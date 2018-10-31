@@ -128,7 +128,7 @@ export class ShardingManager extends EventEmitter {
 	}
 
 	public restartAll(): void {
-		this.emit('debug', 'Respawning all Clusters!');
+		this.emit('debug', 'Restarting all Clusters!');
 
 		for (const workerInfo of this.clusters.values()) {
 			const { worker } = workerInfo;
@@ -141,10 +141,11 @@ export class ShardingManager extends EventEmitter {
 	}
 
 	public async restart(clusterID: number): Promise<void> {
-		this.emit('debug', `Respawn Cluster ${clusterID}`);
-
 		const clusterInfo = this.clusters.get(clusterID);
 		if (!clusterInfo) throw new Error('No Cluster with that ID found.');
+
+		this.emit('debug', `Restarting Cluster ${clusterID}`);
+
 		const { worker } = clusterInfo;
 
 		if (!worker.isDead) worker.kill();
@@ -152,7 +153,7 @@ export class ShardingManager extends EventEmitter {
 	}
 
 	public fetchClientValues<T>(prop: string): Promise<T[]> {
-		return this.ipc.broadcast(`this.${prop}`);
+		return this.ipc.broadcast<T>(`this.${prop}`);
 	}
 
 	private calcShards(shards: number, guildsPerShard = 1000): number {
