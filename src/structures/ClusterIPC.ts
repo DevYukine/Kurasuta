@@ -32,7 +32,7 @@ export class ClusterIPC extends EventEmitter {
 	}
 
 	public async init() {
-		this.nodeSocket = await this.node.connectTo('Master', 9999);
+		this.nodeSocket = await this.node.connectTo('Master', this.port);
 	}
 
 	public get server() {
