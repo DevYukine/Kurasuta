@@ -1,6 +1,6 @@
 import { Client, Util } from 'discord.js';
-import { IPC } from './IPC';
 import { SendOptions } from 'veza';
+import { ClusterIPC } from './ClusterIPC';
 
 export type IPCResult = {
 	success: boolean;
@@ -11,7 +11,7 @@ export class ShardClientUtil {
 	public readonly id: number;
 	public readonly shardCount: number;
 	public readonly clusterCount: number;
-	public readonly ipc = new IPC({ client: this.client, id: this.id });
+	public readonly ipc = new ClusterIPC(this.client, this.id);
 
 	constructor(public client: Client) {
 		this.id = Number(process.env['CLUSTER_ID']);

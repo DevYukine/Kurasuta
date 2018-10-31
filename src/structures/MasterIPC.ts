@@ -1,56 +1,23 @@
 import { EventEmitter } from 'events';
 import { Node, NodeMessage, NodeSocket } from 'veza';
-import { Client, Util, MessageAttachment } from 'discord.js';
+import { Util } from 'discord.js';
 import { ShardingManager } from '..';
-import { isMaster } from 'cluster';
 
-export type IPCConfig = {
-	manager?: ShardingManager;
-	client?: Client;
-	id?: number;
-};
-
-export class IPC extends EventEmitter {
+export class MasterIPC extends EventEmitter {
 	public node: Node;
-	public nodeSocket?: NodeSocket;
-	public manager?: ShardingManager;
-	public client?: Client;
-	public id?: number;
 
-	constructor(config: IPCConfig) {
+	constructor(public manager: ShardingManager) {
 		super();
-		this.manager = config.manager;
-		this.client = config.client;
-		this.id = config.id;
-		if (isMaster) {
-			this.node = new Node('Master')
-				.on('client.identify', client => this.emit('debug', `[IPC] Client Connected: ${client.name}`))
-				.on('client.disconnect', client => this.emit('debug', `[IPC] Client Disconnected: ${client.name}`))
-				.on('client.destroy', client => this.emit('debug', `[IPC] Client Destroyed: ${client.name}`))
-				.on('error', error => this.emit('error', error))
-				.on('message', this._messageMaster.bind(this))
-				.serve(9999);
-		} else {
-			this.node = new Node(`Cluster ${this.id}`)
-				.on('error', error => this.emit('error', error))
-				.on('client.disconnect', client => this.emit('warn', `[IPC] Disconnected from ${client.name}`))
-				.on('client.ready', client => this.emit('debug', `[IPC] Connected to: ${client.name}`))
-				.on('message', this._messageCluster.bind(this));
-		}
+		this.node = new Node('Master')
+			.on('client.identify', client => this.emit('debug', `[IPC] Client Connected: ${client.name}`))
+			.on('client.disconnect', client => this.emit('debug', `[IPC] Client Disconnected: ${client.name}`))
+			.on('client.destroy', client => this.emit('debug', `[IPC] Client Destroyed: ${client.name}`))
+			.on('error', error => this.emit('error', error))
+			.on('message', this._messageMaster.bind(this))
+			.serve(9999);
 	}
 
-	public async broadcast(script: string | Function): Promise<any[]> {
-		script = typeof script === 'function' ? `(${script})(this)` : script;
-		const { success, data } = await this.server.send({ event: '_broadcast', code: script });
-		if (!success) throw Util.makeError(data);
-		return data;
-	}
-
-	public async init() {
-		this.nodeSocket = await this.node.connectTo('Master', 9999);
-	}
-
-	public async getResultFromNodes(code: string) {
+	public async broadcast<T>(code: string): Promise<T[]> {
 		const data = await this.node.broadcast({ event: '_eval', code });
 		let errored = data.filter(res => !res.success);
 		if (errored.length) {
@@ -59,26 +26,6 @@ export class IPC extends EventEmitter {
 			throw Util.makeError(error);
 		}
 		return data.map(res => res.data);
-	}
-
-	public get server() {
-		return this.nodeSocket!;
-	}
-
-	private _eval(script: string): string {
-		const client: any = this.client!;
-		return client._eval(script);
-	}
-
-	private _messageCluster(message: NodeMessage) {
-		const { event, code } = message.data;
-		if (event === '_eval') {
-			try {
-				message.reply({ success: true, data: this._eval(code) });
-			} catch (error) {
-				message.reply({ success: false, data: { name: error.name, message: error.message, stack: error.stack } });
-			}
-		}
 	}
 
 	private _messageMaster(message: NodeMessage) {
@@ -114,7 +61,7 @@ export class IPC extends EventEmitter {
 	private async _broadcast(message: NodeMessage) {
 		const { code } = message.data;
 		try {
-			const data = await this.getResultFromNodes(code);
+			const data = await this.broadcast(code);
 			message.reply({ success: true, data });
 		} catch (error) {
 			message.reply({ success: false, data: { name: error.name, message: error.message, stack: error.stack } });

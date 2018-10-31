@@ -4,9 +4,9 @@ import { cpus } from 'os';
 import { Client, ClientOptions } from 'discord.js';
 import { Util } from '../util/Util';
 import { isMaster, fork, Worker } from 'cluster';
-import { IPC } from './IPC';
-import fetch from 'node-fetch';
 import { http } from '../util/Constants';
+import fetch from 'node-fetch';
+import { MasterIPC } from './MasterIPC';
 
 export const { version } = require('../../package.json');
 
@@ -42,6 +42,7 @@ export type SessionObject = {
 
 export class ShardingManager extends EventEmitter {
 	public clusters = new Map<number, ClusterInfo>();
+	public ipc = new MasterIPC(this);
 	public clientOptions: ClientOptions;
 	public shardCount: number | 'auto';
 	public guildsPerShard: number;
@@ -51,7 +52,6 @@ export class ShardingManager extends EventEmitter {
 	public respawn: boolean;
 	public token: string;
 	public path: string;
-	public ipc: IPC;
 
 	constructor(options: SharderOptions) {
 		super();
@@ -62,7 +62,6 @@ export class ShardingManager extends EventEmitter {
 		this.development = options.development || false;
 		this.client = options.client || Client;
 		this.clientOptions = options.clientOptions || {};
-		this.ipc = new IPC({ manager: this });
 		this.guildsPerShard = options.guildsPerShard || 1000;
 		this.respawn = options.respawn || true;
 
@@ -153,7 +152,7 @@ export class ShardingManager extends EventEmitter {
 	}
 
 	public fetchClientValues<T>(prop: string): Promise<T[]> {
-		return this.ipc.getResultFromNodes(`this.${prop}`);
+		return this.ipc.broadcast(`this.${prop}`);
 	}
 
 	private calcShards(shards: number, guildsPerShard = 1000): number {
