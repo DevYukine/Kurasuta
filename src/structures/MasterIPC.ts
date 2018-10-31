@@ -53,6 +53,9 @@ export class MasterIPC extends EventEmitter {
 			case '_restart':
 				this._restart(message);
 				break;
+			case '_masterEval':
+				this._masterEval(message);
+				break;
 			case '_restartAll':
 				this._restartAll();
 				break;
@@ -71,45 +74,55 @@ export class MasterIPC extends EventEmitter {
 
 	private _ready(message: NodeMessage) {
 		const { id } = message.data;
-		const cluster = this.manager!.clusters.get(id)!;
+		const cluster = this.manager.clusters.get(id)!;
 		cluster.ready = true;
-		this.manager!.clusters.set(id, cluster);
-		this.manager!.emit('debug', `Cluster ${id} became ready`);
-		this.manager!.emit('ready', cluster);
+		this.manager.clusters.set(id, cluster);
+		this.manager.emit('debug', `Cluster ${id} became ready`);
+		this.manager.emit('ready', cluster);
 	}
 
 	private _shardReady(message: NodeMessage) {
 		const { shardID } = message.data;
-		this.manager!.emit('debug', `Shard ${shardID} became ready`);
-		this.manager!.emit('shardReady', shardID);
+		this.manager.emit('debug', `Shard ${shardID} became ready`);
+		this.manager.emit('shardReady', shardID);
 	}
 
 	private _shardReconnect(message: NodeMessage) {
 		const { shardID } = message.data;
-		this.manager!.emit('debug', `Shard ${shardID} tries to reconnect`);
-		this.manager!.emit('shardReconnect', shardID);
+		this.manager.emit('debug', `Shard ${shardID} tries to reconnect`);
+		this.manager.emit('shardReconnect', shardID);
 	}
 
 	private _shardResumed(message: NodeMessage) {
 		const { shardID } = message.data;
-		this.manager!.emit('debug', `Shard ${shardID} resumed connection`);
-		this.manager!.emit('shardResumed', shardID);
+		this.manager.emit('debug', `Shard ${shardID} resumed connection`);
+		this.manager.emit('shardResumed', shardID);
 	}
 
 	private _shardDisconnect(message: NodeMessage) {
 		const { shardID } = message.data;
-		this.manager!.emit('debug', `Shard ${shardID} disconnected!`);
-		this.manager!.emit('shardDisconnect', shardID);
+		this.manager.emit('debug', `Shard ${shardID} disconnected!`);
+		this.manager.emit('shardDisconnect', shardID);
 	}
 
 	private _restart(message: NodeMessage) {
 		const { clusterID } = message.data;
-		return this.manager!.restart(clusterID)
+		return this.manager.restart(clusterID)
 			.then(() => message.reply({ success: true }))
 			.catch(error => message.reply({ success: false, data: { name: error.name, message: error.message, stack: error.stack } }));
 	}
 
+	private async _masterEval(message: NodeMessage) {
+		const { code } = message.data;
+		try {
+			const result = await this.manager.eval(code);
+			return message.reply({ success: true, data: result });
+		} catch (error) {
+			return message.reply({ success: false, data: { name: error.name, message: error.message, stack: error.stack } });
+		}
+	}
+
 	private _restartAll() {
-		this.manager!.restartAll();
+		this.manager.restartAll();
 	}
 }

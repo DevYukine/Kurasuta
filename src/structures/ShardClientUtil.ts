@@ -8,19 +8,20 @@ export type IPCResult = {
 };
 
 export class ShardClientUtil {
-	public readonly id: number;
-	public readonly shardCount: number;
-	public readonly clusterCount: number;
+	public readonly clusterCount = Number(process.env['CLUSTER_CLUSTERCOUNT']);
+	public readonly shardCount = Number(process.env['CLUSTER_SHARDCOUNT']);
+	public readonly id = Number(process.env['CLUSTER_ID']);
 	public readonly ipc = new ClusterIPC(this.client, this.id, this.ipcPort);
 
 	constructor(public client: Client, public ipcPort: number) {
-		this.id = Number(process.env['CLUSTER_ID']);
-		this.shardCount = Number(process.env['CLUSTER_SHARDCOUNT']);
-		this.clusterCount = Number(process.env['CLUSTER_CLUSTERCOUNT']);
 	}
 
-	public broadcastEval(script: string): Promise<any[]> {
-		return this.ipc.broadcast(script);
+	public broadcastEval<T>(script: string | Function): Promise<T[]> {
+		return this.ipc.broadcast<T>(script);
+	}
+
+	public masterEval<T>(script: string | Function): Promise<T> {
+		return this.ipc.masterEval<T>(script);
 	}
 
 	public fetchClientValues(prop: string): Promise<any[]> {
@@ -31,7 +32,7 @@ export class ShardClientUtil {
 		return this.ipc.server.send({ event: '_restartAll' }, { receptive: false });
 	}
 
-	public async restart(clusterID: number) {
+	public async restart(clusterID: number): Promise<void> {
 		const { success, data } = await this.ipc.server.send<IPCResult>({ event: '_restart', id: clusterID });
 		if (!success) throw Util.makeError(data);
 	}

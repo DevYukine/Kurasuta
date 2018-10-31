@@ -17,9 +17,16 @@ export class ClusterIPC extends EventEmitter {
 			.on('message', this._messageCluster.bind(this));
 	}
 
-	public async broadcast(script: string | Function): Promise<any[]> {
+	public async broadcast<T>(script: string | Function): Promise<T[]> {
 		script = typeof script === 'function' ? `(${script})(this)` : script;
 		const { success, data } = await this.server.send({ event: '_broadcast', code: script });
+		if (!success) throw Util.makeError(data);
+		return data;
+	}
+
+	public async masterEval<T>(script: string | Function): Promise<T> {
+		script = typeof script === 'function' ? `(${script})(this)` : script;
+		const { success, data } = await this.server.send({ event: '_masterEval', code: script });
 		if (!success) throw Util.makeError(data);
 		return data;
 	}

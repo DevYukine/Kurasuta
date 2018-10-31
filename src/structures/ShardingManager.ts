@@ -79,12 +79,12 @@ export class ShardingManager extends EventEmitter {
 	public async spawn(): Promise<void> {
 		if (isMaster) {
 			this.emit('debug', 'Fetching Session Endpoint');
-			const { shards: recommendShards, session_start_limit: { remaining } } = await this.fetchSessionEndpoint();
+			const { shards: recommendShards, session_start_limit: { remaining } } = await this._fetchSessionEndpoint();
 
 			if (remaining < this.shardCount) throw new Error('Daily session limit exceeded!');
 
 			if (this.shardCount === 'auto') {
-				this.shardCount = await this.calcShards(recommendShards, this.guildsPerShard);
+				this.shardCount = await this._calcShards(recommendShards, this.guildsPerShard);
 				this.emit('debug', `Using recommend shard count of ${this.shardCount} shards with ${this.guildsPerShard} guilds per shard`);
 			}
 
@@ -161,11 +161,21 @@ export class ShardingManager extends EventEmitter {
 		return this.ipc.broadcast<T>(`this.${prop}`);
 	}
 
-	private calcShards(shards: number, guildsPerShard = 1000): number {
+	public eval<T>(script: string): Promise<T> {
+		return new Promise((resolve, reject) => {
+			try {
+				return resolve(eval(script));
+			} catch (error) {
+				reject(error);
+			}
+		});
+	}
+
+	private _calcShards(shards: number, guildsPerShard = 1000): number {
 		return shards * (1000 / guildsPerShard);
 	}
 
-	private async fetchSessionEndpoint(): Promise<SessionObject> {
+	private async _fetchSessionEndpoint(): Promise<SessionObject> {
 		const res = await fetch(`${http.api}/v${http.version}/gateway/bot`, {
 			method: 'GET',
 			headers: { Authorization: `Bot ${this.token.replace(/^Bot\s*/i, '')}` },
