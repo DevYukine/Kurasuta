@@ -18,7 +18,7 @@ export abstract class Cluster {
 		const clientConfig: ClientOptions = Util.mergeDefault<ClientOptions>(manager.clientOptions, { shards, shardCount: shards.length, totalShardCount: Number(process.env['CLUSTER_SHARDCOUNT']) });
 		this.client = new manager.client(clientConfig);
 		const client: any = this.client;
-		client.shard = new ShardClientUtil(client);
+		client.shard = new ShardClientUtil(client, manager.ipcPort);
 		this.id = Number(process.env['CLUSTER_ID']);
 	}
 

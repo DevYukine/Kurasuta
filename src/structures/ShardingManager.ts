@@ -21,6 +21,7 @@ export type SharderOptions = {
 	clientOptions?: ClientOptions;
 	guildsPerShard?: number,
 	respawn?: boolean;
+	ipcPort: number;
 };
 
 export type ClusterInfo = {
@@ -42,7 +43,6 @@ export type SessionObject = {
 
 export class ShardingManager extends EventEmitter {
 	public clusters = new Map<number, ClusterInfo>();
-	public ipc = new MasterIPC(this);
 	public clientOptions: ClientOptions;
 	public shardCount: number | 'auto';
 	public guildsPerShard: number;
@@ -50,22 +50,27 @@ export class ShardingManager extends EventEmitter {
 	public clusterCount: number;
 	public development: boolean;
 	public respawn: boolean;
+	public ipcPort: number;
+	public ipc: MasterIPC;
 	public token: string;
 	public path: string;
 
 	constructor(options: SharderOptions) {
 		super();
+		this.clusterCount = options.clusterCount || cpus().length;
+		this.guildsPerShard = options.guildsPerShard || 1000;
+		this.clientOptions = options.clientOptions || {};
+		this.development = options.development || false;
+		this.shardCount = options.shardCount || 'auto';
+		this.client = options.client || Client;
+		this.respawn = options.respawn || true;
+		this.ipcPort = options.ipcPort || 9999;
+		this.ipc = new MasterIPC(this);
 		this.token = options.token;
 		this.path = options.path;
-		this.shardCount = options.shardCount || 'auto';
-		this.clusterCount = options.clusterCount || cpus().length;
-		this.development = options.development || false;
-		this.client = options.client || Client;
-		this.clientOptions = options.clientOptions || {};
-		this.guildsPerShard = options.guildsPerShard || 1000;
-		this.respawn = options.respawn || true;
 
 		this.ipc.on('debug', msg => this.emit('debug', msg));
+		this.ipc.on('error', err => this.emit('error', err));
 
 		if (!this.token) throw new Error('You need to supply a Token!');
 		if (!this.path) throw new Error('You need to supply a Path!');

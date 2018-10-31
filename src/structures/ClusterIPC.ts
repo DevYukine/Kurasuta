@@ -7,7 +7,7 @@ export class ClusterIPC extends EventEmitter {
 	public client: Client;
 	public node: Node;
 
-	constructor(discordClient: Client, public id: number) {
+	constructor(discordClient: Client, public id: number, public port: number) {
 		super();
 		this.client = discordClient;
 		this.node = new Node(`Cluster ${this.id}`)

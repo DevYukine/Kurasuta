@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import { Node, NodeMessage, NodeSocket } from 'veza';
 import { Util } from 'discord.js';
 import { ShardingManager } from '..';
+import { isMaster } from 'cluster';
 
 export class MasterIPC extends EventEmitter {
 	public node: Node;
@@ -13,8 +14,8 @@ export class MasterIPC extends EventEmitter {
 			.on('client.disconnect', client => this.emit('debug', `[IPC] Client Disconnected: ${client.name}`))
 			.on('client.destroy', client => this.emit('debug', `[IPC] Client Destroyed: ${client.name}`))
 			.on('error', error => this.emit('error', error))
-			.on('message', this._messageMaster.bind(this))
-			.serve(9999);
+			.on('message', this._messageMaster.bind(this));
+		if (isMaster) this.node.serve(manager.ipcPort);
 	}
 
 	public async broadcast<T>(code: string): Promise<T[]> {

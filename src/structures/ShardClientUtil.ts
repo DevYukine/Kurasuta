@@ -11,9 +11,9 @@ export class ShardClientUtil {
 	public readonly id: number;
 	public readonly shardCount: number;
 	public readonly clusterCount: number;
-	public readonly ipc = new ClusterIPC(this.client, this.id);
+	public readonly ipc = new ClusterIPC(this.client, this.id, this.ipcPort);
 
-	constructor(public client: Client) {
+	constructor(public client: Client, public ipcPort: number) {
 		this.id = Number(process.env['CLUSTER_ID']);
 		this.shardCount = Number(process.env['CLUSTER_SHARDCOUNT']);
 		this.clusterCount = Number(process.env['CLUSTER_CLUSTERCOUNT']);
