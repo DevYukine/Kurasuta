@@ -20,7 +20,7 @@ To use [No Final Name], you can take a look at [example](https://github.com/Dev-
 | `options.shardCount`     | The number of how many shards you want. Defaults to the amount that the gateway reccommends, taking into account `options.guildsPerShard`               |
 | `options.development`    | Boolean to enable development mode.                                                                                                                     |
 | `options.client`         | Class extending the d.js client you want to use for your clusters (usefull for Frameworks like `Commando`, `Klasa` or `Akario`). Default to d.js Client |
-| `options.guildsPerShard` | Number to calculate how many guilds per shard. Defaults to 1300. Overriden if you only have 1 shard.                                                    |
+| `options.guildsPerShard` | Number to calculate how many guilds per shard. Defaults to 1000. Ignored if you set shardCount.                                                    |
 | `options.respawn`        | Boolean indicating if exited Clusters should always get restarted. Default to true                                                                      |
 | `options.ipcPort`        | Port that should be used for IPC connections. Default to 9999                                                                                           |
 
@@ -32,7 +32,7 @@ In every cluster when your code is loaded, you get access to `this.client` and `
 
 | Method            | Example                                 | Description                                                           | Returns        |
 |-------------------|-----------------------------------------|-----------------------------------------------------------------------|----------------|
-| broadcastEval     | `client.shard.broadcastEval(script);`   | Eval's a script on all Clusters in context of the Client              | Promise<any[]>  |
+| broadcastEval     | `client.shard.broadcastEval(script);`   | Eval's a script on all Clusters in context of the Client              | Promise<any[]> |
 | masterEval        | `client.shard.masterEval(script);`      | Eval a script on the master process in context of the ShardingManager | Promise<any>   |
 | fetchClientValues | `client.shard.fetchClientValues(prop);` | Fetch a Client value on all Clusters                                  | Promise<any[]> |
 | restartAll        | `client.shard.restartAll()`             | Sends a message to the master process to kill & restart all Clusters  | Promise<void>  |
