@@ -14,12 +14,17 @@ export abstract class Cluster {
 	public readonly id: number;
 
 	constructor(public manager: ShardingManager) {
-		const shards = process.env['CLUSTER_SHARDS']!.split(',').map(id => Number(id));
-		const clientConfig: ClientOptions = Util.mergeDefault<ClientOptions>(manager.clientOptions, { shards, shardCount: shards.length, totalShardCount: Number(process.env['CLUSTER_SHARDCOUNT']) });
+		const env = process.env;
+		const shards = env['CLUSTER_SHARDS']!.split(',').map(id => Number(id));
+		const clientConfig: ClientOptions = Util.mergeDefault<ClientOptions>(manager.clientOptions, {
+			shards,
+			shardCount: shards.length,
+			totalShardCount: Number(env['CLUSTER_SHARDCOUNT'])
+		});
 		this.client = new manager.client(clientConfig);
 		const client: any = this.client;
 		client.shard = new ShardClientUtil(client, manager.ipcPort);
-		this.id = Number(process.env['CLUSTER_ID']);
+		this.id = Number(env['CLUSTER_ID']);
 	}
 
 	public async init(): Promise<void> {
