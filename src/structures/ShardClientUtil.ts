@@ -8,8 +8,8 @@ export type IPCResult = {
 };
 
 export class ShardClientUtil {
-	public readonly clusterCount = Number(process.env['CLUSTER_CLUSTERCOUNT']);
-	public readonly shardCount = Number(process.env['CLUSTER_SHARDCOUNT']);
+	public readonly clusterCount = Number(process.env['CLUSTER_CLUSTER_COUNT']);
+	public readonly shardCount = Number(process.env['CLUSTER_SHARD_COUNT']);
 	public readonly id = Number(process.env['CLUSTER_ID']);
 	public readonly ipc = new ClusterIPC(this.client, this.id, this.ipcPort);
 
@@ -28,6 +28,24 @@ export class ShardClientUtil {
 		return this.ipc.broadcast(`this.${prop}`);
 	}
 
+	public async fetchGuild(id: string): Promise<Object> {
+		const { success, data } = await this.send<IPCResult>({ event: '_fetchGuild', id });
+		if (!success) throw new Error('No guild with this id found!');
+		return data;
+	}
+
+	public async fetchUser(id: string): Promise<Object> {
+		const { success, data } = await this.send<IPCResult>({ event: '_fetchUser', id });
+		if (!success) throw new Error('No user with this id found!');
+		return data;
+	}
+
+	public async fetchChannel(id: string): Promise<Object> {
+		const { success, data } = await this.send<IPCResult>({ event: '_fetchChannel', id });
+		if (!success) throw new Error('No channel with this id found!');
+		return data;
+	}
+
 	public restartAll(): Promise<void> {
 		return this.ipc.server.send({ event: '_restartAll' }, { receptive: false });
 	}
@@ -37,7 +55,7 @@ export class ShardClientUtil {
 		if (!success) throw Util.makeError(data);
 	}
 
-	public send<T>(data: any, options: SendOptions): Promise<T> {
+	public send<T>(data: any, options?: SendOptions): Promise<T> {
 		if (typeof data === 'object') {
 			if (data.event) return this.ipc.server.send(data, options);
 		}

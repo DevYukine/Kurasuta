@@ -56,6 +56,15 @@ export class MasterIPC extends EventEmitter {
 			case '_masterEval':
 				this._masterEval(message);
 				break;
+			case '_fetchUser':
+				this._fetchUser(message);
+				break;
+			case '_fetchGuild':
+				this._fetchGuild(message);
+				break;
+			case '_fetchChannel':
+				this._fetchChannel(message);
+				break;
 			case '_restartAll':
 				this._restartAll();
 				break;
@@ -124,5 +133,27 @@ export class MasterIPC extends EventEmitter {
 
 	private _restartAll() {
 		this.manager.restartAll();
+	}
+
+	private async _fetchUser(message: NodeMessage) {
+		return this._fetch(message, 'const user = this.users.get({id}); user ? user.toJSON() : user;');
+	}
+
+	private async _fetchGuild(message: NodeMessage) {
+		return this._fetch(message, 'const guild = this.guilds.get({id}); guild ? guild.toJSON() : guild;');
+	}
+
+	private _fetchChannel(message: NodeMessage) {
+		return this._fetch(message, 'const channel = this.channels.get({id}); channel ? channel.toJSON() : channel;');
+	}
+
+	private async _fetch(message: NodeMessage, code: string) {
+		const { id } = message.data;
+		const result = await this.broadcast<any>(code.replace('{id}', id));
+		const realResult = result.filter(r => r);
+		if (realResult.length) {
+			return message.reply({ success: true, data: realResult[0] });
+		}
+		return message.reply({ success: false });
 	}
 }

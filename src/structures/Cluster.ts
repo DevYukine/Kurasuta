@@ -19,7 +19,7 @@ export abstract class Cluster {
 		const clientConfig: ClientOptions = Util.mergeDefault<ClientOptions>(manager.clientOptions, {
 			shards,
 			shardCount: shards.length,
-			totalShardCount: Number(env['CLUSTER_SHARDCOUNT'])
+			totalShardCount: Number(env['CLUSTER_SHARD_COUNT'])
 		});
 		this.client = new manager.client(clientConfig);
 		const client: any = this.client;

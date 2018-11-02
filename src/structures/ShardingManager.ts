@@ -95,7 +95,7 @@ export class ShardingManager extends EventEmitter {
 			const shardTuple = Util.chunk(shardArray, shardsPerCluster);
 			for (let index = 0; index < this.clusterCount; index++) {
 				const shards = shardTuple.shift()!;
-				const worker = fork({ CLUSTER_SHARDS: shards.join(','), CLUSTER_ID: index, CLUSTER_SHARDCOUNT: this.shardCount, CLUSTER_CLUSTERCOUNT: this.clusterCount });
+				const worker = fork({ CLUSTER_SHARDS: shards.join(','), CLUSTER_ID: index, CLUSTER_SHARD_COUNT: this.shardCount, CLUSTER_CLUSTER_COUNT: this.clusterCount });
 
 				this.emit('debug', `Worker spawned with id ${worker.id}`);
 
@@ -122,7 +122,7 @@ export class ShardingManager extends EventEmitter {
 		if (isMaster) {
 			this.emit('debug', `Spawning specific Cluster ${cluster.id}`);
 
-			const worker = fork({ CLUSTER_SHARDS: cluster.shards.join(','), CLUSTER_ID: cluster.id, CLUSTER_SHARDCOUNT: this.shardCount, CLUSTER_CLUSTERCOUNT: this.clusterCount });
+			const worker = fork({ CLUSTER_SHARDS: cluster.shards.join(','), CLUSTER_ID: cluster.id, CLUSTER_SHARD_COUNT: this.shardCount, CLUSTER_CLUSTER_COUNT: this.clusterCount });
 			this.emit('debug', `Worker spawned with id ${worker.id}`);
 
 			this.clusters.set(worker.id, { worker, shards: cluster.shards, ready: false, id: worker.id });
