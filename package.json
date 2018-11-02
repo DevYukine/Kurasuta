@@ -2,7 +2,8 @@
   "name": "djs-sharder",
   "version": "0.1.0",
   "description": "A Custom discord.js Sharding Library inspired by eris-sharder.",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "typings": "typings/index.d.ts",
   "scripts": {
     "prepare": "gulp build"
   },
@@ -21,7 +22,7 @@
     "veza": "^0.3.1"
   },
   "devDependencies": {
-    "@types/node": "^10.12.0",
+    "@types/node": "^10.12.2",
     "@types/node-fetch": "^2.1.2",
     "@types/ws": "^6.0.1",
     "fs-nextra": "^0.3.7",
@@ -30,6 +31,6 @@
     "gulp-typescript": "^5.0.0-alpha.3",
     "merge2": "^1.2.3",
     "tslint": "^5.11.0",
-    "typescript": "^3.1.5"
+    "typescript": "^3.1.6"
   }
 }
