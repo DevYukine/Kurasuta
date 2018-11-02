@@ -84,7 +84,7 @@ export class ShardingManager extends EventEmitter {
 			if (remaining < this.shardCount) throw new Error('Daily session limit exceeded!');
 
 			if (this.shardCount === 'auto') {
-				this.shardCount = await this._calcShards(recommendShards, this.guildsPerShard);
+				this.shardCount = await ShardingManager._calcShards(recommendShards, this.guildsPerShard);
 				this.emit('debug', `Using recommend shard count of ${this.shardCount} shards with ${this.guildsPerShard} guilds per shard`);
 			}
 
@@ -171,10 +171,6 @@ export class ShardingManager extends EventEmitter {
 		});
 	}
 
-	private _calcShards(shards: number, guildsPerShard = 1000): number {
-		return shards * (1000 / guildsPerShard);
-	}
-
 	private async _fetchSessionEndpoint(): Promise<SessionObject> {
 		const res = await fetch(`${http.api}/v${http.version}/gateway/bot`, {
 			method: 'GET',
@@ -196,5 +192,9 @@ export class ShardingManager extends EventEmitter {
 			this.once('ready', resolve);
 			setTimeout(() => reject(new Error(`Cluster ${clusterID} took too long to get ready`)), (7500 * shardCount) * (this.guildsPerShard / 1000));
 		});
+	}
+
+	private static _calcShards(shards: number, guildsPerShard = 1000): number {
+		return shards * (1000 / guildsPerShard);
 	}
 }
