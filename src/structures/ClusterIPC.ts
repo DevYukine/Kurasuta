@@ -14,7 +14,7 @@ export class ClusterIPC extends EventEmitter {
 			.on('error', error => this.emit('error', error))
 			.on('client.disconnect', client => this.emit('warn', `[IPC] Disconnected from ${client.name}`))
 			.on('client.ready', client => this.emit('debug', `[IPC] Connected to: ${client.name}`))
-			.on('message', this._messageCluster.bind(this));
+			.on('message', this._message.bind(this));
 	}
 
 	public async broadcast<T>(script: string | Function): Promise<T[]> {
@@ -44,7 +44,7 @@ export class ClusterIPC extends EventEmitter {
 		return client._eval(script);
 	}
 
-	private _messageCluster(message: NodeMessage) {
+	private _message(message: NodeMessage) {
 		const { event, code } = message.data;
 		if (event === '_eval') {
 			try {

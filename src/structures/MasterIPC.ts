@@ -5,6 +5,7 @@ import { ShardingManager } from '..';
 import { isMaster } from 'cluster';
 
 export class MasterIPC extends EventEmitter {
+	[key: string]: any;
 	public node: Node;
 
 	constructor(public manager: ShardingManager) {
@@ -14,7 +15,7 @@ export class MasterIPC extends EventEmitter {
 			.on('client.disconnect', client => this.emit('debug', `[IPC] Client Disconnected: ${client.name}`))
 			.on('client.destroy', client => this.emit('debug', `[IPC] Client Destroyed: ${client.name}`))
 			.on('error', error => this.emit('error', error))
-			.on('message', this._messageMaster.bind(this));
+			.on('message', this._message.bind(this));
 		if (isMaster) this.node.serve(manager.ipcPort);
 	}
 
@@ -29,46 +30,9 @@ export class MasterIPC extends EventEmitter {
 		return data.map(res => res.data);
 	}
 
-	private _messageMaster(message: NodeMessage) {
-		const { event } = message.data;
-		switch (event) {
-			case '_broadcast':
-				this._broadcast(message);
-				break;
-			case '_ready':
-				this._ready(message);
-				break;
-			case '_shardReady':
-				this._shardReady(message);
-				break;
-			case '_shardReconnect':
-				this._shardReconnect(message);
-				break;
-			case '_shardResumed':
-				this._shardResumed(message);
-				break;
-			case '_shardDisconnect':
-				this._shardDisconnect(message);
-				break;
-			case '_restart':
-				this._restart(message);
-				break;
-			case '_masterEval':
-				this._masterEval(message);
-				break;
-			case '_fetchUser':
-				this._fetchUser(message);
-				break;
-			case '_fetchGuild':
-				this._fetchGuild(message);
-				break;
-			case '_fetchChannel':
-				this._fetchChannel(message);
-				break;
-			case '_restartAll':
-				this._restartAll();
-				break;
-		}
+	private _message(message: NodeMessage) {
+		const { event }: { event: string } = message.data;
+		this[event](message);
 	}
 
 	private async _broadcast(message: NodeMessage) {
