@@ -11,6 +11,7 @@ import { MasterIPC } from './MasterIPC';
 export const { version } = require('../../package.json');
 
 export type SharderOptions = {
+	token?: string
 	shardCount?: number | 'auto';
 	clusterCount?: number;
 	name?: string;
@@ -42,16 +43,18 @@ export type SessionObject = {
 export class ShardingManager extends EventEmitter {
 	public clusters = new Map<number, ClusterInfo>();
 	public clientOptions: ClientOptions;
-	public shardCount: number | 'auto';
-	public guildsPerShard: number;
 	public client: typeof Client;
-	public clusterCount: number;
-	public development: boolean;
-	public respawn: boolean;
 	public ipcSocket: string;
-	public ipc: MasterIPC;
 
-	constructor(public token: string, public path: string, options: SharderOptions) {
+	private shardCount: number | 'auto';
+	private guildsPerShard: number;
+	private clusterCount: number;
+	private development: boolean;
+	private respawn: boolean;
+	private token?: string;
+	private ipc: MasterIPC;
+
+	constructor(private path: string, options: SharderOptions) {
 		super();
 		this.clusterCount = options.clusterCount || cpus().length;
 		this.guildsPerShard = options.guildsPerShard || 1000;
@@ -60,25 +63,23 @@ export class ShardingManager extends EventEmitter {
 		this.shardCount = options.shardCount || 'auto';
 		this.client = options.client || Client;
 		this.respawn = options.respawn || true;
-		this.ipcSocket = options.ipcSocket || platform() === 'win32' ? '//./pipe/tmp/echo.sock' : '/tmp/echo.sock';
+		this.ipcSocket = options.ipcSocket || platform() === 'win32' ? '//./pipe/tmp/DiscordBot.sock' : '/tmp/DiscordBot.sock';
+		this.token = options.token;
 		this.ipc = new MasterIPC(this);
 
 		this.ipc.on('debug', msg => this.emit('debug', msg));
 		this.ipc.on('error', err => this.emit('error', err));
 
-		if (!this.token) throw new Error('You need to supply a Token!');
 		if (!this.path) throw new Error('You need to supply a Path!');
 	}
 
 	public async spawn(): Promise<void> {
 		if (isMaster) {
-			this.emit('debug', 'Fetching Session Endpoint');
-			const { shards: recommendShards, session_start_limit: { remaining } } = await this._fetchSessionEndpoint();
-
-			if (remaining < this.shardCount) throw new Error('Daily session limit exceeded!');
-
 			if (this.shardCount === 'auto') {
-				this.shardCount = await ShardingManager._calcShards(recommendShards, this.guildsPerShard);
+				this.emit('debug', 'Fetching Session Endpoint');
+				const { shards: recommendShards } = await this._fetchSessionEndpoint();
+
+				this.shardCount = ShardingManager._calcShards(recommendShards, this.guildsPerShard);
 				this.emit('debug', `Using recommend shard count of ${this.shardCount} shards with ${this.guildsPerShard} guilds per shard`);
 			}
 
@@ -166,6 +167,7 @@ export class ShardingManager extends EventEmitter {
 	}
 
 	private async _fetchSessionEndpoint(): Promise<SessionObject> {
+		if (!this.token) throw new Error('No token was provided!');
 		const res = await fetch(`${http.api}/v${http.version}/gateway/bot`, {
 			method: 'GET',
 			headers: { Authorization: `Bot ${this.token.replace(/^Bot\s*/i, '')}` },
