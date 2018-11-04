@@ -23,7 +23,7 @@ export abstract class Cluster {
 		});
 		this.client = new manager.client(clientConfig);
 		const client: any = this.client;
-		client.shard = new ShardClientUtil(client, manager.ipcPort);
+		client.shard = new ShardClientUtil(client, manager.ipcSocket);
 		this.id = Number(env['CLUSTER_ID']);
 	}
 

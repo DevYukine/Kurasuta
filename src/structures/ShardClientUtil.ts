@@ -11,9 +11,9 @@ export class ShardClientUtil {
 	public readonly clusterCount = Number(process.env['CLUSTER_CLUSTER_COUNT']);
 	public readonly shardCount = Number(process.env['CLUSTER_SHARD_COUNT']);
 	public readonly id = Number(process.env['CLUSTER_ID']);
-	public readonly ipc = new ClusterIPC(this.client, this.id, this.ipcPort);
+	public readonly ipc = new ClusterIPC(this.client, this.id, this.ipcSocket);
 
-	constructor(public client: Client, public ipcPort: number) {
+	constructor(public client: Client, public ipcSocket: string) {
 	}
 
 	public broadcastEval<T>(script: string | Function): Promise<T[]> {
