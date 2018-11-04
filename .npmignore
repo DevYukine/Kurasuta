@@ -1,2 +1,8 @@
 src/
 test/
+node_modules/
+.vscode/
+.env
+tsconfig.json
+gulpfile.js
+webpack.config.js
