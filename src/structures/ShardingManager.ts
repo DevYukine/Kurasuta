@@ -1,6 +1,6 @@
 import { Cluster } from './Cluster';
 import { EventEmitter } from 'events';
-import { cpus } from 'os';
+import { cpus, platform } from 'os';
 import { Client, ClientOptions } from 'discord.js';
 import { Util } from '../util/Util';
 import { isMaster, fork, Worker } from 'cluster';
@@ -19,7 +19,7 @@ export type SharderOptions = {
 	clientOptions?: ClientOptions;
 	guildsPerShard?: number,
 	respawn?: boolean;
-	ipcPort: number;
+	ipcSocket?: string;
 };
 
 export type ClusterInfo = {
@@ -48,7 +48,7 @@ export class ShardingManager extends EventEmitter {
 	public clusterCount: number;
 	public development: boolean;
 	public respawn: boolean;
-	public ipcPort: number;
+	public ipcSocket: string;
 	public ipc: MasterIPC;
 
 	constructor(public token: string, public path: string, options: SharderOptions) {
@@ -60,7 +60,7 @@ export class ShardingManager extends EventEmitter {
 		this.shardCount = options.shardCount || 'auto';
 		this.client = options.client || Client;
 		this.respawn = options.respawn || true;
-		this.ipcPort = options.ipcPort || 9999;
+		this.ipcSocket = options.ipcSocket || platform() === 'win32' ? '//./pipe/tmp/echo.sock' : '/tmp/echo.sock';
 		this.ipc = new MasterIPC(this);
 
 		this.ipc.on('debug', msg => this.emit('debug', msg));

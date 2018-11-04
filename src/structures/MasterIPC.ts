@@ -16,7 +16,7 @@ export class MasterIPC extends EventEmitter {
 			.on('client.destroy', client => this.emit('debug', `[IPC] Client Destroyed: ${client.name}`))
 			.on('error', error => this.emit('error', error))
 			.on('message', this._message.bind(this));
-		if (isMaster) this.node.serve(manager.ipcPort);
+		if (isMaster) this.node.serve(manager.ipcSocket);
 	}
 
 	public async broadcast<T>(code: string): Promise<T[]> {

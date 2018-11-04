@@ -22,7 +22,7 @@ To use [No Final Name], you can take a look at [example](https://github.com/Dev-
 | `options.client`         | Class extending the d.js client you want to use for your clusters (usefull for Frameworks like `Commando`, `Klasa` or `Akairo`). Default to d.js Client |
 | `options.guildsPerShard` | Number to calculate how many guilds per shard. Defaults to 1000. Ignored if you set shardCount.                                                         |
 | `options.respawn`        | Boolean indicating if exited Clusters should always get restarted. Default to true                                                                      |
-| `options.ipcPort`        | Port that should be used for IPC connections. Default to 9999                                                                                           |
+| `options.ipcSocket`      | Path to Socket that should be used for IPC connections. Default to `//./pipe/tmp/echo.sock` on Windows and `'/tmp/echo.sock'` on Linux                  |
 
 ## Cluster
 
