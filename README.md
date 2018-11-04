@@ -19,7 +19,7 @@ To use [No Final Name], you can take a look at [example](https://github.com/Dev-
 | `options.clusterCount`   | The number of how many clusters you want. Defaults to the amount of cores                                                                               |
 | `options.shardCount`     | The number of how many shards you want. Defaults to the amount that the gateway reccommends, taking into account `options.guildsPerShard`               |
 | `options.development`    | Boolean to enable development mode.                                                                                                                     |
-| `options.client`         | Class extending the d.js client you want to use for your clusters (usefull for Frameworks like `Commando`, `Klasa` or `Akario`). Default to d.js Client |
+| `options.client`         | Class extending the d.js client you want to use for your clusters (usefull for Frameworks like `Commando`, `Klasa` or `Akairo`). Default to d.js Client |
 | `options.guildsPerShard` | Number to calculate how many guilds per shard. Defaults to 1000. Ignored if you set shardCount.                                                         |
 | `options.respawn`        | Boolean indicating if exited Clusters should always get restarted. Default to true                                                                      |
 | `options.ipcPort`        | Port that should be used for IPC connections. Default to 9999                                                                                           |
