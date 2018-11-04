@@ -8,21 +8,21 @@ Kurasuta is a powerful sharding manager for the discord.js library. It uses Node
 To download Kurasuta, run `npm install kurasuta`
 If you use Yarn, run `yarn add kurasuta`
 
-To use Kurasuta, you can take a look at [example](https://github.com/Dev-Yukine/Custom-Sharder#example)
+To use Kurasuta, you can take a look at [example](#example)
 
 ## ShardingManager
-| Name                     | Description                                                                                                                                                         |
-|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `token`                  | Your bot token. It will be used to query the Session endpoint and calculate how many shards to spawn.                                                               |
-| `path`                   | path to a file that exports a class extending `Cluster`. The class must containt a method called `launch`.                                                          |
-| `options.clientOptions`  | A object of client options you want to pass to the Discord.js client constructor.                                                                                   |
-| `options.clusterCount`   | The number of how many clusters you want. Defaults to the amount of cores.                                                                                          |
-| `options.shardCount`     | The number of how many shards you want. Defaults to the amount that the gateway recommends, taking into account `options.guildsPerShard`.                           |
-| `options.development`    | Boolean to enable development mode.                                                                                                                                 |
-| `options.client`         | Class extending the Discord.js client you want to use for your clusters (useful for Frameworks like `Commando`, `Klasa` or `Akairo`). Default to Discord.js client. |
-| `options.guildsPerShard` | Number to calculate how many guilds per shard. Defaults to 1000. Ignored if you set shardCount.                                                                     |
-| `options.respawn`        | Boolean indicating if exited Clusters should always get restarted. Defaults to `true`.                                                                              |
-| `options.ipcSocket`      | Path to Socket that should be used for IPC connections. Default to `//./pipe/tmp/echo.sock` on Windows and `'/tmp/echo.sock'` on Linux.                             |
+| Name                     | Description                                                                                                                                                     |
+|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `token`                  | Your bot token. It will be used to query the Session endpoint and calculate how many shards to spawn.                                                           |
+| `path`                   | path to a file that exports a class extending `Cluster`. The class must containt a method called `launch`.                                                      |
+| `options.clientOptions`  | A object of client options you want to pass to the Discord.js client constructor.                                                                               |
+| `options.clusterCount`   | The number of how many clusters you want. Defaults to the amount of cores.                                                                                      |
+| `options.shardCount`     | The number of how many shards you want. Defaults to the amount that the gateway recommends, taking into account `options.guildsPerShard`.                       |
+| `options.development`    | Boolean to enable development mode.                                                                                                                             |
+| `options.client`         | Class extending the Discord.js client you want to use for your clusters (useful for Frameworks like Commando, Klasa, or Akairo). Defaults to Discord.js client. |
+| `options.guildsPerShard` | Number to calculate how many guilds per shard. Defaults to 1000. Ignored if you set shardCount.                                                                 |
+| `options.respawn`        | Boolean indicating if exited Clusters should always get restarted. Defaults to `true`.                                                                          |
+| `options.ipcSocket`      | Path to Socket that should be used for IPC connections. Default to `//./pipe/tmp/echo.sock` on Windows and `'/tmp/echo.sock'` on Linux.                         |
 
 ## Cluster
 
