@@ -14,10 +14,10 @@ To use Kurasuta, you can take a look at [example](#example)
 | Name                     | Description                                                                                                                                                     |
 |--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `token`                  | Your bot token. It will be used to query the Session endpoint and calculate how many shards to spawn.                                                           |
-| `path`                   | path to a file that exports a class extending `Cluster`. The class must containt a method called `launch`.                                                      |
-| `options.clientOptions`  | A object of client options you want to pass to the Discord.js client constructor.                                                                               |
+| `path`                   | path to a file that exports a class extending `Cluster`. The class must contain a method called `launch`.                                                      |
+| `options.clientOptions`  | An object of client options you want to pass to the Discord.js client constructor.                                                                               |
 | `options.clusterCount`   | The number of how many clusters you want. Defaults to the amount of cores.                                                                                      |
-| `options.shardCount`     | The number of how many shards you want. Defaults to the amount that the gateway recommends, taking into account `options.guildsPerShard`.                       |
+| `options.shardCount`     | The number of how many shards you want. Defaults to the amount that the gateway recommends, taking `options.guildsPerShard` into account .                       |
 | `options.development`    | Boolean to enable development mode.                                                                                                                             |
 | `options.client`         | Class extending the Discord.js client you want to use for your clusters (useful for Frameworks like Commando, Klasa, or Akairo). Defaults to Discord.js client. |
 | `options.guildsPerShard` | Number to calculate how many guilds per shard. Defaults to 1000. Ignored if you set shardCount.                                                                 |
@@ -26,7 +26,7 @@ To use Kurasuta, you can take a look at [example](#example)
 
 ## Cluster
 
-In every cluster when your code is loaded, you get access to `this.client` and `this.id`. `this.client` is an instance of the Client you provided with nearly no modifications beside the `shard` property, Discord.js build-in ShardClientUtil is replaced by Kurasuta's one.
+In every cluster when your code is loaded, you get access to `this.client` and `this.id`. `this.client` is an instance of the Client you provided with nearly no modifications beside the `shard` property, Discord.js's build-in ShardClientUtil is replaced by Kurasuta's.
 
 ### ShardClientUtil
 
@@ -43,7 +43,7 @@ In every cluster when your code is loaded, you get access to `this.client` and `
 
 ## Directory Tree
 
-In this example our setup look like this:
+In this example our setup looks like this:
 
 ```
 Project/
