@@ -1,14 +1,14 @@
-# [No Final Name]
+# Kurasuta
 
 # About
 
-[No Final Name] is a powerful sharding manager for the discord.js library. It uses Node.js's cluster module to spread shards evenly among all cores.
+kurasuta is a powerful sharding manager for the discord.js library. It uses Node.js's cluster module to spread shards evenly among all cores.
 
 # Installation and Usage
-To download [No Final Name], run `npm install [No Final Name]`
-If you use Yarn, run `yarn add [No Final Name]`
+To download kurasuta, run `npm install kurasuta`
+If you use Yarn, run `yarn add kurasuta`
 
-To use [No Final Name], you can take a look at [example](https://github.com/Dev-Yukine/Custom-Sharder#example)
+To use kurasuta, you can take a look at [example](https://github.com/Dev-Yukine/Custom-Sharder#example)
 
 ## ShardingManager
 | Name                     | Description                                                                                                                                             |
@@ -26,7 +26,7 @@ To use [No Final Name], you can take a look at [example](https://github.com/Dev-
 
 ## Cluster
 
-In every cluster when your code is loaded, you get access to `this.client` and `this.id`. `this.client` is an instance of the Client you provided with nearly no modifications beside the `shard` property, d.js build-in ShardClientUtil is replaced by [No Final Name]'s one.
+In every cluster when your code is loaded, you get access to `this.client` and `this.id`. `this.client` is an instance of the Client you provided with nearly no modifications beside the `shard` property, d.js build-in ShardClientUtil is replaced by kurasuta's one.
 
 ### ShardClientUtil
 
@@ -48,7 +48,7 @@ In this example our setup look like this:
 ```
 Project/
 ├── node-modules/
-│   ├── [No Final Name]
+│   ├── kurasuta
 |
 ├── src/
 │   ├── main.js
@@ -57,7 +57,7 @@ Project/
 
 ## Example of main.js
 ```javascript
-const { Cluster } = require('[No Final Name]');
+const { Cluster } = require('kurasuta');
 
 module.exports = class extends Cluster {
 	launch() {
@@ -68,7 +68,7 @@ module.exports = class extends Cluster {
 
 ## Example of index.js
 ```javascript
-const { ShardingManager } = require('[No Final Name]');
+const { ShardingManager } = require('kurasuta');
 const { join } = require('path');
 const sharder = new ShardingManager('YOUR_TOKEN', join(__dirname, 'main'), {
 	// your options here

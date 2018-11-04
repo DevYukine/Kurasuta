@@ -1,5 +1,5 @@
 {
-  "name": "djs-sharder",
+  "name": "kurasuta",
   "version": "0.1.0",
   "description": "A Custom discord.js Sharding Library inspired by eris-sharder.",
   "main": "dist/index.js",
