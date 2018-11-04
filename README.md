@@ -2,42 +2,42 @@
 
 # About
 
-kurasuta is a powerful sharding manager for the discord.js library. It uses Node.js's cluster module to spread shards evenly among all cores.
+Kurasuta is a powerful sharding manager for the discord.js library. It uses Node.js's cluster module to spread shards evenly among all cores.
 
 # Installation and Usage
-To download kurasuta, run `npm install kurasuta`
+To download Kurasuta, run `npm install kurasuta`
 If you use Yarn, run `yarn add kurasuta`
 
-To use kurasuta, you can take a look at [example](https://github.com/Dev-Yukine/Custom-Sharder#example)
+To use Kurasuta, you can take a look at [example](https://github.com/Dev-Yukine/Custom-Sharder#example)
 
 ## ShardingManager
-| Name                     | Description                                                                                                                                             |
-|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `token`                  | Your bot token. It will be used to query the Session endpoint and calculate how many shards to spawn.                                                   |
-| `path`                   | path to a file that exports a class extending `Cluster`. The class must containt a method called "launch".                                              |
-| `options.clientOptions`  | A object of client options you want to pass to the d.js client constructor.                                                                             |
-| `options.clusterCount`   | The number of how many clusters you want. Defaults to the amount of cores                                                                               |
-| `options.shardCount`     | The number of how many shards you want. Defaults to the amount that the gateway reccommends, taking into account `options.guildsPerShard`               |
-| `options.development`    | Boolean to enable development mode.                                                                                                                     |
-| `options.client`         | Class extending the d.js client you want to use for your clusters (usefull for Frameworks like `Commando`, `Klasa` or `Akairo`). Default to d.js Client |
-| `options.guildsPerShard` | Number to calculate how many guilds per shard. Defaults to 1000. Ignored if you set shardCount.                                                         |
-| `options.respawn`        | Boolean indicating if exited Clusters should always get restarted. Default to true                                                                      |
-| `options.ipcSocket`      | Path to Socket that should be used for IPC connections. Default to `//./pipe/tmp/echo.sock` on Windows and `'/tmp/echo.sock'` on Linux                  |
+| Name                     | Description                                                                                                                                                         |
+|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `token`                  | Your bot token. It will be used to query the Session endpoint and calculate how many shards to spawn.                                                               |
+| `path`                   | path to a file that exports a class extending `Cluster`. The class must containt a method called `launch`.                                                          |
+| `options.clientOptions`  | A object of client options you want to pass to the Discord.js client constructor.                                                                                   |
+| `options.clusterCount`   | The number of how many clusters you want. Defaults to the amount of cores.                                                                                          |
+| `options.shardCount`     | The number of how many shards you want. Defaults to the amount that the gateway recommends, taking into account `options.guildsPerShard`.                           |
+| `options.development`    | Boolean to enable development mode.                                                                                                                                 |
+| `options.client`         | Class extending the Discord.js client you want to use for your clusters (useful for Frameworks like `Commando`, `Klasa` or `Akairo`). Default to Discord.js client. |
+| `options.guildsPerShard` | Number to calculate how many guilds per shard. Defaults to 1000. Ignored if you set shardCount.                                                                     |
+| `options.respawn`        | Boolean indicating if exited Clusters should always get restarted. Defaults to `true`.                                                                              |
+| `options.ipcSocket`      | Path to Socket that should be used for IPC connections. Default to `//./pipe/tmp/echo.sock` on Windows and `'/tmp/echo.sock'` on Linux.                             |
 
 ## Cluster
 
-In every cluster when your code is loaded, you get access to `this.client` and `this.id`. `this.client` is an instance of the Client you provided with nearly no modifications beside the `shard` property, d.js build-in ShardClientUtil is replaced by kurasuta's one.
+In every cluster when your code is loaded, you get access to `this.client` and `this.id`. `this.client` is an instance of the Client you provided with nearly no modifications beside the `shard` property, Discord.js build-in ShardClientUtil is replaced by Kurasuta's one.
 
 ### ShardClientUtil
 
-| Method            | Example                                 | Description                                                           | Returns        |
-|-------------------|-----------------------------------------|-----------------------------------------------------------------------|----------------|
-| broadcastEval     | `client.shard.broadcastEval(script);`   | Eval's a script on all Clusters in context of the Client              | Promise<any[]> |
-| masterEval        | `client.shard.masterEval(script);`      | Eval a script on the master process in context of the ShardingManager | Promise<any>   |
-| fetchClientValues | `client.shard.fetchClientValues(prop);` | Fetch a Client value on all Clusters                                  | Promise<any[]> |
-| restartAll        | `client.shard.restartAll()`             | Sends a message to the master process to kill & restart all Clusters  | Promise<void>  |
-| restart           | `client.shard.restart(cluserID)`        | restart a specific cluster by id                                      | Promise<void>  |
-| send              | `client.shard.send(data, options)`      | send a message to the master process                                  | Promise<void>  |
+| Method            | Example                                 | Description                                                             | Returns          |
+|-------------------|-----------------------------------------|-------------------------------------------------------------------------|------------------|
+| broadcastEval     | `client.shard.broadcastEval(script);`   | Evals a script on all Clusters in context of the Client.                | `Promise<any[]>` |
+| masterEval        | `client.shard.masterEval(script);`      | Evals a script on the master process in context of the ShardingManager. | `Promise<any>`   |
+| fetchClientValues | `client.shard.fetchClientValues(prop);` | Fetch a Client value on all Clusters.                                   | `Promise<any[]>` |
+| restartAll        | `client.shard.restartAll()`             | Sends a message to the master process to kill & restart all Clusters.   | `Promise<void>`  |
+| restart           | `client.shard.restart(cluserID)`        | Restart a specific cluster by id.                                       | `Promise<void>`  |
+| send              | `client.shard.send(data, options)`      | send a message to the master process.                                   | `Promise<void>`  |
 
 # Example
 
@@ -48,11 +48,11 @@ In this example our setup look like this:
 ```
 Project/
 ├── node-modules/
-│   ├── kurasuta
+│   └── kurasuta/
 |
-├── src/
-│   ├── main.js
-|   ├── index.js
+└── src/
+    ├── main.js
+    └── index.js
 ```
 
 ## Example of main.js
@@ -61,9 +61,9 @@ const { Cluster } = require('kurasuta');
 
 module.exports = class extends Cluster {
 	launch() {
-		
+
 	}
-}
+};
 ```
 
 ## Example of index.js
