@@ -18,13 +18,13 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "discord.js": "discordjs/discord.js",
     "veza": "^0.3.1"
   },
   "devDependencies": {
     "@types/node": "^10.12.2",
     "@types/node-fetch": "^2.1.2",
     "@types/ws": "^6.0.1",
+    "discord.js": "discordjs/discord.js",
     "fs-nextra": "^0.3.7",
     "gulp": "^3.9.1",
     "gulp-sourcemaps": "^2.6.4",
@@ -32,5 +32,8 @@
     "merge2": "^1.2.3",
     "tslint": "^5.11.0",
     "typescript": "^3.1.6"
+  },
+  "peerDependencies": {
+    "discord.js": "discordjs/discord.js"
   }
 }
