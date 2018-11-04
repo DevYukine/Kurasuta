@@ -26,18 +26,18 @@ To use Kurasuta, you can take a look at [example](#example)
 
 ## Cluster
 
-In every cluster when your code is loaded, you get access to `this.client` and `this.id`. `this.client` is an instance of the Client you provided with nearly no modifications beside the `shard` property, Discord.js' build-in ShardClientUtil is replaced by Kurasuta's.
+In every cluster when your code is loaded, you get access to `this.client` and `this.id`. `this.client` is an instance of the `Client` you provided with nearly no modifications besides the `shard` property, Discord.js' build-in `ShardClientUtil` is replaced by Kurasuta's.
 
 ### ShardClientUtil
 
-| Method            | Example                                 | Description                                                             | Returns          |
-|-------------------|-----------------------------------------|-------------------------------------------------------------------------|------------------|
-| broadcastEval     | `client.shard.broadcastEval(script);`   | Evals a script on all Clusters in context of the Client.                | `Promise<any[]>` |
-| masterEval        | `client.shard.masterEval(script);`      | Evals a script on the master process in context of the ShardingManager. | `Promise<any>`   |
-| fetchClientValues | `client.shard.fetchClientValues(prop);` | Fetch a Client value on all Clusters.                                   | `Promise<any[]>` |
-| restartAll        | `client.shard.restartAll()`             | Sends a message to the master process to kill & restart all Clusters.   | `Promise<void>`  |
-| restart           | `client.shard.restart(cluserID)`        | Restart a specific cluster by id.                                       | `Promise<void>`  |
-| send              | `client.shard.send(data, options)`      | send a message to the master process.                                   | `Promise<void>`  |
+| Method            | Example                                 | Description                                                               | Returns          |
+|-------------------|-----------------------------------------|---------------------------------------------------------------------------|------------------|
+| broadcastEval     | `client.shard.broadcastEval(script);`   | Evals a script on all clusters in context of the `Client`.                | `Promise<any[]>` |
+| masterEval        | `client.shard.masterEval(script);`      | Evals a script on the master process in context of the `ShardingManager`. | `Promise<any>`   |
+| fetchClientValues | `client.shard.fetchClientValues(prop);` | Fetch a `Client` value on all clusters.                                   | `Promise<any[]>` |
+| restartAll        | `client.shard.restartAll()`             | Sends a message to the master process to kill & restart all clusters.     | `Promise<void>`  |
+| restart           | `client.shard.restart(cluserID)`        | Restart a specific cluster by id.                                         | `Promise<void>`  |
+| send              | `client.shard.send(data, options)`      | send a message to the master process.                                     | `Promise<void>`  |
 
 # Example
 
