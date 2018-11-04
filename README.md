@@ -10,7 +10,7 @@ If you use Yarn, run `yarn add [No Final Name]`
 
 To use [No Final Name], you can take a look at [example](https://github.com/Dev-Yukine/Custom-Sharder#example)
 
-## Options for the ShardingManager
+## ShardingManager
 | Name                     | Description                                                                                                                                             |
 |--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `token`                  | Your bot token. It will be used to query the Session endpoint and calculate how many shards to spawn.                                                   |

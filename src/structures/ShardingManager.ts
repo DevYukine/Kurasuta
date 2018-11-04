@@ -11,8 +11,6 @@ import { MasterIPC } from './MasterIPC';
 export const { version } = require('../../package.json');
 
 export type SharderOptions = {
-	token: string;
-	path: string;
 	shardCount?: number | 'auto';
 	clusterCount?: number;
 	name?: string;
@@ -52,10 +50,8 @@ export class ShardingManager extends EventEmitter {
 	public respawn: boolean;
 	public ipcPort: number;
 	public ipc: MasterIPC;
-	public token: string;
-	public path: string;
 
-	constructor(options: SharderOptions) {
+	constructor(public token: string, public path: string, options: SharderOptions) {
 		super();
 		this.clusterCount = options.clusterCount || cpus().length;
 		this.guildsPerShard = options.guildsPerShard || 1000;
@@ -66,8 +62,6 @@ export class ShardingManager extends EventEmitter {
 		this.respawn = options.respawn || true;
 		this.ipcPort = options.ipcPort || 9999;
 		this.ipc = new MasterIPC(this);
-		this.token = options.token;
-		this.path = options.path;
 
 		this.ipc.on('debug', msg => this.emit('debug', msg));
 		this.ipc.on('error', err => this.emit('error', err));
