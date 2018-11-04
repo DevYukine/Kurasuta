@@ -14,10 +14,10 @@ To use Kurasuta, you can take a look at [example](#example)
 | Name                     | Description                                                                                                                                                     |
 |--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `token`                  | Your bot token. It will be used to query the Session endpoint and calculate how many shards to spawn.                                                           |
-| `path`                   | path to a file that exports a class extending `Cluster`. The class must contain a method called `launch`.                                                      |
-| `options.clientOptions`  | An object of client options you want to pass to the Discord.js client constructor.                                                                               |
+| `path`                   | path to a file that exports a class extending `Cluster`. The class must contain a method called `launch`.                                                       |
+| `options.clientOptions`  | An object of client options you want to pass to the Discord.js client constructor.                                                                              |
 | `options.clusterCount`   | The number of how many clusters you want. Defaults to the amount of cores.                                                                                      |
-| `options.shardCount`     | The number of how many shards you want. Defaults to the amount that the gateway recommends, taking `options.guildsPerShard` into account .                       |
+| `options.shardCount`     | The number of how many shards you want. Defaults to the amount that the gateway recommends, taking `options.guildsPerShard` into account .                      |
 | `options.development`    | Boolean to enable development mode.                                                                                                                             |
 | `options.client`         | Class extending the Discord.js client you want to use for your clusters (useful for Frameworks like Commando, Klasa, or Akairo). Defaults to Discord.js client. |
 | `options.guildsPerShard` | Number to calculate how many guilds per shard. Defaults to 1000. Ignored if you set shardCount.                                                                 |
@@ -26,18 +26,18 @@ To use Kurasuta, you can take a look at [example](#example)
 
 ## Cluster
 
-In every cluster when your code is loaded, you get access to `this.client` and `this.id`. `this.client` is an instance of the Client you provided with nearly no modifications beside the `shard` property, Discord.js's build-in ShardClientUtil is replaced by Kurasuta's.
+In every cluster when your code is loaded, you get access to `this.client` and `this.id`. `this.client` is an instance of the `Client` you provided with nearly no modifications besides the `shard` property, Discord.js' build-in `ShardClientUtil` is replaced by Kurasuta's.
 
 ### ShardClientUtil
 
-| Method            | Example                                 | Description                                                             | Returns          |
-|-------------------|-----------------------------------------|-------------------------------------------------------------------------|------------------|
-| broadcastEval     | `client.shard.broadcastEval(script);`   | Evals a script on all Clusters in context of the Client.                | `Promise<any[]>` |
-| masterEval        | `client.shard.masterEval(script);`      | Evals a script on the master process in context of the ShardingManager. | `Promise<any>`   |
-| fetchClientValues | `client.shard.fetchClientValues(prop);` | Fetch a Client value on all Clusters.                                   | `Promise<any[]>` |
-| restartAll        | `client.shard.restartAll()`             | Sends a message to the master process to kill & restart all Clusters.   | `Promise<void>`  |
-| restart           | `client.shard.restart(cluserID)`        | Restart a specific cluster by id.                                       | `Promise<void>`  |
-| send              | `client.shard.send(data, options)`      | send a message to the master process.                                   | `Promise<void>`  |
+| Method            | Example                                 | Description                                                               | Returns          |
+|-------------------|-----------------------------------------|---------------------------------------------------------------------------|------------------|
+| broadcastEval     | `client.shard.broadcastEval(script);`   | Evals a script on all clusters in context of the `Client`.                | `Promise<any[]>` |
+| masterEval        | `client.shard.masterEval(script);`      | Evals a script on the master process in context of the `ShardingManager`. | `Promise<any>`   |
+| fetchClientValues | `client.shard.fetchClientValues(prop);` | Fetch a `Client` value on all clusters.                                   | `Promise<any[]>` |
+| restartAll        | `client.shard.restartAll()`             | Sends a message to the master process to kill & restart all clusters.     | `Promise<void>`  |
+| restart           | `client.shard.restart(cluserID)`        | Restart a specific cluster by id.                                         | `Promise<void>`  |
+| send              | `client.shard.send(data, options)`      | send a message to the master process.                                     | `Promise<void>`  |
 
 # Example
 
