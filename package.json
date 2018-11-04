@@ -18,7 +18,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "discord.js": "discordjs/discord.js#internal-sharding",
+    "discord.js": "discordjs/discord.js",
     "veza": "^0.3.1"
   },
   "devDependencies": {
