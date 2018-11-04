@@ -70,7 +70,7 @@ module.exports = class extends Cluster {
 ```javascript
 const { ShardingManager } = require('kurasuta');
 const { join } = require('path');
-const sharder = new ShardingManager('YOUR_TOKEN', join(__dirname, 'main'), {
+const sharder = new ShardingManager(join(__dirname, 'main'), {
 	// your options here
 });
 ```
