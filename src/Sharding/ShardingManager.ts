@@ -1,4 +1,4 @@
-import { Cluster } from './Cluster';
+import { BaseCluster } from '../Cluster/BaseCluster';
 import { EventEmitter } from 'events';
 import { cpus, platform } from 'os';
 import { Client, ClientOptions } from 'discord.js';
@@ -6,7 +6,8 @@ import { Util } from '../util/Util';
 import { isMaster, fork, Worker } from 'cluster';
 import { http } from '../util/Constants';
 import fetch from 'node-fetch';
-import { MasterIPC } from './MasterIPC';
+import { MasterIPC } from '../IPC/MasterIPC';
+import { Cluster } from '../Cluster/Cluster';
 
 export const { version } = require('../../package.json');
 
@@ -41,20 +42,20 @@ export type SessionObject = {
 };
 
 export class ShardingManager extends EventEmitter {
-	public clusters = new Map<number, ClusterInfo>();
+	public clusters = new Map<number, Cluster>();
 	public clientOptions: ClientOptions;
+	public shardCount: number | 'auto';
+	public guildsPerShard: number;
 	public client: typeof Client;
+	public clusterCount: number;
 	public ipcSocket: string;
+	public respawn: boolean;
+	public ipc: MasterIPC;
 
-	private shardCount: number | 'auto';
-	private guildsPerShard: number;
-	private clusterCount: number;
 	private development: boolean;
-	private respawn: boolean;
 	private token?: string;
-	private ipc: MasterIPC;
 
-	constructor(private path: string, options: SharderOptions) {
+	constructor(public path: string, options: SharderOptions) {
 		super();
 		this.clusterCount = options.clusterCount || cpus().length;
 		this.guildsPerShard = options.guildsPerShard || 1000;
@@ -90,66 +91,33 @@ export class ShardingManager extends EventEmitter {
 			const shardTuple = Util.chunk(shardArray, shardsPerCluster);
 			for (let index = 0; index < this.clusterCount; index++) {
 				const shards = shardTuple.shift()!;
-				const worker = fork({ CLUSTER_SHARDS: shards.join(','), CLUSTER_ID: index, CLUSTER_SHARD_COUNT: this.shardCount, CLUSTER_CLUSTER_COUNT: this.clusterCount });
 
-				this.emit('debug', `Worker spawned with id ${worker.id}`);
+				const cluster = new Cluster({ id: index, shards, manager: this });
 
-				const clusterInfo: ClusterInfo = { worker, shards, ready: false, id: index };
-				if (this.respawn) worker.on('exit', (code, signal) => {
-					this.emit('debug', `Worker exited with code ${code} and signal ${signal}, restarting ...`);
-					this.clusters.delete(index);
-					this.spawnSpecific(clusterInfo);
-				});
+				this.clusters.set(index, cluster);
 
-				this.emit('spawn', clusterInfo);
-
-				this.clusters.set(index, clusterInfo);
-
-				await this._waitReady(shards.length, index);
-				await Util.sleep(5000);
+				await cluster.spawn();
 			}
 		} else {
-			this._run();
+			Cluster._run(this);
 		}
 	}
 
-	public async spawnSpecific(cluster: ClusterInfo): Promise<void> {
-		if (isMaster) {
-			this.emit('debug', `Spawning specific Cluster ${cluster.id}`);
-
-			const worker = fork({ CLUSTER_SHARDS: cluster.shards.join(','), CLUSTER_ID: cluster.id, CLUSTER_SHARD_COUNT: this.shardCount, CLUSTER_CLUSTER_COUNT: this.clusterCount });
-			this.emit('debug', `Worker spawned with id ${worker.id}`);
-
-			this.clusters.set(worker.id, { worker, shards: cluster.shards, ready: false, id: worker.id });
-			await this._waitReady(cluster.shards.length, cluster.id);
-		} else {
-			this._run();
-		}
-	}
-
-	public restartAll(): void {
+	public async restartAll(): Promise<void> {
 		this.emit('debug', 'Restarting all Clusters!');
 
-		for (const workerInfo of this.clusters.values()) {
-			const { worker } = workerInfo;
-			worker.kill();
+		for (const worker of this.clusters.values()) {
+			await worker.respawn();
 		}
-
-		this.clusters.clear();
-
-		this.spawn();
 	}
 
 	public async restart(clusterID: number): Promise<void> {
-		const clusterInfo = this.clusters.get(clusterID);
-		if (!clusterInfo) throw new Error('No Cluster with that ID found.');
+		const cluster = this.clusters.get(clusterID);
+		if (!cluster) throw new Error('No Cluster with that ID found.');
 
 		this.emit('debug', `Restarting Cluster ${clusterID}`);
 
-		const { worker } = clusterInfo;
-
-		if (!worker.isDead) worker.kill();
-		await this.spawnSpecific(clusterInfo);
+		cluster.respawn();
 	}
 
 	public fetchClientValues<T>(prop: string): Promise<T[]> {
@@ -175,19 +143,6 @@ export class ShardingManager extends EventEmitter {
 		if (res.ok)
 			return res.json();
 		throw res;
-	}
-
-	private _run(): void {
-		const ClusterClass = require(this.path);
-		const cluster: Cluster = new ClusterClass(this);
-		cluster.init();
-	}
-
-	private _waitReady(shardCount: number, clusterID: number): Promise<void> {
-		return new Promise((resolve, reject) => {
-			this.once('ready', resolve);
-			setTimeout(() => reject(new Error(`Cluster ${clusterID} took too long to get ready`)), (7500 * shardCount) * (this.guildsPerShard / 1000));
-		});
 	}
 
 	private static _calcShards(shards: number, guildsPerShard = 1000): number {

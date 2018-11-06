@@ -1,10 +1,11 @@
 import { Client, Util } from 'discord.js';
 import { SendOptions } from 'veza';
-import { ClusterIPC } from './ClusterIPC';
+import { ClusterIPC } from '../IPC/ClusterIPC';
+import { IPCEvents } from '../util/Constants';
 
 export type IPCResult = {
 	success: boolean;
-	data: any;
+	d: any;
 };
 
 export class ShardClientUtil {
@@ -29,37 +30,37 @@ export class ShardClientUtil {
 	}
 
 	public async fetchGuild(id: string): Promise<Object> {
-		const { success, data } = await this.send<IPCResult>({ event: '_fetchGuild', id });
+		const { success, d } = await this.send<IPCResult>({ op: IPCEvents.FETCHGUILD, d: id });
 		if (!success) throw new Error('No guild with this id found!');
-		return data;
+		return d;
 	}
 
 	public async fetchUser(id: string): Promise<Object> {
-		const { success, data } = await this.send<IPCResult>({ event: '_fetchUser', id });
+		const { success, d } = await this.send<IPCResult>({ op: IPCEvents.FETCHUSER, d: id });
 		if (!success) throw new Error('No user with this id found!');
-		return data;
+		return d;
 	}
 
 	public async fetchChannel(id: string): Promise<Object> {
-		const { success, data } = await this.send<IPCResult>({ event: '_fetchChannel', id });
+		const { success, d } = await this.send<IPCResult>({ op: IPCEvents.FETCHCHANNEL, d: id });
 		if (!success) throw new Error('No channel with this id found!');
-		return data;
+		return d;
 	}
 
 	public restartAll(): Promise<void> {
-		return this.ipc.server.send({ event: '_restartAll' }, { receptive: false });
+		return this.ipc.server.send({ op: IPCEvents.RESTARTALL }, { receptive: false });
 	}
 
 	public async restart(clusterID: number): Promise<void> {
-		const { success, data } = await this.ipc.server.send<IPCResult>({ event: '_restart', id: clusterID });
-		if (!success) throw Util.makeError(data);
+		const { success, d } = await this.ipc.server.send<IPCResult>({ op: IPCEvents.RESTART, d: clusterID });
+		if (!success) throw Util.makeError(d);
 	}
 
 	public send<T>(data: any, options?: SendOptions): Promise<T> {
 		if (typeof data === 'object') {
-			if (data.event) return this.ipc.server.send(data, options);
+			if (data.op) return this.ipc.server.send(data, options);
 		}
-		return this.ipc.server.send({ event: '_message', data }, options);
+		return this.ipc.server.send({ op: IPCEvents.MESSAGE, d: data }, options);
 	}
 
 	public init(): Promise<void> {

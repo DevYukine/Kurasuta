@@ -1,7 +1,8 @@
 import { ShardingManager } from '..';
 import { Client, ClientOptions } from 'discord.js';
 import { Util } from '../util/Util';
-import { ShardClientUtil } from './ShardClientUtil';
+import { ShardClientUtil } from '../Sharding/ShardClientUtil';
+import { IPCEvents } from '../util/Constants';
 
 export type CloseEvent = {
 	code: number;
@@ -9,7 +10,7 @@ export type CloseEvent = {
 	wasClean: boolean;
 };
 
-export abstract class Cluster {
+export abstract class BaseCluster {
 	public readonly client: Client;
 	public readonly id: number;
 
@@ -30,11 +31,11 @@ export abstract class Cluster {
 	public async init(): Promise<void> {
 		const shardUtil = ((this.client.shard as any) as ShardClientUtil);
 		await shardUtil.init();
-		this.client.once('ready', () => shardUtil.send({ event: '_ready', id: this.id }, { receptive: false }));
-		this.client.on('shardReady', (id: number) => shardUtil.send({ event: '_shardReady', id: this.id, shardID: id }, { receptive: false }));
-		this.client.on('reconnecting', (id: number) => shardUtil.send({ event: '_shardReconnect', id: this.id, shardID: id }, { receptive: false }));
-		this.client.on('resumed', (replayed: number, id: number ) => shardUtil.send({ event: '_shardResumed', id: this.id, shardID: id, replayed }, { receptive: false }));
-		this.client.on('disconnect', (event: CloseEvent, id: number) => shardUtil.send({ event: '_shardDisconnect', id: this.id, shardID: id, closeEvent: event }, { receptive: false }));
+		this.client.once('ready', () => shardUtil.send({ op: IPCEvents.READY, d: this.id }, { receptive: false }));
+		this.client.on('shardReady', (id: number) => shardUtil.send({ op: IPCEvents.SHARDREADY, d: { id: this.id, shardID: id } }, { receptive: false }));
+		this.client.on('reconnecting', (id: number) => shardUtil.send({ op: IPCEvents.SHARDRECONNECT, d: { id: this.id, shardID: id } }, { receptive: false }));
+		this.client.on('resumed', (replayed: number, id: number ) => shardUtil.send({ op: IPCEvents.SHARDRESUME, d: { id: this.id, shardID: id, replayed } }, { receptive: false }));
+		this.client.on('disconnect', (event: CloseEvent, id: number) => shardUtil.send({ op: IPCEvents.SHARDDISCONNECT, d: { id: this.id, shardID: id, closeEvent: event } }, { receptive: false }));
 		this.launch();
 	}
 

@@ -13,7 +13,6 @@ To use Kurasuta, you can take a look at [example](#example)
 ## ShardingManager
 | Name                     | Description                                                                                                                                                     |
 |--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `token`                  | Your bot token. It will be used to query the Session endpoint and calculate how many shards to spawn.                                                           |
 | `path`                   | path to a file that exports a class extending `Cluster`. The class must contain a method called `launch`.                                                       |
 | `options.clientOptions`  | An object of client options you want to pass to the Discord.js client constructor.                                                                              |
 | `options.clusterCount`   | The number of how many clusters you want. Defaults to the amount of cores.                                                                                      |
@@ -23,6 +22,7 @@ To use Kurasuta, you can take a look at [example](#example)
 | `options.guildsPerShard` | Number to calculate how many guilds per shard. Defaults to 1000. Ignored if you set shardCount.                                                                 |
 | `options.respawn`        | Boolean indicating if exited Clusters should always get restarted. Defaults to `true`.                                                                          |
 | `options.ipcSocket`      | Path to Socket that should be used for IPC connections. Default to `//./pipe/tmp/echo.sock` on Windows and `'/tmp/echo.sock'` on Linux.                         |
+| `options.token`          | Token that should be used to fetch the recommend Shard count if no Shard count was provided.                                                                    |
 
 ## Cluster
 

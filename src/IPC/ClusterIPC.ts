@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import { Node, NodeMessage, NodeSocket } from 'veza';
 import { Client, Util } from 'discord.js';
+import { IPCEvents } from '../util/Constants';
 
 export class ClusterIPC extends EventEmitter {
 	public nodeSocket?: NodeSocket;
@@ -19,16 +20,16 @@ export class ClusterIPC extends EventEmitter {
 
 	public async broadcast<T>(script: string | Function): Promise<T[]> {
 		script = typeof script === 'function' ? `(${script})(this)` : script;
-		const { success, data } = await this.server.send({ event: '_broadcast', code: script });
-		if (!success) throw Util.makeError(data);
-		return data;
+		const { success, d } = await this.server.send({ op: IPCEvents.BROADCAST, d: script });
+		if (!success) throw Util.makeError(d);
+		return d;
 	}
 
 	public async masterEval<T>(script: string | Function): Promise<T> {
 		script = typeof script === 'function' ? `(${script})(this)` : script;
-		const { success, data } = await this.server.send({ event: '_masterEval', code: script });
-		if (!success) throw Util.makeError(data);
-		return data;
+		const { success, d } = await this.server.send({ op: IPCEvents.MASTEREVAL, d: script });
+		if (!success) throw Util.makeError(d);
+		return d;
 	}
 
 	public async init() {
@@ -45,12 +46,12 @@ export class ClusterIPC extends EventEmitter {
 	}
 
 	private _message(message: NodeMessage) {
-		const { event, code } = message.data;
-		if (event === '_eval') {
+		const { op, d } = message.data;
+		if (op === IPCEvents.EVAL) {
 			try {
-				message.reply({ success: true, data: this._eval(code) });
+				message.reply({ success: true, d: this._eval(d) });
 			} catch (error) {
-				message.reply({ success: false, data: { name: error.name, message: error.message, stack: error.stack } });
+				message.reply({ success: false, d: { name: error.name, message: error.message, stack: error.stack } });
 			}
 		}
 	}

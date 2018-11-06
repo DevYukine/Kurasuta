@@ -2,3 +2,20 @@ export const http = {
 	version: 7,
 	api: 'https://discordapp.com/api'
 };
+
+export enum IPCEvents {
+	EVAL,
+	MESSAGE,
+	BROADCAST,
+	READY,
+	SHARDREADY,
+	SHARDRECONNECT,
+	SHARDRESUME,
+	SHARDDISCONNECT,
+	MASTEREVAL,
+	RESTARTALL,
+	RESTART,
+	FETCHUSER,
+	FETCHCHANNEL,
+	FETCHGUILD
+}

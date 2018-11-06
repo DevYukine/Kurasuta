@@ -1,4 +1,5 @@
-import { Cluster } from './structures/Cluster';
-import { ShardingManager, version } from './structures/ShardingManager';
+import { BaseCluster } from './Cluster/BaseCluster';
+import { ShardingManager, version } from './Sharding/ShardingManager';
+import { Util } from './util/Util';
 
-export { Cluster, ShardingManager, version };
+export { BaseCluster, ShardingManager, Util, version };
