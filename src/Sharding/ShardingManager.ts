@@ -106,8 +106,8 @@ export class ShardingManager extends EventEmitter {
 	public async restartAll(): Promise<void> {
 		this.emit('debug', 'Restarting all Clusters!');
 
-		for (const worker of this.clusters.values()) {
-			await worker.respawn();
+		for (const cluster of this.clusters.values()) {
+			await cluster.respawn();
 		}
 	}
 
