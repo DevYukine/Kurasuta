@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import { Node, NodeMessage, NodeSocket } from 'veza';
 import { Client, Util } from 'discord.js';
-import { IPCEvents } from '../util/Constants';
+import { IPCEvents } from '../Util/Constants';
 
 export class ClusterIPC extends EventEmitter {
 	public nodeSocket?: NodeSocket;

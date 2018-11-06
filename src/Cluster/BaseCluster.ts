@@ -1,8 +1,8 @@
 import { ShardingManager } from '..';
 import { Client, ClientOptions } from 'discord.js';
-import { Util } from '../util/Util';
+import { Util } from '../Util/Util';
 import { ShardClientUtil } from '../Sharding/ShardClientUtil';
-import { IPCEvents } from '../util/Constants';
+import { IPCEvents } from '../Util/Constants';
 
 export type CloseEvent = {
 	code: number;

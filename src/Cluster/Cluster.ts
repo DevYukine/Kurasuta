@@ -1,6 +1,6 @@
 import { Worker, fork, isMaster } from 'cluster';
 import { ShardingManager, BaseCluster } from '..';
-import { IPCEvents } from '../util/Constants';
+import { IPCEvents } from '../Util/Constants';
 import { IPCResult } from '../Sharding/ShardClientUtil';
 import { Util as DjsUtil } from 'discord.js';
 import { Util } from '../Util/Util';

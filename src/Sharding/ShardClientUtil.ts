@@ -1,7 +1,7 @@
 import { Client, Util } from 'discord.js';
 import { SendOptions } from 'veza';
 import { ClusterIPC } from '../IPC/ClusterIPC';
-import { IPCEvents } from '../util/Constants';
+import { IPCEvents } from '../Util/Constants';
 
 export type IPCResult = {
 	success: boolean;

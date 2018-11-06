@@ -3,7 +3,7 @@ import { Node, NodeMessage, NodeSocket } from 'veza';
 import { Util } from 'discord.js';
 import { ShardingManager } from '..';
 import { isMaster } from 'cluster';
-import { IPCEvents } from '../util/Constants';
+import { IPCEvents } from '../Util/Constants';
 
 export class MasterIPC extends EventEmitter {
 	[key: string]: any;
