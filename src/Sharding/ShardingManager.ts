@@ -1,4 +1,3 @@
-import { BaseCluster } from '../Cluster/BaseCluster';
 import { EventEmitter } from 'events';
 import { cpus, platform } from 'os';
 import { Client, ClientOptions } from 'discord.js';
@@ -64,7 +63,7 @@ export class ShardingManager extends EventEmitter {
 		this.shardCount = options.shardCount || 'auto';
 		this.client = options.client || Client;
 		this.respawn = options.respawn || true;
-		this.ipcSocket = options.ipcSocket || platform() === 'win32' ? '//./pipe/tmp/DiscordBot.sock' : '/tmp/DiscordBot.sock';
+		this.ipcSocket = options.ipcSocket || (platform() === 'win32' ? '//./pipe/tmp/DiscordBot.sock' : '/tmp/DiscordBot.sock');
 		this.token = options.token;
 		this.ipc = new MasterIPC(this);
 
