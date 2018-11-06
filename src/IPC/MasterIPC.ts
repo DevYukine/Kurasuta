@@ -21,7 +21,7 @@ export class MasterIPC extends EventEmitter {
 	}
 
 	public async broadcast<T>(code: string): Promise<T[]> {
-		const data = await this.node.broadcast({ op: IPCEvents.EVAL, code });
+		const data = await this.node.broadcast({ op: IPCEvents.EVAL, d: code });
 		let errored = data.filter(res => !res.success);
 		if (errored.length) {
 			errored = errored.map(msg => msg.data);
