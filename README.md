@@ -57,9 +57,9 @@ Project/
 
 ## Example of main.js
 ```javascript
-const { Cluster } = require('kurasuta');
+const { BaseCluster } = require('kurasuta');
 
-module.exports = class extends Cluster {
+module.exports = class extends BaseCluster {
 	launch() {
 
 	}
