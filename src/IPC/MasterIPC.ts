@@ -28,7 +28,7 @@ export class MasterIPC extends EventEmitter {
 			const error = errored[0];
 			throw Util.makeError(error);
 		}
-		return data.map(res => res.data);
+		return data.map(res => res.d);
 	}
 
 	private _incommingMessage(message: NodeMessage) {
@@ -47,7 +47,7 @@ export class MasterIPC extends EventEmitter {
 			const data = await this.broadcast(d);
 			message.reply({ success: true, d: data });
 		} catch (error) {
-			message.reply({ success: false, data: { name: error.name, message: error.message, stack: error.stack } });
+			message.reply({ success: false, d: { name: error.name, message: error.message, stack: error.stack } });
 		}
 	}
 

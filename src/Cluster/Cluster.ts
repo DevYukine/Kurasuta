@@ -1,4 +1,4 @@
-import { Worker, fork, isMaster } from 'cluster';
+import { Worker, fork } from 'cluster';
 import { ShardingManager, BaseCluster } from '..';
 import { IPCEvents } from '../Util/Constants';
 import { IPCResult } from '../Sharding/ShardClientUtil';
