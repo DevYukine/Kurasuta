@@ -105,15 +105,15 @@ export class MasterIPC extends EventEmitter {
 	}
 
 	private async _fetchuser(message: NodeMessage) {
-		return this._fetch(message, 'const user = this.users.get({id}); user ? user.toJSON() : user;');
+		return this._fetch(message, 'const user = this.users.get(\'{id}\'); user ? user.toJSON() : user;');
 	}
 
 	private async _fetchguild(message: NodeMessage) {
-		return this._fetch(message, 'const guild = this.guilds.get({id}); guild ? guild.toJSON() : guild;');
+		return this._fetch(message, 'const guild = this.guilds.get(\'{id}\'); guild ? guild.toJSON() : guild;');
 	}
 
 	private _fetchchannel(message: NodeMessage) {
-		return this._fetch(message, 'const channel = this.channels.get({id}); channel ? channel.toJSON() : channel;');
+		return this._fetch(message, 'const channel = this.channels.get(\'{id}\'); channel ? channel.toJSON() : channel;');
 	}
 
 	private async _fetch(message: NodeMessage, code: string) {
