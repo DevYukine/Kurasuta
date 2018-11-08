@@ -162,7 +162,7 @@ export class ShardingManager extends EventEmitter {
 		throw res;
 	}
 
-	private static _calcShards(shards: number, guildsPerShard = 1000): number {
-		return shards * (1000 / guildsPerShard);
+	private static _calcShards(shards: number, guildsPerShard: number): number {
+		return Math.ceil(shards * (1000 / guildsPerShard));
 	}
 }
