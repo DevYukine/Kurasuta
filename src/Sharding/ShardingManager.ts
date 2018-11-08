@@ -79,6 +79,10 @@ export class ShardingManager extends EventEmitter {
 
 			this.emit('debug', `Starting ${this.shardCount} Shards in ${this.clusterCount} Clusters!`);
 
+			if (this.shardCount < this.clusterCount) {
+				this.clusterCount = this.shardCount;
+			}
+
 			const shardsPerCluster = Math.round(this.shardCount / this.clusterCount);
 			const shardArray = [...Array(this.shardCount).keys()];
 			const shardTuple = Util.chunk(shardArray, shardsPerCluster);
@@ -110,7 +114,7 @@ export class ShardingManager extends EventEmitter {
 
 		this.emit('debug', `Restarting Cluster ${clusterID}`);
 
-		cluster.respawn();
+		await cluster.respawn();
 	}
 
 	public fetchClientValues<T>(prop: string): Promise<T[]> {
