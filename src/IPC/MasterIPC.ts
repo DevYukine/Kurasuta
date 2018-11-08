@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { Node, NodeMessage, NodeSocket } from 'veza';
+import { Node, NodeMessage } from 'veza';
 import { Util } from 'discord.js';
 import { ShardingManager } from '..';
 import { isMaster } from 'cluster';
@@ -37,8 +37,8 @@ export class MasterIPC extends EventEmitter {
 	}
 
 	private _message(message: NodeMessage) {
-		const { data } = message.data;
-		this.manager.emit('message', data);
+		const { d } = message.data;
+		this.manager.emit('message', d);
 	}
 
 	private async _broadcast(message: NodeMessage) {
@@ -72,15 +72,15 @@ export class MasterIPC extends EventEmitter {
 	}
 
 	private _shardresumed(message: NodeMessage) {
-		const { d: { shardID } } = message.data;
+		const { d: { shardID, replayed } } = message.data;
 		this.manager.emit('debug', `Shard ${shardID} resumed connection`);
-		this.manager.emit('shardResumed', shardID);
+		this.manager.emit('shardResumed', replayed, shardID);
 	}
 
 	private _sharddisconnect(message: NodeMessage) {
-		const { d: { shardID } } = message.data;
+		const { d: { shardID, closeEvent } } = message.data;
 		this.manager.emit('debug', `Shard ${shardID} disconnected!`);
-		this.manager.emit('shardDisconnect', shardID);
+		this.manager.emit('shardDisconnect', closeEvent, shardID);
 	}
 
 	private _restart(message: NodeMessage) {

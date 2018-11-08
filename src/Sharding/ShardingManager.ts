@@ -2,11 +2,12 @@ import { EventEmitter } from 'events';
 import { cpus, platform } from 'os';
 import { Client, ClientOptions } from 'discord.js';
 import { Util } from '../Util/Util';
-import { isMaster, fork, Worker } from 'cluster';
+import { isMaster } from 'cluster';
 import { http } from '../Util/Constants';
 import fetch from 'node-fetch';
 import { MasterIPC } from '../IPC/MasterIPC';
 import { Cluster } from '../Cluster/Cluster';
+import { CloseEvent } from '../Cluster/BaseCluster';
 
 export const { version } = require('../../package.json');
 
@@ -21,13 +22,6 @@ export type SharderOptions = {
 	guildsPerShard?: number,
 	respawn?: boolean;
 	ipcSocket?: string;
-};
-
-export type ClusterInfo = {
-	worker: Worker;
-	shards: number[];
-	ready: boolean;
-	id: number;
 };
 
 export type SessionObject = {
@@ -131,6 +125,26 @@ export class ShardingManager extends EventEmitter {
 				reject(error);
 			}
 		});
+	}
+
+	public on(event: 'debug', listener: (message: string) => void): this;
+	public on(event: 'message', listener: (message: any) => void): this;
+	public on(event: 'ready', listener: (cluster: Cluster) => void): this;
+	public on(event: 'shardReady' | 'shardReconnect', listener: (shardID: number) => void): this;
+	public on(event: 'shardResumed', listener: (replayed: number, shardID: number) => void): this;
+	public on(event: 'shardDisconnect', listener: (closeEvent: CloseEvent, shardID: number) => void): this;
+	public on(event: any, listener: (...args: any[]) => void): this {
+		return super.on(event, listener);
+	}
+
+	public once(event: 'debug', listener: (message: string) => void): this;
+	public once(event: 'message', listener: (message: any) => void): this;
+	public once(event: 'ready', listener: (cluster: Cluster) => void): this;
+	public once(event: 'shardReady' | 'shardReconnect', listener: (shardID: number) => void): this;
+	public once(event: 'shardResumed', listener: (replayed: number, shardID: number) => void): this;
+	public once(event: 'shardDisconnect', listener: (closeEvent: CloseEvent, shardID: number) => void): this;
+	public once(event: any, listener: (...args: any[]) => void): this {
+		return super.once(event, listener);
 	}
 
 	private async _fetchSessionEndpoint(): Promise<SessionObject> {
