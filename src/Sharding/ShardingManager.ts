@@ -133,7 +133,7 @@ export class ShardingManager extends EventEmitter {
 
 	public on(event: 'debug', listener: (message: string) => void): this;
 	public on(event: 'message', listener: (message: any) => void): this;
-	public on(event: 'ready', listener: (cluster: Cluster) => void): this;
+	public on(event: 'ready' | 'spawn', listener: (cluster: Cluster) => void): this;
 	public on(event: 'shardReady' | 'shardReconnect', listener: (shardID: number) => void): this;
 	public on(event: 'shardResumed', listener: (replayed: number, shardID: number) => void): this;
 	public on(event: 'shardDisconnect', listener: (closeEvent: CloseEvent, shardID: number) => void): this;
@@ -143,7 +143,7 @@ export class ShardingManager extends EventEmitter {
 
 	public once(event: 'debug', listener: (message: string) => void): this;
 	public once(event: 'message', listener: (message: any) => void): this;
-	public once(event: 'ready', listener: (cluster: Cluster) => void): this;
+	public once(event: 'ready' | 'spawn', listener: (cluster: Cluster) => void): this;
 	public once(event: 'shardReady' | 'shardReconnect', listener: (shardID: number) => void): this;
 	public once(event: 'shardResumed', listener: (replayed: number, shardID: number) => void): this;
 	public once(event: 'shardDisconnect', listener: (closeEvent: CloseEvent, shardID: number) => void): this;
