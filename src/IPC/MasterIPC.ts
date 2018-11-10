@@ -24,7 +24,7 @@ export class MasterIPC extends EventEmitter {
 		const data = await this.node.broadcast({ op: IPCEvents.EVAL, d: code });
 		let errored = data.filter(res => !res.success);
 		if (errored.length) {
-			errored = errored.map(msg => msg.data);
+			errored = errored.map(msg => msg.d);
 			const error = errored[0];
 			throw Util.makeError(error);
 		}
