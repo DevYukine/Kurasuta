@@ -61,7 +61,7 @@ const { BaseCluster } = require('kurasuta');
 
 module.exports = class extends BaseCluster {
 	launch() {
-
+		this.client.login('YOUR_TOKEN_HERE')
 	}
 };
 ```
@@ -73,4 +73,6 @@ const { join } = require('path');
 const sharder = new ShardingManager(join(__dirname, 'main'), {
 	// your options here
 });
+
+sharder.spawn();
 ```
