@@ -13,20 +13,22 @@ export type ClusterOptions = {
 };
 
 export class Cluster extends EventEmitter {
+	public ready = false;
+	public id: number;
+	public shards: number[];
+	public worker?: Worker;
+	public manager: ShardingManager;
+	public _exitListenerFunction: (...args: any[]) => void;
 
 	constructor(options: ClusterOptions) {
 		super();
 		this.id = options.id;
 		this.shards = options.shards;
 		this.manager = options.manager;
+		this._exitListenerFunction = this._exitListener.bind(this);
 
 		this.once('ready', () => { this.ready = true; });
 	}
-	public ready = false;
-	public id: number;
-	public shards: number[];
-	public worker?: Worker;
-	public manager: ShardingManager;
 
 	public async eval(script: string | Function) {
 		script = typeof script === 'function' ? `(${script})(this)` : script;
@@ -44,7 +46,7 @@ export class Cluster extends EventEmitter {
 	public kill() {
 		if (this.worker) {
 			this.manager.emit('debug', `Killing Cluster ${this.id}`);
-			this.worker.removeListener('exit', this._exitListener);
+			this.worker.removeListener('exit', this._exitListenerFunction);
 			this.worker.kill();
 		}
 	}
@@ -52,7 +54,7 @@ export class Cluster extends EventEmitter {
 	public async respawn(delay = 500) {
 		this.kill();
 		if (delay) await DjsUtil.delayFor(delay);
-		this.spawn();
+		await this.spawn();
 	}
 
 	public send(data: Object) {
@@ -62,7 +64,7 @@ export class Cluster extends EventEmitter {
 	public async spawn() {
 		this.worker = fork({ CLUSTER_SHARDS: this.shards.join(','), CLUSTER_ID: this.id, CLUSTER_SHARD_COUNT: this.manager.shardCount, CLUSTER_CLUSTER_COUNT: this.manager.clusterCount });
 
-		this.worker.on('exit', this._exitListener.bind(this));
+		this.worker.once('exit', this._exitListenerFunction);
 
 		this.manager.emit('debug', `Worker spawned with id ${this.worker.id}`);
 

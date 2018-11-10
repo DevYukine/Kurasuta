@@ -11,6 +11,17 @@ If you use Yarn, run `yarn add kurasuta`
 To use Kurasuta, you can take a look at [example](#example)
 
 ## ShardingManager
+**Important Note** Your Sharder file is also executed by each cluster to access the client, client options and ipcsocket properties. You should make sure to wrap all the code what should only run on the Master process in a if statement checking if the current process is the Master process. This does **not include** ShardingManager#spawn.
+
+Example:
+```js
+const { isMaster } = require('cluster');
+
+if (isMaster) {
+	// Code to run on the Master process here
+}
+
+```
 | Name                     | Description                                                                                                                                                     |
 |--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `path`                   | path to a file that exports a class extending `Cluster`. The class must contain a method called `launch`.                                                       |
