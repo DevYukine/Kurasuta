@@ -73,7 +73,7 @@ export class ShardingManager extends EventEmitter {
 				this.emit('debug', 'Fetching Session Endpoint');
 				const { shards: recommendShards } = await this._fetchSessionEndpoint();
 
-				this.shardCount = ShardingManager._calcShards(recommendShards, this.guildsPerShard);
+				this.shardCount = Util.calcShards(recommendShards, this.guildsPerShard);
 				this.emit('debug', `Using recommend shard count of ${this.shardCount} shards with ${this.guildsPerShard} guilds per shard`);
 			}
 
@@ -83,9 +83,8 @@ export class ShardingManager extends EventEmitter {
 				this.clusterCount = this.shardCount;
 			}
 
-			const shardsPerCluster = Math.round(this.shardCount / this.clusterCount);
 			const shardArray = [...Array(this.shardCount).keys()];
-			const shardTuple = Util.chunk(shardArray, shardsPerCluster);
+			const shardTuple = Util.chunk(shardArray, this.clusterCount);
 			for (let index = 0; index < this.clusterCount; index++) {
 				const shards = shardTuple.shift()!;
 
@@ -96,7 +95,7 @@ export class ShardingManager extends EventEmitter {
 				await cluster.spawn();
 			}
 		} else {
-			Cluster._run(this);
+			Util.startCluster(this);
 		}
 	}
 
@@ -160,9 +159,5 @@ export class ShardingManager extends EventEmitter {
 		if (res.ok)
 			return res.json();
 		throw res;
-	}
-
-	private static _calcShards(shards: number, guildsPerShard: number): number {
-		return Math.ceil(shards * (1000 / guildsPerShard));
 	}
 }

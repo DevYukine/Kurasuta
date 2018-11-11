@@ -2,22 +2,28 @@
 
 import { Constructable } from 'discord.js';
 import { promisify } from 'util';
+import { ShardingManager, BaseCluster } from '..';
 
 export type AnyObj = {
 	[key: string]: any
 };
 
 export abstract class Util {
-	static PRIMITIVE_TYPES = ['string', 'bigint', 'number', 'boolean'];
+	public static PRIMITIVE_TYPES = ['string', 'bigint', 'number', 'boolean'];
 
-	static chunk<T>(entries: T[], chunkSize: number) {
-		const clone = entries.slice();
-		const chunks = [];
-		while (clone.length) chunks.push(clone.splice(0, chunkSize));
-		return chunks;
+	public static chunk<T>(entries: T[], chunkSize: number) {
+		const result = [];
+		const amount = Math.floor(entries.length / chunkSize);
+		const mod = entries.length % chunkSize;
+
+		for (let i = 0; i < chunkSize; i++) {
+			result[i] = entries.splice(0, i < mod ? amount + 1 : amount);
+		}
+
+		return result;
 	}
 
-	static deepClone(source: any): any {
+	public static deepClone(source: any): any {
 		// Check if it's a primitive (with exception of function and null, which is typeof object)
 		if (source === null || Util.isPrimitive(source)) return source;
 		if (Array.isArray(source)) {
@@ -43,11 +49,11 @@ export abstract class Util {
 		return source;
 	}
 
-	static isPrimitive(value: any) {
+	public static isPrimitive(value: any) {
 		return Util.PRIMITIVE_TYPES.includes(typeof value);
 	}
 
-	static mergeDefault<T>(def: AnyObj, given: AnyObj): T {
+	public static mergeDefault<T>(def: AnyObj, given: AnyObj): T {
 		if (!given) return Util.deepClone(def);
 		for (const key in def) {
 			if (typeof given[key] === 'undefined') given[key] = Util.deepClone(def[key]);
@@ -57,11 +63,22 @@ export abstract class Util {
 		return given as any;
 	}
 
-	static isObject(input: any) {
+	public static isObject(input: any) {
 		return input && input.constructor === Object;
 	}
 
-	static sleep(duration: number) {
+	public static sleep(duration: number) {
 		return promisify(setTimeout)(duration);
+	}
+
+	public static calcShards(shards: number, guildsPerShard: number): number {
+		return Math.ceil(shards * (1000 / guildsPerShard));
+	}
+
+	public static startCluster(manager: ShardingManager) {
+		const ClusterClassRequire = require(manager.path);
+		const ClusterClass = ClusterClassRequire.default ? ClusterClassRequire.default : ClusterClassRequire;
+		const cluster: BaseCluster = new ClusterClass(manager);
+		cluster.init();
 	}
 }

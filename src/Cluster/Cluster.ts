@@ -89,11 +89,4 @@ export class Cluster extends EventEmitter {
 			setTimeout(() => reject(new Error(`Cluster ${this.id} took too long to get ready`)), (7500 * shardCount) * (this.manager.guildsPerShard / 1000));
 		});
 	}
-
-	public static _run(manager: ShardingManager) {
-		const ClusterClassRequire = require(manager.path);
-		const ClusterClass = ClusterClassRequire.default ? ClusterClassRequire.default : ClusterClassRequire;
-		const cluster: BaseCluster = new ClusterClass(manager);
-		cluster.init();
-	}
 }
