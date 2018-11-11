@@ -22,6 +22,7 @@ export type SharderOptions = {
 	guildsPerShard?: number,
 	respawn?: boolean;
 	ipcSocket?: string;
+	timeout: number;
 };
 
 export type SessionObject = {
@@ -43,6 +44,7 @@ export class ShardingManager extends EventEmitter {
 	public clusterCount: number;
 	public ipcSocket: string;
 	public respawn: boolean;
+	public timeout: number;
 	public ipc: MasterIPC;
 
 	private development: boolean;
@@ -59,6 +61,7 @@ export class ShardingManager extends EventEmitter {
 		this.respawn = options.respawn || true;
 		this.ipcSocket = options.ipcSocket || (platform() === 'win32' ? '//./pipe/tmp/DiscordBot.sock' : '/tmp/DiscordBot.sock');
 		this.token = options.token;
+		this.timeout = options.timeout || 30000;
 		this.ipc = new MasterIPC(this);
 
 		this.ipc.on('debug', msg => this.emit('debug', msg));
