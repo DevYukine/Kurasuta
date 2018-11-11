@@ -91,7 +91,8 @@ export class Cluster extends EventEmitter {
 	}
 
 	public static _run(manager: ShardingManager) {
-		const ClusterClass = require(manager.path);
+		const ClusterClassRequire = require(manager.path);
+		const ClusterClass = ClusterClassRequire.default ? ClusterClassRequire.default : ClusterClassRequire;
 		const cluster: BaseCluster = new ClusterClass(manager);
 		cluster.init();
 	}
