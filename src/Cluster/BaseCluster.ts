@@ -1,14 +1,14 @@
 import { ShardingManager } from '..';
 import { Client, ClientOptions } from 'discord.js';
-import { Util } from '../Util/Util';
 import { ShardClientUtil } from '../Sharding/ShardClientUtil';
 import { IPCEvents } from '../Util/Constants';
+import * as Util from '../Util/Util';
 
-export type CloseEvent = {
+export interface CloseEvent {
 	code: number;
 	reason: string;
 	wasClean: boolean;
-};
+}
 
 export abstract class BaseCluster {
 	public readonly client: Client;
@@ -16,16 +16,16 @@ export abstract class BaseCluster {
 
 	constructor(public manager: ShardingManager) {
 		const env = process.env;
-		const shards = env['CLUSTER_SHARDS']!.split(',').map(id => Number(id));
+		const shards = env.CLUSTER_SHARDS!.split(',').map(Number);
 		const clientConfig: ClientOptions = Util.mergeDefault<ClientOptions>(manager.clientOptions, {
 			shards,
 			shardCount: shards.length,
-			totalShardCount: Number(env['CLUSTER_SHARD_COUNT'])
+			totalShardCount: Number(env.CLUSTER_SHARD_COUNT)
 		});
 		this.client = new manager.client(clientConfig);
 		const client: any = this.client;
 		client.shard = new ShardClientUtil(client, manager.ipcSocket);
-		this.id = Number(env['CLUSTER_ID']);
+		this.id = Number(env.CLUSTER_ID);
 	}
 
 	public async init(): Promise<void> {

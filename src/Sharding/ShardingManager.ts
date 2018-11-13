@@ -1,39 +1,37 @@
-import { EventEmitter } from 'events';
-import { cpus, platform } from 'os';
+import { CloseEvent } from '../Cluster/BaseCluster';
 import { Client, ClientOptions } from 'discord.js';
-import { Util } from '../Util/Util';
-import { isMaster } from 'cluster';
-import { http } from '../Util/Constants';
-import fetch from 'node-fetch';
 import { MasterIPC } from '../IPC/MasterIPC';
 import { Cluster } from '../Cluster/Cluster';
-import { CloseEvent } from '../Cluster/BaseCluster';
+import { http } from '../Util/Constants';
+import { EventEmitter } from 'events';
+import { cpus, platform } from 'os';
+import { isMaster } from 'cluster';
+import * as Util from '../Util/Util';
+import fetch from 'node-fetch';
 
-export const { version } = require('../../package.json');
-
-export type SharderOptions = {
-	token?: string
+export interface SharderOptions {
+	token?: string;
 	shardCount?: number | 'auto';
 	clusterCount?: number;
 	name?: string;
 	development?: boolean;
-	client?: typeof Client,
+	client?: typeof Client;
 	clientOptions?: ClientOptions;
-	guildsPerShard?: number,
+	guildsPerShard?: number;
 	respawn?: boolean;
 	ipcSocket?: string;
 	timeout: number;
-};
+}
 
-export type SessionObject = {
+export interface SessionObject {
 	url: string;
 	shards: number;
 	session_start_limit: {
 		total: number;
 		remaining: number;
 		reset_after: number;
-	}
-};
+	};
+}
 
 export class ShardingManager extends EventEmitter {
 	public clusters = new Map<number, Cluster>();
@@ -126,6 +124,7 @@ export class ShardingManager extends EventEmitter {
 	public eval<T>(script: string): Promise<T> {
 		return new Promise((resolve, reject) => {
 			try {
+				// tslint:disable-next-line:no-eval
 				return resolve(eval(script));
 			} catch (error) {
 				reject(error);
@@ -159,8 +158,7 @@ export class ShardingManager extends EventEmitter {
 			method: 'GET',
 			headers: { Authorization: `Bot ${this.token.replace(/^Bot\s*/i, '')}` },
 		});
-		if (res.ok)
-			return res.json();
+		if (res.ok) return res.json();
 		throw res;
 	}
 }

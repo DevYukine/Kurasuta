@@ -3,14 +3,14 @@ import { ShardingManager, BaseCluster } from '..';
 import { IPCEvents } from '../Util/Constants';
 import { IPCResult } from '../Sharding/ShardClientUtil';
 import { Util as DjsUtil } from 'discord.js';
-import { Util } from '../Util/Util';
+import * as Util from '../Util/Util';
 import { EventEmitter } from 'events';
 
-export type ClusterOptions = {
+export interface ClusterOptions {
 	id: number;
 	shards: number[];
 	manager: ShardingManager;
-};
+}
 
 export class Cluster extends EventEmitter {
 	public ready = false;
@@ -18,7 +18,8 @@ export class Cluster extends EventEmitter {
 	public shards: number[];
 	public worker?: Worker;
 	public manager: ShardingManager;
-	public _exitListenerFunction: (...args: any[]) => void;
+
+	private _exitListenerFunction: (...args: any[]) => void;
 
 	constructor(options: ClusterOptions) {
 		super();
@@ -57,7 +58,7 @@ export class Cluster extends EventEmitter {
 		await this.spawn();
 	}
 
-	public send(data: Object) {
+	public send(data: object) {
 		return this.manager.ipc.node.sendTo(`Cluster ${this.id}`, data);
 	}
 

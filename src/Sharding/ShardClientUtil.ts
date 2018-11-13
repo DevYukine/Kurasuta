@@ -3,15 +3,15 @@ import { SendOptions } from 'veza';
 import { ClusterIPC } from '../IPC/ClusterIPC';
 import { IPCEvents } from '../Util/Constants';
 
-export type IPCResult = {
+export interface IPCResult {
 	success: boolean;
 	d: any;
-};
+}
 
 export class ShardClientUtil {
-	public readonly clusterCount = Number(process.env['CLUSTER_CLUSTER_COUNT']);
-	public readonly shardCount = Number(process.env['CLUSTER_SHARD_COUNT']);
-	public readonly id = Number(process.env['CLUSTER_ID']);
+	public readonly clusterCount = Number(process.env.CLUSTER_CLUSTER_COUNT);
+	public readonly shardCount = Number(process.env.CLUSTER_SHARD_COUNT);
+	public readonly id = Number(process.env.CLUSTER_ID);
 	public readonly ipc = new ClusterIPC(this.client, this.id, this.ipcSocket);
 
 	constructor(public client: Client, public ipcSocket: string) {
@@ -29,19 +29,19 @@ export class ShardClientUtil {
 		return this.ipc.broadcast(`this.${prop}`);
 	}
 
-	public async fetchGuild(id: string): Promise<Object> {
+	public async fetchGuild(id: string): Promise<object> {
 		const { success, d } = await this.send<IPCResult>({ op: IPCEvents.FETCHGUILD, d: id });
 		if (!success) throw new Error('No guild with this id found!');
 		return d;
 	}
 
-	public async fetchUser(id: string): Promise<Object> {
+	public async fetchUser(id: string): Promise<object> {
 		const { success, d } = await this.send<IPCResult>({ op: IPCEvents.FETCHUSER, d: id });
 		if (!success) throw new Error('No user with this id found!');
 		return d;
 	}
 
-	public async fetchChannel(id: string): Promise<Object> {
+	public async fetchChannel(id: string): Promise<object> {
 		const { success, d } = await this.send<IPCResult>({ op: IPCEvents.FETCHCHANNEL, d: id });
 		if (!success) throw new Error('No channel with this id found!');
 		return d;
