@@ -2336,9 +2336,9 @@ value-or-function@^3.0.0:
   integrity sha1-HCQ6ULWVwb5Up1S/7OhWO5/42BM=
 
 veza@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/veza/-/veza-0.3.1.tgz#6228edf40dacfe97e7c314353a9521db5ab60f13"
-  integrity sha512-R8/Di6S0OlrhbWiyjC9Jlq88VEcj0tdylljOcjSbvHDa3xofRmTNua6iPyLrLw7UrvVnDv5KrCHy3Lep8Nj/Jg==
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/veza/-/veza-0.3.2.tgz#d1c91a462384018055f55f654f00ff61d566d1d5"
+  integrity sha512-x9CePvtXoVC3YDGTOYrpBGMRveruXtQp0ryqI5SdRXiRk0mc9m/bd5dAqPAYeaGKzhtQfhnRtjab4ACOon93gA==
 
 vinyl-fs@^0.3.0:
   version "0.3.14"
