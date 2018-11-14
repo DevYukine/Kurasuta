@@ -96,7 +96,7 @@ export class ShardingManager extends EventEmitter {
 				await cluster.spawn();
 			}
 		} else {
-			Util.startCluster(this);
+			return Util.startCluster(this);
 		}
 	}
 
