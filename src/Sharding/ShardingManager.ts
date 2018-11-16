@@ -20,7 +20,7 @@ export interface SharderOptions {
 	guildsPerShard?: number;
 	respawn?: boolean;
 	ipcSocket?: string;
-	timeout: number;
+	timeout?: number;
 }
 
 export interface SessionObject {
