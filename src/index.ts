@@ -1,7 +1,19 @@
-import { ShardingManager } from './Sharding/ShardingManager';
-import { ShardClientUtil } from './Sharding/ShardClientUtil';
-import { BaseCluster } from './Cluster/BaseCluster';
-import { version } from './Util/Constants';
+import { ShardingManager, SessionObject, SharderOptions } from './Sharding/ShardingManager';
+import { ShardClientUtil, IPCResult } from './Sharding/ShardClientUtil';
+import { BaseCluster, CloseEvent } from './Cluster/BaseCluster';
+import { version, http, IPCEvents } from './Util/Constants';
 import * as Util from './Util/Util';
 
-export { BaseCluster, ShardingManager, Util, ShardClientUtil, version };
+export {
+	BaseCluster,
+	ShardingManager,
+	Util,
+	ShardClientUtil,
+	SessionObject,
+	SharderOptions,
+	IPCResult,
+	CloseEvent,
+	http,
+	IPCEvents,
+	version
+};
