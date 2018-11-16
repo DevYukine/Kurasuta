@@ -2,6 +2,9 @@ import { ShardingManager, SessionObject, SharderOptions } from './Sharding/Shard
 import { ShardClientUtil, IPCResult } from './Sharding/ShardClientUtil';
 import { BaseCluster, CloseEvent } from './Cluster/BaseCluster';
 import { version, http, IPCEvents } from './Util/Constants';
+import { Cluster, ClusterOptions } from './Cluster/Cluster';
+import { ClusterIPC } from './IPC/ClusterIPC';
+import { MasterIPC } from './IPC/MasterIPC';
 import * as Util from './Util/Util';
 
 export {
@@ -15,5 +18,9 @@ export {
 	CloseEvent,
 	http,
 	IPCEvents,
+	Cluster,
+	ClusterOptions,
+	ClusterIPC,
+	MasterIPC,
 	version
 };
