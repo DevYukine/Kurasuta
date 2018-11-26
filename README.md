@@ -47,7 +47,7 @@ In every cluster when your code is loaded, you get access to `this.client` and `
 | masterEval        | `client.shard.masterEval(script);`      | Evals a script on the master process in context of the `ShardingManager`. | `Promise<any>`   |
 | fetchClientValues | `client.shard.fetchClientValues(prop);` | Fetch a `Client` value on all clusters.                                   | `Promise<any[]>` |
 | restartAll        | `client.shard.restartAll()`             | Sends a message to the master process to kill & restart all clusters.     | `Promise<void>`  |
-| restart           | `client.shard.restart(cluserID)`        | Restart a specific cluster by id.                                         | `Promise<void>`  |
+| restart           | `client.shard.restart(clusterID)`        | Restart a specific cluster by id.                                         | `Promise<void>`  |
 | send              | `client.shard.send(data, options)`      | send a message to the master process.                                     | `Promise<void>`  |
 
 # Example
