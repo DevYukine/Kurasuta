@@ -45,11 +45,11 @@ export class ClusterIPC extends EventEmitter {
 		return client._eval(script);
 	}
 
-	private _message(message: NodeMessage) {
+	private async _message(message: NodeMessage) {
 		const { op, d } = message.data;
 		if (op === IPCEvents.EVAL) {
 			try {
-				message.reply({ success: true, d: this._eval(d) });
+				message.reply({ success: true, d: await this._eval(d) });
 			} catch (error) {
 				message.reply({ success: false, d: { name: error.name, message: error.message, stack: error.stack } });
 			}
