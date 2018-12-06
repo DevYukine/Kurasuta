@@ -32,7 +32,7 @@ if (isMaster) {
 | `options.client`         | Class extending the Discord.js client you want to use for your clusters (useful for Frameworks like Commando, Klasa, or Akairo). Defaults to Discord.js client. |
 | `options.guildsPerShard` | Number to calculate how many guilds per shard. Defaults to 1000. Ignored if you set shardCount.                                                                 |
 | `options.respawn`        | Boolean indicating if exited Clusters should always get restarted. Defaults to `true`.                                                                          |
-| `options.ipcSocket`      | Path to Socket that should be used for IPC connections. Default to `//./pipe/tmp/DiscordBot.sock` on Windows and `'/tmp/DiscordBot.sock'` on Linux.                         |
+| `options.ipcSocket`      | Path to Socket or Port that should be used for IPC connections. Defaults to Port 9999.                                                                          |
 | `options.token`          | Token that should be used to fetch the recommend Shard count if no Shard count was provided.                                                                    |
 
 ## Cluster

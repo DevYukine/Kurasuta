@@ -19,7 +19,7 @@ export interface SharderOptions {
 	clientOptions?: ClientOptions;
 	guildsPerShard?: number;
 	respawn?: boolean;
-	ipcSocket?: string;
+	ipcSocket?: string | number;
 	timeout?: number;
 }
 
@@ -40,7 +40,7 @@ export class ShardingManager extends EventEmitter {
 	public guildsPerShard: number;
 	public client: typeof Client;
 	public clusterCount: number;
-	public ipcSocket: string;
+	public ipcSocket: string | number;
 	public respawn: boolean;
 	public timeout: number;
 	public ipc: MasterIPC;
@@ -57,12 +57,12 @@ export class ShardingManager extends EventEmitter {
 		this.shardCount = options.shardCount || 'auto';
 		this.client = options.client || Client;
 		this.respawn = options.respawn || true;
-		this.ipcSocket = options.ipcSocket || (platform() === 'win32' ? '//./pipe/tmp/DiscordBot.sock' : '/tmp/DiscordBot.sock');
+		this.ipcSocket = options.ipcSocket || 9999;
 		this.token = options.token;
 		this.timeout = options.timeout || 30000;
 		this.ipc = new MasterIPC(this);
 
-		this.ipc.on('debug', msg => this.emit('debug', msg));
+		this.ipc.on('debug', msg => this.emit('debug', `[IPC] ${msg}`));
 		this.ipc.on('error', err => this.emit('error', err));
 
 		if (!this.path) throw new Error('You need to supply a Path!');

@@ -81,7 +81,7 @@ export class Cluster extends EventEmitter {
 
 		if (this.manager.respawn) this.respawn();
 
-		this.manager.emit('debug', `Worker exited with code ${code} and signal ${signal}, restarting ...`);
+		this.manager.emit('debug', `Worker exited with code ${code} and signal ${signal}${this.manager.respawn ? ', restarting...' : ''}`);
 	}
 
 	private _waitReady(shardCount: number): Promise<void> {

@@ -12,9 +12,9 @@ export class MasterIPC extends EventEmitter {
 	constructor(public manager: ShardingManager) {
 		super();
 		this.node = new Node('Master')
-			.on('client.identify', client => this.emit('debug', `[IPC] Client Connected: ${client.name}`))
-			.on('client.disconnect', client => this.emit('debug', `[IPC] Client Disconnected: ${client.name}`))
-			.on('client.destroy', client => this.emit('debug', `[IPC] Client Destroyed: ${client.name}`))
+			.on('client.identify', client => this.emit('debug', `Client Connected: ${client.name}`))
+			.on('client.disconnect', client => this.emit('debug', `Client Disconnected: ${client.name}`))
+			.on('client.destroy', client => this.emit('debug', `Client Destroyed: ${client.name}`))
 			.on('error', error => this.emit('error', error))
 			.on('message', this._incommingMessage.bind(this));
 		if (isMaster) this.node.serve(manager.ipcSocket);
