@@ -27,9 +27,9 @@
   integrity sha512-KEIlhXnIutzKwRbQkGWb/I4HFqBuUykAdHgDED6xqwXJfONCjF5VoE0cXEiurh3XauygxzeDzgtXUqvLkxFzzA==
 
 "@types/node-fetch@^2.1.2":
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@types/node-fetch/-/node-fetch-2.1.4.tgz#093d1beae11541aef25999d70aa09286fd025b1a"
-  integrity sha512-tR1ekaXUGpmzOcDXWU9BW73YfA2/VW1DF1FH+wlJ82BbCSnWTbdX+JkqWQXWKIGsFPnPsYadbXfNgz28g+ccWg==
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/@types/node-fetch/-/node-fetch-2.1.5.tgz#94f81fbb0cab2709a5275bbfab7ff93fd7d4bdc0"
+  integrity sha512-GuJUcxJt5VjAmkf23v5P2eBX6bVFp3ZVRFhuZhTLxAytlc8puxGDwdZAmQaV8l7A3mpm/xv14UjhSZIWt1UQAQ==
   dependencies:
     "@types/node" "*"
 
