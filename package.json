@@ -26,7 +26,7 @@
     "@types/node-fetch": "^2.1.2",
     "@types/ws": "^6.0.1",
     "discord.js": "discordjs/discord.js",
-    "fs-nextra": "^0.3.7",
+    "fs-nextra": "^0.4.2",
     "gulp": "^3.9.1",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-typescript": "^5.0.0-alpha.3",
