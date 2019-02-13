@@ -22,7 +22,7 @@
     "veza": "^0.3.1"
   },
   "devDependencies": {
-    "@types/node": "^10.12.6",
+    "@types/node": "^11.9.3",
     "@types/node-fetch": "^2.1.2",
     "@types/ws": "^6.0.1",
     "discord.js": "discordjs/discord.js",
