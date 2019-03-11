@@ -33,10 +33,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*", "@types/node@^10.12.6":
-  version "10.12.12"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.12.tgz#e15a9d034d9210f00320ef718a50c4a799417c47"
-  integrity sha512-Pr+6JRiKkfsFvmU/LK68oBRCQeEg36TyAbPhc2xpez24OOZZCuoIhWGTd39VZy6nGafSbxzGouFPTFD/rR1A0A==
+"@types/node@*", "@types/node@^11.11.0":
+  version "11.11.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-11.11.0.tgz#070e9ce7c90e727aca0e0c14e470f9a93ffe9390"
+  integrity sha512-D5Rt+HXgEywr3RQJcGlZUCTCx1qVbCZpVk3/tOOA6spLNZdGm8BU+zRgdRYDoF1pO3RuXLxADzMrF903JlQXqg==
 
 "@types/ws@^6.0.1":
   version "6.0.1"
