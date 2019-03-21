@@ -8,7 +8,7 @@ export class ClusterIPC extends EventEmitter {
 	public client: Client;
 	public node: Node;
 
-	constructor(discordClient: Client, public id: number, public socket: string) {
+	constructor(discordClient: Client, public id: number, public socket: string | number) {
 		super();
 		this.client = discordClient;
 		this.node = new Node(`Cluster ${this.id}`)
@@ -33,7 +33,7 @@ export class ClusterIPC extends EventEmitter {
 	}
 
 	public async init() {
-		this.nodeSocket = await this.node.connectTo('Master', this.socket);
+		this.nodeSocket = await this.node.connectTo('Master', String(this.socket));
 	}
 
 	public get server() {
