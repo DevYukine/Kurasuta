@@ -8,10 +8,10 @@ export class ClusterIPC extends EventEmitter {
 	public client: Client;
 	public node: Node;
 
-	constructor(discordClient: Client, public id: number, public socket: string) {
+	constructor(discordClient: Client, public id: number, public socket: string | number) {
 		super();
 		this.client = discordClient;
-		this.node = new Node(`Cluster ${this.id}`)
+		this.node = new Node(`K-C-${this.id}`)
 			.on('error', error => this.emit('error', error))
 			.on('client.disconnect', client => this.emit('warn', `[IPC] Disconnected from ${client.name}`))
 			.on('client.ready', client => this.emit('debug', `[IPC] Connected to: ${client.name}`))
@@ -33,7 +33,7 @@ export class ClusterIPC extends EventEmitter {
 	}
 
 	public async init() {
-		this.nodeSocket = await this.node.connectTo('Master', this.socket);
+		this.nodeSocket = await this.node.connectTo('Master', String(this.socket));
 	}
 
 	public get server() {

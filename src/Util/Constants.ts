@@ -1,3 +1,5 @@
+import { BroadcastOptions } from 'veza';
+
 export const http = {
 	version: 7,
 	api: 'https://discordapp.com/api'
@@ -21,3 +23,7 @@ export enum IPCEvents {
 	FETCHCHANNEL,
 	FETCHGUILD
 }
+
+export const BROADCAST_OPTIONS: BroadcastOptions = {
+ filter: /^K-C-\d+$/
+};

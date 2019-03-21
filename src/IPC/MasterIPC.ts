@@ -3,7 +3,7 @@ import { Node, NodeMessage } from 'veza';
 import { Util } from 'discord.js';
 import { ShardingManager } from '..';
 import { isMaster } from 'cluster';
-import { IPCEvents } from '../Util/Constants';
+import { IPCEvents, BROADCAST_OPTIONS } from '../Util/Constants';
 
 export class MasterIPC extends EventEmitter {
 	[key: string]: any;
@@ -21,7 +21,7 @@ export class MasterIPC extends EventEmitter {
 	}
 
 	public async broadcast<T>(code: string): Promise<T[]> {
-		const data = await this.node.broadcast({ op: IPCEvents.EVAL, d: code });
+		const data = await this.node.broadcast({ op: IPCEvents.EVAL, d: code }, BROADCAST_OPTIONS);
 		let errored = data.filter(res => !res.success);
 		if (errored.length) {
 			errored = errored.map(msg => msg.d);

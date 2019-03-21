@@ -14,7 +14,7 @@ export class ShardClientUtil {
 	public readonly id = Number(process.env.CLUSTER_ID);
 	public readonly ipc = new ClusterIPC(this.client, this.id, this.ipcSocket);
 
-	constructor(public client: Client, public ipcSocket: string) {
+	constructor(public client: Client, public ipcSocket: string | number) {
 	}
 
 	public broadcastEval<T>(script: string | Function): Promise<T[]> {
