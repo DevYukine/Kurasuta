@@ -25,5 +25,5 @@ export enum IPCEvents {
 }
 
 export const BROADCAST_OPTIONS: BroadcastOptions = {
- filter: /^K-C-\d+$/
+	filter: /^K-C-\d+$/
 };
