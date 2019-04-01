@@ -22,18 +22,19 @@ if (isMaster) {
 }
 
 ```
-| Name                     | Description                                                                                                                                                     |
-|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `path`                   | path to a file that exports a class extending `Cluster`. The class must contain a method called `launch`.                                                       |
-| `options.clientOptions`  | An object of client options you want to pass to the Discord.js client constructor.                                                                              |
-| `options.clusterCount`   | The number of how many clusters you want. Defaults to the amount of cores.                                                                                      |
-| `options.shardCount`     | The number of how many shards you want. Defaults to the amount that the gateway recommends, taking `options.guildsPerShard` into account .                      |
-| `options.development`    | Boolean to enable development mode.                                                                                                                             |
-| `options.client`         | Class extending the Discord.js client you want to use for your clusters (useful for Frameworks like Commando, Klasa, or Akairo). Defaults to Discord.js client. |
-| `options.guildsPerShard` | Number to calculate how many guilds per shard. Defaults to 1000. Ignored if you set shardCount.                                                                 |
-| `options.respawn`        | Boolean indicating if exited Clusters should always get restarted. Defaults to `true`.                                                                          |
-| `options.ipcSocket`      | Path to Socket or Port that should be used for IPC connections. Defaults to Port 9999.                                                                          |
-| `options.token`          | Token that should be used to fetch the recommend Shard count if no Shard count was provided.                                                                    |
+| Name                     	| Description                                                                                                                                                     	|
+|--------------------------	|-----------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+| `path`                   	| path to a file that exports a class extending `Cluster`. The class must contain a method called `launch`.                                                       	|
+| `options.clientOptions`  	| An object of client options you want to pass to the Discord.js client constructor.                                                                              	|
+| `options.clusterCount`   	| The number of how many clusters you want. Defaults to the amount of cores.                                                                                      	|
+| `options.shardCount`     	| The number of how many shards you want. Defaults to the amount that the gateway recommends, taking `options.guildsPerShard`into account.                        	|
+| `options.development`    	| Boolean to enable development mode.                                                                                                                             	|
+| `options.client`         	| Class extending the Discord.js client you want to use for your clusters (useful for Frameworks like Commando, Klasa, or Akairo). Defaults to Discord.js client. 	|
+| `options.guildsPerShard` 	| Number to calculate how many guilds per shard. Defaults to 1000. Ignored if you set shardCount.                                                                 	|
+| `options.respawn`        	| Boolean indicating if exited Clusters should always get restarted. Defaults to `true` .                                                                         	|
+| `options.ipcSocket`      	| Path to Socket or Port that should be used for IPC connections. Defaults to Port 9999.                                                                          	|
+| `options.token`          	| Token that should be used to fetch the recommend Shard count if no Shard count was provided.                                                                    	|
+| `options.timeout`        	| Time per shard to wait before assuming that a Cluster can't get ready in ms. Defaults to 30000                                                                  	|
 
 ## Cluster
 
