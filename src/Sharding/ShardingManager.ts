@@ -86,6 +86,8 @@ export class ShardingManager extends EventEmitter {
 
 			const shardArray = [...Array(this.shardCount).keys()];
 			const shardTuple = Util.chunk(shardArray, this.clusterCount);
+			const failed: Cluster[] = [];
+
 			for (let index = 0; index < this.clusterCount; index++) {
 				const shards = shardTuple.shift()!;
 
@@ -93,8 +95,16 @@ export class ShardingManager extends EventEmitter {
 
 				this.clusters.set(index, cluster);
 
-				await cluster.spawn();
+				try {
+					await cluster.spawn();
+				} catch (error) {
+					this.emit('debug', `Cluster ${cluster.id} failed to start, enqueue and retry`);
+					this.emit('error', new Error(`Cluster ${cluster.id} failed to start`));
+					failed.push(cluster);
+				}
 			}
+
+			await this.retryFailed(failed);
 		} else {
 			return Util.startCluster(this);
 		}
@@ -150,6 +160,20 @@ export class ShardingManager extends EventEmitter {
 	public once(event: 'shardDisconnect', listener: (closeEvent: CloseEvent, shardID: number) => void): this;
 	public once(event: any, listener: (...args: any[]) => void): this {
 		return super.once(event, listener);
+	}
+
+	private async retryFailed(clusters: Cluster[]): Promise<void> {
+		const failed: Cluster[] = [];
+
+		for (const cluster of clusters) {
+			try {
+				await cluster.respawn();
+			} catch (error) {
+				failed.push(cluster);
+			}
+		}
+
+		if (failed.length) return this.retryFailed(failed);
 	}
 
 	private async _fetchSessionEndpoint(): Promise<SessionObject> {
