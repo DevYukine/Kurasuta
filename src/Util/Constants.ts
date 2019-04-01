@@ -3,7 +3,7 @@ export const http = {
 	api: 'https://discordapp.com/api'
 };
 
-export const version = '0.2.17';
+export const version = '0.2.18';
 
 export enum IPCEvents {
 	EVAL,
