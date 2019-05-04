@@ -86,7 +86,9 @@ export class Cluster extends EventEmitter {
 
 	private _waitReady(shardCount: number): Promise<void> {
 		return new Promise((resolve, reject) => {
-			this.manager.client.once('KashimaReady', resolve);
+			this.once('ready', () => {
+				this.manager.client.once('KashimaReady', resolve);
+			});
 			setTimeout(() => reject(new Error(`Cluster ${this.id} took too long to get ready`)), (this.manager.timeout * shardCount) * (this.manager.guildsPerShard / 1000));
 		});
 	}
