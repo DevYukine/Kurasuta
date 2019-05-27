@@ -2369,10 +2369,10 @@ value-or-function@^3.0.0:
   resolved "https://registry.yarnpkg.com/value-or-function/-/value-or-function-3.0.0.tgz#1c243a50b595c1be54a754bfece8563b9ff8d813"
   integrity sha1-HCQ6ULWVwb5Up1S/7OhWO5/42BM=
 
-veza@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/veza/-/veza-0.4.0.tgz#592d0752bdf29aced29bb49a2966cbf1977ca6f9"
-  integrity sha512-WIxsWppQ0yPv2NyxujZ8WjPl/rkqMIp+QdOkoJyKl2C+PGbiri/gDXumA9HjvRtnCTZJiMt3duhEhM/igLE8SQ==
+veza@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/veza/-/veza-0.5.0.tgz#b66e33fda83aac5490d6e25d5e036f870cbf166a"
+  integrity sha512-KyPotWWG4GIm9nZnBDA43vHf/s2tJIJJTyGSI7Dw6xu/gLoDohSzWbFM04B9a+5XR8+UrXMicsS3WoaSGwKJHA==
 
 vinyl-fs@^0.3.0:
   version "0.3.14"
