@@ -33,13 +33,13 @@ export class Cluster extends EventEmitter {
 
 	public async eval(script: string | Function) {
 		script = typeof script === 'function' ? `(${script})(this)` : script;
-		const { success, d } = await this.manager.ipc.node.sendTo<IPCResult>(`Cluster ${this.id}`, { op: IPCEvents.EVAL, d: script });
+		const { success, d } = await this.manager.ipc.node.sendTo(`Cluster ${this.id}`, { op: IPCEvents.EVAL, d: script }) as IPCResult;
 		if (!success) throw DjsUtil.makeError(d);
 		return d;
 	}
 
 	public async fetchClientValue(prop: string) {
-		const { success, d } = await this.manager.ipc.node.sendTo<IPCResult>(`Cluster ${this.id}`, { op: IPCEvents.EVAL, d: `this.${prop}` });
+		const { success, d } = await this.manager.ipc.node.sendTo(`Cluster ${this.id}`, { op: IPCEvents.EVAL, d: `this.${prop}` }) as IPCResult;
 		if (!success) throw DjsUtil.makeError(d);
 		return d;
 	}

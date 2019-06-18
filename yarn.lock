@@ -210,6 +210,11 @@ beeper@^1.0.0:
   resolved "https://registry.yarnpkg.com/beeper/-/beeper-1.1.1.tgz#e6d5ea8c5dad001304a70b22638447f69cb2f809"
   integrity sha1-5tXqjF2tABMEpwsiY4RH9pyy+Ak=
 
+binarytf@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/binarytf/-/binarytf-1.0.0.tgz#dcf339922fa286511fa8603e2d5ef8e4483eb623"
+  integrity sha512-H2b3ax8maE7AilKMAA0mSHECHWn1aEIgmiMsUcAVfseZ49pPZsVxRiwMyi3CqGyQQ9Syyg2UZXIc3TSaU2ohdA==
+
 brace-expansion@^1.0.0, brace-expansion@^1.1.7:
   version "1.1.11"
   resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.11.tgz#3c7fcbf529d87226f3d2f52b966ff5271eb441dd"
@@ -505,7 +510,6 @@ diff@^3.2.0:
 
 discord.js@discordjs/discord.js:
   version "12.0.0-dev"
-  uid d34b62414bca3a73cd5a3df9d2d5b2fcb81557b5
   resolved "https://codeload.github.com/discordjs/discord.js/tar.gz/d34b62414bca3a73cd5a3df9d2d5b2fcb81557b5"
   dependencies:
     form-data "^2.3.3"
@@ -2369,10 +2373,12 @@ value-or-function@^3.0.0:
   resolved "https://registry.yarnpkg.com/value-or-function/-/value-or-function-3.0.0.tgz#1c243a50b595c1be54a754bfece8563b9ff8d813"
   integrity sha1-HCQ6ULWVwb5Up1S/7OhWO5/42BM=
 
-veza@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/veza/-/veza-0.5.0.tgz#b66e33fda83aac5490d6e25d5e036f870cbf166a"
-  integrity sha512-KyPotWWG4GIm9nZnBDA43vHf/s2tJIJJTyGSI7Dw6xu/gLoDohSzWbFM04B9a+5XR8+UrXMicsS3WoaSGwKJHA==
+veza@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/veza/-/veza-0.6.0.tgz#d19fbfe85d143d0a6ae0cd3f7665ea59bb57062f"
+  integrity sha512-TKRn0m6xk+pYIGPD6mlq3fnLESnHzgMntkxg5/Vc/W0n60GmzrYfNYd0lirVNSvYTT8TEXlABTUd+rxfxy0mAQ==
+  dependencies:
+    binarytf "1.0.0"
 
 vinyl-fs@^0.3.0:
   version "0.3.14"
