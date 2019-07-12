@@ -32,10 +32,7 @@ export class MasterIPC extends EventEmitter {
 	}
 
 	private _incommingMessage(message: NodeMessage) {
-		if (isNaN(message.data.op)) {
-		    // For custom implementations
-                    return this._message(message);
-		}
+		if (isNaN(message.data.op)) return;
 		const { op }: { op: number } = message.data;
 		this[`_${IPCEvents[op].toLowerCase()}`](message);
 	}
