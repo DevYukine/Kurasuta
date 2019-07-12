@@ -33,8 +33,7 @@ export class MasterIPC extends EventEmitter {
 
 	private _incommingMessage(message: NodeMessage) {
 		const { op }: { op: number } = message.data;
-		const event = IPCEvents[op];
-		if (!event) return;
+		const event = IPCEvents[op] ? IPCEvents[op] : IPCEvents.MESSAGE;
 		this[`_${event.toLowerCase()}`](message);
 	}
 
