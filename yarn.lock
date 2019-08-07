@@ -210,6 +210,11 @@ beeper@^1.0.0:
   resolved "https://registry.yarnpkg.com/beeper/-/beeper-1.1.1.tgz#e6d5ea8c5dad001304a70b22638447f69cb2f809"
   integrity sha1-5tXqjF2tABMEpwsiY4RH9pyy+Ak=
 
+binarytf@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/binarytf/-/binarytf-2.0.0.tgz#c5476cc5cdf023d075b9b8fa62612b86d36f666c"
+  integrity sha512-CS0MvijAFAHBBw4LgIHBP7wzdW3KWEB0KeMjblK0rHOyyhnkoMu3puW7uhJXlnS5WDn5M2XQFaQBtw00FwRfcA==
+
 brace-expansion@^1.0.0, brace-expansion@^1.1.7:
   version "1.1.11"
   resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.11.tgz#3c7fcbf529d87226f3d2f52b966ff5271eb441dd"
@@ -2369,10 +2374,12 @@ value-or-function@^3.0.0:
   resolved "https://registry.yarnpkg.com/value-or-function/-/value-or-function-3.0.0.tgz#1c243a50b595c1be54a754bfece8563b9ff8d813"
   integrity sha1-HCQ6ULWVwb5Up1S/7OhWO5/42BM=
 
-veza@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/veza/-/veza-0.5.0.tgz#b66e33fda83aac5490d6e25d5e036f870cbf166a"
-  integrity sha512-KyPotWWG4GIm9nZnBDA43vHf/s2tJIJJTyGSI7Dw6xu/gLoDohSzWbFM04B9a+5XR8+UrXMicsS3WoaSGwKJHA==
+veza@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/veza/-/veza-1.0.0.tgz#d526f19f0aff4802e679cd91165aabbe633488f4"
+  integrity sha512-Bt6AWYsl+mA0blnIreMkqRW6OCeF81beiw39o1IVK8GSt760B10IORnIzxbSYV813ZVTtGvToab0gX+ZqQKjew==
+  dependencies:
+    binarytf "^2.0.0"
 
 vinyl-fs@^0.3.0:
   version "0.3.14"
