@@ -1,7 +1,6 @@
 // Copyright (c) 2017-2018 dirigeants. All rights reserved. MIT license.
 
 import { Constructable } from 'discord.js';
-import { promisify } from 'util';
 import { ShardingManager, BaseCluster } from '..';
 
 export interface AnyObj {
@@ -67,7 +66,7 @@ export function isObject(input: any) {
 }
 
 export function sleep(duration: number) {
-	return promisify(setTimeout)(duration);
+	return new Promise((resolve) => setTimeout(resolve, duration));
 }
 
 export function calcShards(shards: number, guildsPerShard: number): number {
