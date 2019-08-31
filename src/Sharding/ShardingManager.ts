@@ -21,6 +21,7 @@ export interface SharderOptions {
 	respawn?: boolean;
 	ipcSocket?: string | number;
 	timeout?: number;
+	retry?: boolean;
 }
 
 export interface SessionObject {
@@ -43,6 +44,7 @@ export class ShardingManager extends EventEmitter {
 	public ipcSocket: string | number;
 	public respawn: boolean;
 	public timeout: number;
+	public retry: boolean;
 	public ipc: MasterIPC;
 
 	private development: boolean;
@@ -58,11 +60,12 @@ export class ShardingManager extends EventEmitter {
 		this.client = options.client || Client;
 		this.respawn = options.respawn || true;
 		this.ipcSocket = options.ipcSocket || 9999;
-		this.token = options.token;
+		this.retry = options.retry || true;
 		this.timeout = options.timeout || 30000;
+		this.token = options.token;
 		this.ipc = new MasterIPC(this);
 
-		this.ipc.on('debug', msg => this.emit('debug', `[IPC] ${msg}`));
+		this.ipc.on('debug', msg => this._debug(`[IPC] ${msg}`));
 		this.ipc.on('error', err => this.emit('error', err));
 
 		if (!this.path) throw new Error('You need to supply a Path!');
@@ -71,14 +74,14 @@ export class ShardingManager extends EventEmitter {
 	public async spawn() {
 		if (isMaster) {
 			if (this.shardCount === 'auto') {
-				this.emit('debug', 'Fetching Session Endpoint');
+				this._debug('Fetching Session Endpoint');
 				const { shards: recommendShards } = await this._fetchSessionEndpoint();
 
 				this.shardCount = Util.calcShards(recommendShards, this.guildsPerShard);
-				this.emit('debug', `Using recommend shard count of ${this.shardCount} shards with ${this.guildsPerShard} guilds per shard`);
+				this._debug(`Using recommend shard count of ${this.shardCount} shards with ${this.guildsPerShard} guilds per shard`);
 			}
 
-			this.emit('debug', `Starting ${this.shardCount} Shards in ${this.clusterCount} Clusters!`);
+			this._debug(`Starting ${this.shardCount} Shards in ${this.clusterCount} Clusters!`);
 
 			if (this.shardCount < this.clusterCount) {
 				this.clusterCount = this.shardCount;
@@ -97,21 +100,24 @@ export class ShardingManager extends EventEmitter {
 
 				try {
 					await cluster.spawn();
-				} catch (error) {
-					this.emit('debug', `Cluster ${cluster.id} failed to start, enqueue and retry`);
+				} catch {
+					this._debug(`Cluster ${cluster.id} failed to start`);
 					this.emit('error', new Error(`Cluster ${cluster.id} failed to start`));
-					failed.push(cluster);
+					if (this.retry) {
+						this._debug(`Requeuing Cluster ${cluster.id} to be spawned`);
+						failed.push(cluster);
+					}
 				}
 			}
 
-			await this.retryFailed(failed);
+			if (this.retry) await this.retryFailed(failed);
 		} else {
 			return Util.startCluster(this);
 		}
 	}
 
 	public async restartAll() {
-		this.emit('debug', 'Restarting all Clusters!');
+		this._debug('Restarting all Clusters!');
 
 		for (const cluster of this.clusters.values()) {
 			await cluster.respawn();
@@ -122,7 +128,7 @@ export class ShardingManager extends EventEmitter {
 		const cluster = this.clusters.get(clusterID);
 		if (!cluster) throw new Error('No Cluster with that ID found.');
 
-		this.emit('debug', `Restarting Cluster ${clusterID}`);
+		this._debug(`Restarting Cluster ${clusterID}`);
 
 		await cluster.respawn();
 	}
@@ -131,7 +137,7 @@ export class ShardingManager extends EventEmitter {
 		return this.ipc.broadcast(`this.${prop}`);
 	}
 
-	public eval<T>(script: string): Promise<T> {
+	public eval(script: string) {
 		return new Promise((resolve, reject) => {
 			try {
 				// tslint:disable-next-line:no-eval
@@ -167,13 +173,18 @@ export class ShardingManager extends EventEmitter {
 
 		for (const cluster of clusters) {
 			try {
+				this._debug(`Respawning Cluster ${cluster.id}`);
 				await cluster.respawn();
 			} catch {
+				this._debug(`Cluster ${cluster.id} failed, requeuing...`);
 				failed.push(cluster);
 			}
 		}
 
-		if (failed.length) return this.retryFailed(failed);
+		if (failed.length) {
+			this._debug(`${failed.length} Clusters still failed, retry...`);
+			return this.retryFailed(failed);
+		}
 	}
 
 	private async _fetchSessionEndpoint(): Promise<SessionObject> {
@@ -184,5 +195,9 @@ export class ShardingManager extends EventEmitter {
 		});
 		if (res.ok) return res.json();
 		throw res;
+	}
+
+	private _debug(message: string) {
+		this.emit('debug', message);
 	}
 }
