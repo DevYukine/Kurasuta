@@ -2,7 +2,7 @@ import { CloseEvent } from '../Cluster/BaseCluster';
 import { Client, ClientOptions } from 'discord.js';
 import { MasterIPC } from '../IPC/MasterIPC';
 import { Cluster } from '../Cluster/Cluster';
-import { http } from '../Util/Constants';
+import { http, SharderEvents } from '../Util/Constants';
 import { EventEmitter } from 'events';
 import { cpus } from 'os';
 import { isMaster } from 'cluster';
@@ -66,7 +66,7 @@ export class ShardingManager extends EventEmitter {
 		this.ipc = new MasterIPC(this);
 
 		this.ipc.on('debug', msg => this._debug(`[IPC] ${msg}`));
-		this.ipc.on('error', err => this.emit('error', err));
+		this.ipc.on('error', err => this.emit(SharderEvents.ERROR, err));
 
 		if (!this.path) throw new Error('You need to supply a Path!');
 	}
@@ -102,7 +102,7 @@ export class ShardingManager extends EventEmitter {
 					await cluster.spawn();
 				} catch {
 					this._debug(`Cluster ${cluster.id} failed to start`);
-					this.emit('error', new Error(`Cluster ${cluster.id} failed to start`));
+					this.emit(SharderEvents.ERROR, new Error(`Cluster ${cluster.id} failed to start`));
 					if (this.retry) {
 						this._debug(`Requeuing Cluster ${cluster.id} to be spawned`);
 						failed.push(cluster);
@@ -148,22 +148,22 @@ export class ShardingManager extends EventEmitter {
 		});
 	}
 
-	public on(event: 'debug', listener: (message: string) => void): this;
-	public on(event: 'message', listener: (message: any) => void): this;
-	public on(event: 'ready' | 'spawn', listener: (cluster: Cluster) => void): this;
-	public on(event: 'shardReady' | 'shardReconnect', listener: (shardID: number) => void): this;
-	public on(event: 'shardResumed', listener: (replayed: number, shardID: number) => void): this;
-	public on(event: 'shardDisconnect', listener: (closeEvent: CloseEvent, shardID: number) => void): this;
+	public on(event: SharderEvents.DEBUG, listener: (message: string) => void): this;
+	public on(event: SharderEvents.MESSAGE, listener: (message: unknown) => void): this;
+	public on(event: SharderEvents.READY | SharderEvents.SPAWN, listener: (cluster: Cluster) => void): this;
+	public on(event: SharderEvents.SHARD_READY | SharderEvents.SHARD_RECONNECT, listener: (shardID: number) => void): this;
+	public on(event: SharderEvents.SHARD_RESUME, listener: (replayed: number, shardID: number) => void): this;
+	public on(event: SharderEvents.SHARD_DISCONNECT, listener: (closeEvent: CloseEvent, shardID: number) => void): this;
 	public on(event: any, listener: (...args: any[]) => void): this {
 		return super.on(event, listener);
 	}
 
-	public once(event: 'debug', listener: (message: string) => void): this;
-	public once(event: 'message', listener: (message: any) => void): this;
-	public once(event: 'ready' | 'spawn', listener: (cluster: Cluster) => void): this;
-	public once(event: 'shardReady' | 'shardReconnect', listener: (shardID: number) => void): this;
-	public once(event: 'shardResumed', listener: (replayed: number, shardID: number) => void): this;
-	public once(event: 'shardDisconnect', listener: (closeEvent: CloseEvent, shardID: number) => void): this;
+	public once(event: SharderEvents.DEBUG, listener: (message: string) => void): this;
+	public once(event: SharderEvents.MESSAGE, listener: (message: unknown) => void): this;
+	public once(event: SharderEvents.READY | SharderEvents.SPAWN, listener: (cluster: Cluster) => void): this;
+	public once(event: SharderEvents.SHARD_READY | SharderEvents.SHARD_RECONNECT, listener: (shardID: number) => void): this;
+	public once(event: SharderEvents.SHARD_RESUME, listener: (replayed: number, shardID: number) => void): this;
+	public once(event: SharderEvents.SHARD_DISCONNECT, listener: (closeEvent: CloseEvent, shardID: number) => void): this;
 	public once(event: any, listener: (...args: any[]) => void): this {
 		return super.once(event, listener);
 	}
@@ -198,6 +198,6 @@ export class ShardingManager extends EventEmitter {
 	}
 
 	private _debug(message: string) {
-		this.emit('debug', message);
+		this.emit(SharderEvents.DEBUG, message);
 	}
 }

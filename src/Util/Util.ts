@@ -4,7 +4,7 @@ import { Constructable } from 'discord.js';
 import { promisify } from 'util';
 import { ShardingManager, BaseCluster } from '..';
 
-export interface AnyObj {
+export interface UnkownObject {
 	[key: string]: any;
 }
 
@@ -31,7 +31,7 @@ export function deepClone(source: any): any {
 		return output;
 	}
 	if (isObject(source)) {
-		const output: AnyObj = {};
+		const output = {} as UnkownObject;
 		for (const [key, value] of Object.entries(source)) output[key] = deepClone(value);
 		return output;
 	}
@@ -52,7 +52,7 @@ export function isPrimitive(value: any) {
 	return PRIMITIVE_TYPES.includes(typeof value);
 }
 
-export function mergeDefault<T>(def: AnyObj, given: AnyObj): T {
+export function mergeDefault<T>(def: UnkownObject, given: UnkownObject): T {
 	if (!given) return deepClone(def);
 	for (const key in def) {
 		if (typeof given[key] === 'undefined') given[key] = deepClone(def[key]);

@@ -1,7 +1,7 @@
 import { Worker, fork } from 'cluster';
 import { ShardingManager } from '..';
 import { IPCEvents } from '../Util/Constants';
-import { IPCResult } from '../Sharding/ShardClientUtil';
+import { IPCResult, IPCError } from '../Sharding/ShardClientUtil';
 import { Util as DjsUtil } from 'discord.js';
 import * as Util from '../Util/Util';
 import { EventEmitter } from 'events';
@@ -34,13 +34,13 @@ export class Cluster extends EventEmitter {
 	public async eval(script: string | Function) {
 		script = typeof script === 'function' ? `(${script})(this)` : script;
 		const { success, d } = await this.manager.ipc.server.sendTo(`Cluster ${this.id}`, { op: IPCEvents.EVAL, d: script }) as IPCResult;
-		if (!success) throw DjsUtil.makeError(d);
+		if (!success) throw DjsUtil.makeError(d as IPCError);
 		return d;
 	}
 
 	public async fetchClientValue(prop: string) {
 		const { success, d } = await this.manager.ipc.server.sendTo(`Cluster ${this.id}`, { op: IPCEvents.EVAL, d: `this.${prop}` }) as IPCResult;
-		if (!success) throw DjsUtil.makeError(d);
+		if (!success) throw DjsUtil.makeError(d as IPCError);
 		return d;
 	}
 

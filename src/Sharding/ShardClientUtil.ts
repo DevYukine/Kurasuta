@@ -5,7 +5,13 @@ import { SendOptions } from 'veza';
 
 export interface IPCResult {
 	success: boolean;
-	d: any;
+	d: unknown;
+}
+
+export interface IPCError {
+	name: string;
+	message: string;
+	stack: string;
 }
 
 export class ShardClientUtil {
@@ -53,7 +59,7 @@ export class ShardClientUtil {
 
 	public async restart(clusterID: number) {
 		const { success, d } = await this.ipc.server.send({ op: IPCEvents.RESTART, d: clusterID }) as IPCResult;
-		if (!success) throw Util.makeError(d);
+		if (!success) throw Util.makeError(d as IPCError);
 	}
 
 	public send(data: any, options?: SendOptions) {

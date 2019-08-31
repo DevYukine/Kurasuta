@@ -12,7 +12,7 @@ export enum IPCEvents {
 	READY,
 	SHARDREADY,
 	SHARDRECONNECT,
-	SHARDRESUMED,
+	SHARDRESUME,
 	SHARDDISCONNECT,
 	MASTEREVAL,
 	RESTARTALL,
@@ -20,4 +20,16 @@ export enum IPCEvents {
 	FETCHUSER,
 	FETCHCHANNEL,
 	FETCHGUILD
+}
+
+export enum SharderEvents {
+	DEBUG = 'debug',
+	MESSAGE = 'message',
+	READY = 'ready',
+	SPAWN = 'spawn',
+	SHARD_READY = 'shardReady',
+	SHARD_RECONNECT = 'shardReconnect',
+	SHARD_RESUME = 'shardResume',
+	SHARD_DISCONNECT = 'shardDisconnect',
+	ERROR = 'error'
 }

@@ -35,6 +35,21 @@ if (isMaster) {
 | `options.ipcSocket`      	| Path to Socket or Port that should be used for IPC connections. Defaults to Port 9999.                                                                          	|
 | `options.token`          	| Token that should be used to fetch the recommend Shard count if no Shard count was provided.                                                                    	|
 | `options.timeout`        	| Time per shard to wait before assuming that a Cluster can't get ready in ms. Defaults to 30000                                                                  	|
+| `option.retry`           	| Boolean indicating if Clusters which fail to start but not exit should be restarted. Defaults to true                                                         	|
+
+### Events
+
+| Name            	| Argument(s)                                 	| Description                                              	|
+|-----------------	|---------------------------------------------	|----------------------------------------------------------	|
+| debug           	| message: `string`                           	| Emitted for debug messages                               	|
+| message         	| message: `unknown`                          	| Emitted for custom messages sent from Cluster to Manager 	|
+| ready           	| cluster: `Cluster`                          	| Emitted when a Cluster becomes ready                     	|
+| spawn           	| cluster: `Cluster`                          	| Emitted when a Cluster spawns                            	|
+| shardReady      	| shardID: `number`                           	| Emitted when a Shard becomes ready                       	|
+| shardReconnect  	| shardID: `number`                           	| Emitted when a Shard reconnects                          	|
+| shardResume     	| replayed: `number`, shardID: `number`       	| Emitted when a Shard resumes                             	|
+| shardDisconnect 	| closeEvent: `CloseEvent`, shardID: `number` 	| Emitted when a Shard disconnects                         	|
+
 
 ## Cluster
 
@@ -42,14 +57,14 @@ In every cluster when your code is loaded, you get access to `this.client` and `
 
 ### ShardClientUtil
 
-| Method            | Example                                 | Description                                                               | Returns          |
-|-------------------|-----------------------------------------|---------------------------------------------------------------------------|------------------|
-| broadcastEval     | `client.shard.broadcastEval(script);`   | Evals a script on all clusters in context of the `Client`.                | `Promise<any[]>` |
-| masterEval        | `client.shard.masterEval(script);`      | Evals a script on the master process in context of the `ShardingManager`. | `Promise<any>`   |
-| fetchClientValues | `client.shard.fetchClientValues(prop);` | Fetch a `Client` value on all clusters.                                   | `Promise<any[]>` |
-| restartAll        | `client.shard.restartAll()`             | Sends a message to the master process to kill & restart all clusters.     | `Promise<void>`  |
-| restart           | `client.shard.restart(clusterID)`        | Restart a specific cluster by id.                                         | `Promise<void>`  |
-| send              | `client.shard.send(data, options)`      | send a message to the master process.                                     | `Promise<void>`  |
+| Method            	| Example                                 	| Description                                                               	| Returns             	|
+|-------------------	|-----------------------------------------	|---------------------------------------------------------------------------	|---------------------	|
+| broadcastEval     	| `client.shard.broadcastEval(script);`   	| Evals a script on all clusters in context of the `Client`.                	| `Promise<unkown[]>` 	|
+| masterEval        	| `client.shard.masterEval(script);`      	| Evals a script on the master process in context of the `ShardingManager`. 	| `Promise<unkown>`   	|
+| fetchClientValues 	| `client.shard.fetchClientValues(prop);` 	| Fetch a `Client` value on all clusters.                                   	| `Promise<unkown[]>` 	|
+| restartAll        	| `client.shard.restartAll()`             	| Sends a message to the master process to kill & restart all clusters.     	| `Promise<void>`     	|
+| restart           	| `client.shard.restart(clusterID)`       	| Restart a specific cluster by id.                                         	| `Promise<void>`     	|
+| send              	| `client.shard.send(data, options)`      	| send a message to the master process.                                     	| `Promise<void>`     	|
 
 # Example
 
