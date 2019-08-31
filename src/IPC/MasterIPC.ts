@@ -1,43 +1,43 @@
 import { EventEmitter } from 'events';
-import { Node, NodeMessage } from 'veza';
+import { Server, NodeMessage } from 'veza';
 import { Util } from 'discord.js';
 import { ShardingManager } from '..';
 import { isMaster } from 'cluster';
 import { IPCEvents } from '../Util/Constants';
+import { IPCRequest } from './ClusterIPC';
 
 export class MasterIPC extends EventEmitter {
 	[key: string]: any;
-	public node: Node;
+	public server: Server;
 
 	constructor(public manager: ShardingManager) {
 		super();
-		this.node = new Node('Master')
-			.on('client.identify', client => this.emit('debug', `Client Connected: ${client.name}`))
-			.on('client.disconnect', client => this.emit('debug', `Client Disconnected: ${client.name}`))
-			.on('client.destroy', client => this.emit('debug', `Client Destroyed: ${client.name}`))
+		this.server = new Server('Master')
+			.on('connect', client => this.emit('debug', `Client Connected: ${client.name}`))
+			.on('disconnect', client => this.emit('debug', `Client Disconnected: ${client.name}`))
 			.on('error', error => this.emit('error', error))
 			.on('message', this._incommingMessage.bind(this));
-		if (isMaster) this.node.serve(manager.ipcSocket);
+		if (isMaster) this.server.listen(manager.ipcSocket);
 	}
 
-	public async broadcast<T>(code: string): Promise<T[]> {
-		const data = await this.node.broadcast({ op: IPCEvents.EVAL, d: code });
+	public async broadcast(code: string) {
+		const data = await this.server.broadcast({ op: IPCEvents.EVAL, d: code });
 		let errored = data.filter(res => !res.success);
 		if (errored.length) {
 			errored = errored.map(msg => msg.d);
 			const error = errored[0];
 			throw Util.makeError(error);
 		}
-		return data.map(res => res.d);
+		return data.map(res => res.d) as unknown[];
 	}
 
 	private _incommingMessage(message: NodeMessage) {
-		const { op }: { op: number } = message.data;
+		const { op } = message.data as IPCRequest;
 		this[`_${IPCEvents[op].toLowerCase()}`](message);
 	}
 
 	private _message(message: NodeMessage) {
-		const { d } = message.data;
+		const { d } = message.data as IPCRequest;
 		this.manager.emit('message', d);
 	}
 
@@ -100,8 +100,8 @@ export class MasterIPC extends EventEmitter {
 		}
 	}
 
-	private _restartall() {
-		this.manager.restartAll();
+	private async _restartall() {
+		await this.manager.restartAll();
 	}
 
 	private async _fetchuser(message: NodeMessage) {
@@ -118,7 +118,7 @@ export class MasterIPC extends EventEmitter {
 
 	private async _fetch(message: NodeMessage, code: string) {
 		const { d: id } = message.data;
-		const result = await this.broadcast<any>(code.replace('{id}', id));
+		const result = await this.broadcast(code.replace('{id}', id));
 		const realResult = result.filter(r => r);
 		if (realResult.length) {
 			return message.reply({ success: true, d: realResult[0] });

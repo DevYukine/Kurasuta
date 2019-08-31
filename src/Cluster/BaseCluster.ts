@@ -28,16 +28,16 @@ export abstract class BaseCluster {
 		this.id = Number(env.CLUSTER_ID);
 	}
 
-	public async init(): Promise<void> {
+	public async init() {
 		const shardUtil = ((this.client.shard as any) as ShardClientUtil);
 		await shardUtil.init();
 		this.client.once('ready', () => shardUtil.send({ op: IPCEvents.READY, d: this.id }, { receptive: false }));
 		this.client.on('shardReady', (id: number) => shardUtil.send({ op: IPCEvents.SHARDREADY, d: { id: this.id, shardID: id } }, { receptive: false }));
-		this.client.on('reconnecting', (id: number) => shardUtil.send({ op: IPCEvents.SHARDRECONNECT, d: { id: this.id, shardID: id } }, { receptive: false }));
-		this.client.on('resumed', (replayed: number, id: number ) => shardUtil.send({ op: IPCEvents.SHARDRESUMED, d: { id: this.id, shardID: id, replayed } }, { receptive: false }));
-		this.client.on('disconnect', (closeEvent: CloseEvent, id: number) => shardUtil.send({ op: IPCEvents.SHARDDISCONNECT, d: { id: this.id, shardID: id, closeEvent } }, { receptive: false }));
+		this.client.on('shardReconnecting', (id: number) => shardUtil.send({ op: IPCEvents.SHARDRECONNECT, d: { id: this.id, shardID: id } }, { receptive: false }));
+		this.client.on('shardResumed', (replayed: number, id: number ) => shardUtil.send({ op: IPCEvents.SHARDRESUMED, d: { id: this.id, shardID: id, replayed } }, { receptive: false }));
+		this.client.on('shardDisconnected', (closeEvent: CloseEvent, id: number) => shardUtil.send({ op: IPCEvents.SHARDDISCONNECT, d: { id: this.id, shardID: id, closeEvent } }, { receptive: false }));
 		await this.launch();
 	}
 
-	protected abstract launch(): Promise<void>;
+	protected abstract launch(): Promise<void> | void;
 }

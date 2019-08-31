@@ -1,43 +1,49 @@
 import { EventEmitter } from 'events';
-import { Node, NodeMessage, NodeSocket } from 'veza';
+import { Client as VezaClient, NodeMessage, ClientSocket } from 'veza';
 import { Client, Util } from 'discord.js';
 import { IPCEvents } from '../Util/Constants';
+import { IPCResult } from '..';
+
+export interface IPCRequest {
+	op: number;
+	d: string;
+}
 
 export class ClusterIPC extends EventEmitter {
-	public nodeSocket?: NodeSocket;
+	public clientSocket?: ClientSocket;
 	public client: Client;
-	public node: Node;
+	public node: VezaClient;
 
 	constructor(discordClient: Client, public id: number, public socket: string | number) {
 		super();
 		this.client = discordClient;
-		this.node = new Node(`Cluster ${this.id}`)
+		this.node = new VezaClient(`Cluster ${this.id}`)
 			.on('error', error => this.emit('error', error))
-			.on('client.disconnect', client => this.emit('warn', `[IPC] Disconnected from ${client.name}`))
-			.on('client.ready', client => this.emit('debug', `[IPC] Connected to: ${client.name}`))
+			.on('disconnect', client => this.emit('warn', `[IPC] Disconnected from ${client.name}`))
+			.on('ready', client => this.emit('debug', `[IPC] Connected to: ${client.name}`))
 			.on('message', this._message.bind(this));
 	}
 
-	public async broadcast<T>(script: string | Function): Promise<T[]> {
+	public async broadcast(script: string | Function) {
 		script = typeof script === 'function' ? `(${script})(this)` : script;
-		const { success, d } = await this.server.send({ op: IPCEvents.BROADCAST, d: script });
+		const { success, d } = await this.server.send({ op: IPCEvents.BROADCAST, d: script }) as IPCResult;
 		if (!success) throw Util.makeError(d);
-		return d;
+		return d as unknown[];
 	}
 
-	public async masterEval<T>(script: string | Function): Promise<T> {
+	public async masterEval(script: string | Function) {
 		script = typeof script === 'function' ? `(${script})(this)` : script;
-		const { success, d } = await this.server.send({ op: IPCEvents.MASTEREVAL, d: script });
+		const { success, d } = await this.server.send({ op: IPCEvents.MASTEREVAL, d: script }) as IPCResult;
 		if (!success) throw Util.makeError(d);
-		return d;
+		return d as unknown;
 	}
 
 	public async init() {
-		this.nodeSocket = await this.node.connectTo('Master', String(this.socket));
+		this.clientSocket = await this.node.connectTo(String(this.socket));
 	}
 
 	public get server() {
-		return this.nodeSocket!;
+		return this.clientSocket!;
 	}
 
 	private _eval(script: string): string {

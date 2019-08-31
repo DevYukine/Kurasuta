@@ -4,7 +4,7 @@ import { MasterIPC } from '../IPC/MasterIPC';
 import { Cluster } from '../Cluster/Cluster';
 import { http } from '../Util/Constants';
 import { EventEmitter } from 'events';
-import { cpus, platform } from 'os';
+import { cpus } from 'os';
 import { isMaster } from 'cluster';
 import * as Util from '../Util/Util';
 import fetch from 'node-fetch';
@@ -68,7 +68,7 @@ export class ShardingManager extends EventEmitter {
 		if (!this.path) throw new Error('You need to supply a Path!');
 	}
 
-	public async spawn(): Promise<void> {
+	public async spawn() {
 		if (isMaster) {
 			if (this.shardCount === 'auto') {
 				this.emit('debug', 'Fetching Session Endpoint');
@@ -110,7 +110,7 @@ export class ShardingManager extends EventEmitter {
 		}
 	}
 
-	public async restartAll(): Promise<void> {
+	public async restartAll() {
 		this.emit('debug', 'Restarting all Clusters!');
 
 		for (const cluster of this.clusters.values()) {
@@ -118,7 +118,7 @@ export class ShardingManager extends EventEmitter {
 		}
 	}
 
-	public async restart(clusterID: number): Promise<void> {
+	public async restart(clusterID: number) {
 		const cluster = this.clusters.get(clusterID);
 		if (!cluster) throw new Error('No Cluster with that ID found.');
 
@@ -127,8 +127,8 @@ export class ShardingManager extends EventEmitter {
 		await cluster.respawn();
 	}
 
-	public fetchClientValues<T>(prop: string): Promise<T[]> {
-		return this.ipc.broadcast<T>(`this.${prop}`);
+	public fetchClientValues(prop: string) {
+		return this.ipc.broadcast(`this.${prop}`);
 	}
 
 	public eval<T>(script: string): Promise<T> {
@@ -168,7 +168,7 @@ export class ShardingManager extends EventEmitter {
 		for (const cluster of clusters) {
 			try {
 				await cluster.respawn();
-			} catch (error) {
+			} catch {
 				failed.push(cluster);
 			}
 		}

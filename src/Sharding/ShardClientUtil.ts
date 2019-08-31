@@ -1,7 +1,7 @@
 import { Client, Util } from 'discord.js';
-import { SendOptions } from 'veza';
 import { ClusterIPC } from '../IPC/ClusterIPC';
 import { IPCEvents } from '../Util/Constants';
+import { SendOptions } from 'veza';
 
 export interface IPCResult {
 	success: boolean;
@@ -17,53 +17,51 @@ export class ShardClientUtil {
 	constructor(public client: Client, public ipcSocket: string | number) {
 	}
 
-	public broadcastEval<T>(script: string | Function): Promise<T[]> {
-		return this.ipc.broadcast<T>(script);
+	public broadcastEval(script: string | Function): Promise<unknown[]> {
+		return this.ipc.broadcast(script);
 	}
 
-	public masterEval<T>(script: string | Function): Promise<T> {
-		return this.ipc.masterEval<T>(script);
+	public masterEval(script: string | Function): Promise<unknown> {
+		return this.ipc.masterEval(script);
 	}
 
-	public fetchClientValues(prop: string): Promise<any[]> {
+	public fetchClientValues(prop: string): Promise<unknown[]> {
 		return this.ipc.broadcast(`this.${prop}`);
 	}
 
-	public async fetchGuild(id: string): Promise<object> {
-		const { success, d } = await this.send<IPCResult>({ op: IPCEvents.FETCHGUILD, d: id });
+	public async fetchGuild(id: string) {
+		const { success, d } = await this.send({ op: IPCEvents.FETCHGUILD, d: id }) as IPCResult;
 		if (!success) throw new Error('No guild with this id found!');
-		return d;
+		return d as object;
 	}
 
-	public async fetchUser(id: string): Promise<object> {
-		const { success, d } = await this.send<IPCResult>({ op: IPCEvents.FETCHUSER, d: id });
+	public async fetchUser(id: string) {
+		const { success, d } = await this.send({ op: IPCEvents.FETCHUSER, d: id }) as IPCResult;
 		if (!success) throw new Error('No user with this id found!');
-		return d;
+		return d as object;
 	}
 
-	public async fetchChannel(id: string): Promise<object> {
-		const { success, d } = await this.send<IPCResult>({ op: IPCEvents.FETCHCHANNEL, d: id });
+	public async fetchChannel(id: string) {
+		const { success, d } = await this.send({ op: IPCEvents.FETCHCHANNEL, d: id }) as IPCResult;
 		if (!success) throw new Error('No channel with this id found!');
-		return d;
+		return d as object;
 	}
 
-	public restartAll(): Promise<void> {
-		return this.ipc.server.send({ op: IPCEvents.RESTARTALL }, { receptive: false });
+	public async restartAll() {
+		await this.ipc.server.send({ op: IPCEvents.RESTARTALL }, { receptive: false });
 	}
 
-	public async restart(clusterID: number): Promise<void> {
-		const { success, d } = await this.ipc.server.send<IPCResult>({ op: IPCEvents.RESTART, d: clusterID });
+	public async restart(clusterID: number) {
+		const { success, d } = await this.ipc.server.send({ op: IPCEvents.RESTART, d: clusterID }) as IPCResult;
 		if (!success) throw Util.makeError(d);
 	}
 
-	public send<T>(data: any, options?: SendOptions): Promise<T> {
-		if (typeof data === 'object') {
-			if (data.op) return this.ipc.server.send(data, options);
-		}
+	public send(data: any, options?: SendOptions) {
+		if (typeof data === 'object' && data.op) return this.ipc.server.send(data, options);
 		return this.ipc.server.send({ op: IPCEvents.MESSAGE, d: data }, options);
 	}
 
-	public init(): Promise<void> {
+	public init() {
 		return this.ipc.init();
 	}
 }

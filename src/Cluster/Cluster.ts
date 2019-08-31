@@ -1,5 +1,5 @@
 import { Worker, fork } from 'cluster';
-import { ShardingManager, BaseCluster } from '..';
+import { ShardingManager } from '..';
 import { IPCEvents } from '../Util/Constants';
 import { IPCResult } from '../Sharding/ShardClientUtil';
 import { Util as DjsUtil } from 'discord.js';
@@ -33,13 +33,13 @@ export class Cluster extends EventEmitter {
 
 	public async eval(script: string | Function) {
 		script = typeof script === 'function' ? `(${script})(this)` : script;
-		const { success, d } = await this.manager.ipc.node.sendTo<IPCResult>(`Cluster ${this.id}`, { op: IPCEvents.EVAL, d: script });
+		const { success, d } = await this.manager.ipc.server.sendTo(`Cluster ${this.id}`, { op: IPCEvents.EVAL, d: script }) as IPCResult;
 		if (!success) throw DjsUtil.makeError(d);
 		return d;
 	}
 
 	public async fetchClientValue(prop: string) {
-		const { success, d } = await this.manager.ipc.node.sendTo<IPCResult>(`Cluster ${this.id}`, { op: IPCEvents.EVAL, d: `this.${prop}` });
+		const { success, d } = await this.manager.ipc.server.sendTo(`Cluster ${this.id}`, { op: IPCEvents.EVAL, d: `this.${prop}` }) as IPCResult;
 		if (!success) throw DjsUtil.makeError(d);
 		return d;
 	}
@@ -84,7 +84,7 @@ export class Cluster extends EventEmitter {
 		this.manager.emit('debug', `Worker exited with code ${code} and signal ${signal}${this.manager.respawn ? ', restarting...' : ''}`);
 	}
 
-	private _waitReady(shardCount: number): Promise<void> {
+	private _waitReady(shardCount: number) {
 		return new Promise((resolve, reject) => {
 			this.once('ready', resolve);
 			setTimeout(() => reject(new Error(`Cluster ${this.id} took too long to get ready`)), (this.manager.timeout * shardCount) * (this.manager.guildsPerShard / 1000));
