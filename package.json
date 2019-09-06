@@ -1,6 +1,6 @@
 {
   "name": "kurasuta",
-  "version": "0.2.16",
+  "version": "1.0.0",
   "description": "A Custom discord.js Sharding Library inspired by eris-sharder.",
   "main": "dist/index.js",
   "typings": "typings/index.d.ts",
@@ -18,24 +18,21 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "node-fetch": "^2.3.0",
-    "veza": "^0.3.1"
+    "discord.js": "discordjs/discord.js",
+    "node-fetch": "^2.6.0",
+    "veza": "^1.1.0"
   },
   "devDependencies": {
-    "@types/node": "^10.12.6",
-    "@types/node-fetch": "^2.1.2",
-    "@types/ws": "^6.0.1",
-    "discord.js": "discordjs/discord.js",
-    "fs-nextra": "^0.3.7",
-    "gulp": "^3.9.1",
-    "gulp-sourcemaps": "^2.6.4",
-    "gulp-typescript": "^5.0.0-alpha.3",
+    "@types/node": "^12.7.3",
+    "@types/node-fetch": "^2.5.0",
+    "@types/ws": "^6.0.3",
+    "fs-nextra": "^0.4.5",
+    "gulp": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-typescript": "^5.0.1",
     "merge2": "^1.2.3",
-    "tslint": "^5.11.0",
-    "tslint-config-fire": "^1.0.0",
-    "typescript": "^3.1.6"
-  },
-  "peerDependencies": {
-    "discord.js": "discordjs/discord.js"
+    "tslint": "^5.19.0",
+    "tslint-config-fire": "^1.0.1",
+    "typescript": "^3.6.2"
   }
 }

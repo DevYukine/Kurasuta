@@ -8,7 +8,8 @@
 		"declaration": true,
 		"declarationDir": "./dist/typings",
 		"lib": ["es2017"],
-		"resolveJsonModule": true
+		"resolveJsonModule": true,
+		"types": ["node"]
 	},
 	"include": [
 		"./src/**/*"

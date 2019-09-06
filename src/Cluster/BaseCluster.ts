@@ -23,21 +23,21 @@ export abstract class BaseCluster {
 			totalShardCount: Number(env.CLUSTER_SHARD_COUNT)
 		});
 		this.client = new manager.client(clientConfig);
-		const client: any = this.client;
+		const client = this.client as any;
 		client.shard = new ShardClientUtil(client, manager.ipcSocket);
 		this.id = Number(env.CLUSTER_ID);
 	}
 
-	public async init(): Promise<void> {
+	public async init() {
 		const shardUtil = ((this.client.shard as any) as ShardClientUtil);
 		await shardUtil.init();
 		this.client.once('KashimaReady', () => shardUtil.send({ op: IPCEvents.READY, d: this.id }, { receptive: false }));
-		this.client.on('shardReady', (id: number) => shardUtil.send({ op: IPCEvents.SHARDREADY, d: { id: this.id, shardID: id } }, { receptive: false }));
-		this.client.on('reconnecting', (id: number) => shardUtil.send({ op: IPCEvents.SHARDRECONNECT, d: { id: this.id, shardID: id } }, { receptive: false }));
-		this.client.on('resumed', (replayed: number, id: number ) => shardUtil.send({ op: IPCEvents.SHARDRESUMED, d: { id: this.id, shardID: id, replayed } }, { receptive: false }));
-		this.client.on('disconnect', (closeEvent: CloseEvent, id: number) => shardUtil.send({ op: IPCEvents.SHARDDISCONNECT, d: { id: this.id, shardID: id, closeEvent } }, { receptive: false }));
+		this.client.on('shardReady', id => shardUtil.send({ op: IPCEvents.SHARDREADY, d: { id: this.id, shardID: id } }, { receptive: false }));
+		this.client.on('shardReconnecting', id => shardUtil.send({ op: IPCEvents.SHARDRECONNECT, d: { id: this.id, shardID: id } }, { receptive: false }));
+		this.client.on('shardResume', (id, replayed) => shardUtil.send({ op: IPCEvents.SHARDRESUME, d: { id: this.id, shardID: id, replayed } }, { receptive: false }));
+		this.client.on('shardDisconnect', (closeEvent, id) => shardUtil.send({ op: IPCEvents.SHARDDISCONNECT, d: { id: this.id, shardID: id, closeEvent } }, { receptive: false }));
 		await this.launch();
 	}
 
-	protected abstract launch(): Promise<void>;
+	protected abstract launch(): Promise<void> | void;
 }

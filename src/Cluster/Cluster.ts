@@ -1,7 +1,7 @@
 import { Worker, fork } from 'cluster';
-import { ShardingManager, BaseCluster } from '..';
+import { ShardingManager } from '..';
 import { IPCEvents } from '../Util/Constants';
-import { IPCResult } from '../Sharding/ShardClientUtil';
+import { IPCResult, IPCError } from '../Sharding/ShardClientUtil';
 import { Util as DjsUtil } from 'discord.js';
 import * as Util from '../Util/Util';
 import { EventEmitter } from 'events';
@@ -33,14 +33,14 @@ export class Cluster extends EventEmitter {
 
 	public async eval(script: string | Function) {
 		script = typeof script === 'function' ? `(${script})(this)` : script;
-		const { success, d } = await this.manager.ipc.node.sendTo<IPCResult>(`Cluster ${this.id}`, { op: IPCEvents.EVAL, d: script });
-		if (!success) throw DjsUtil.makeError(d);
+		const { success, d } = await this.manager.ipc.server.sendTo(`Cluster ${this.id}`, { op: IPCEvents.EVAL, d: script }) as IPCResult;
+		if (!success) throw DjsUtil.makeError(d as IPCError);
 		return d;
 	}
 
 	public async fetchClientValue(prop: string) {
-		const { success, d } = await this.manager.ipc.node.sendTo<IPCResult>(`Cluster ${this.id}`, { op: IPCEvents.EVAL, d: `this.${prop}` });
-		if (!success) throw DjsUtil.makeError(d);
+		const { success, d } = await this.manager.ipc.server.sendTo(`Cluster ${this.id}`, { op: IPCEvents.EVAL, d: `this.${prop}` }) as IPCResult;
+		if (!success) throw DjsUtil.makeError(d as IPCError);
 		return d;
 	}
 
@@ -81,10 +81,10 @@ export class Cluster extends EventEmitter {
 
 		if (this.manager.respawn) this.respawn();
 
-		this.manager.emit('debug', `Worker exited with code ${code} and signal ${signal}, restarting ...`);
+		this.manager.emit('debug', `Worker exited with code ${code} and signal ${signal}${this.manager.respawn ? ', restarting...' : ''}`);
 	}
 
-	private _waitReady(shardCount: number): Promise<void> {
+	private _waitReady(shardCount: number) {
 		return new Promise((resolve, reject) => {
 			this.once('ready', resolve);
 			setTimeout(() => reject(new Error(`Cluster ${this.id} took too long to get ready`)), (this.manager.timeout * shardCount) * (this.manager.guildsPerShard / 1000));

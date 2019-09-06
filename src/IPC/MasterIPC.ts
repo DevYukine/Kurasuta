@@ -1,45 +1,45 @@
 import { EventEmitter } from 'events';
-import { Node, NodeMessage } from 'veza';
+import { Server, NodeMessage } from 'veza';
 import { Util } from 'discord.js';
 import { ShardingManager } from '..';
 import { isMaster } from 'cluster';
-import { IPCEvents } from '../Util/Constants';
+import { IPCEvents, SharderEvents } from '../Util/Constants';
+import { IPCRequest } from './ClusterIPC';
 
 export class MasterIPC extends EventEmitter {
 	[key: string]: any;
-	public node: Node;
+	public server: Server;
 
 	constructor(public manager: ShardingManager) {
 		super();
-		this.node = new Node('Master')
-			.on('client.identify', client => this.emit('debug', `[IPC] Client Connected: ${client.name}`))
-			.on('client.disconnect', client => this.emit('debug', `[IPC] Client Disconnected: ${client.name}`))
-			.on('client.destroy', client => this.emit('debug', `[IPC] Client Destroyed: ${client.name}`))
+		this.server = new Server('Master')
+			.on('connect', client => this.emit('debug', `Client Connected: ${client.name}`))
+			.on('disconnect', client => this.emit('debug', `Client Disconnected: ${client.name}`))
 			.on('error', error => this.emit('error', error))
 			.on('message', this._incommingMessage.bind(this));
-		if (isMaster) this.node.serve(manager.ipcSocket);
+		if (isMaster) this.server.listen(manager.ipcSocket);
 	}
 
-	public async broadcast<T>(code: string): Promise<T[]> {
-		const data = await this.node.broadcast({ op: IPCEvents.EVAL, d: code });
+	public async broadcast(code: string) {
+		const data = await this.server.broadcast({ op: IPCEvents.EVAL, d: code });
 		let errored = data.filter(res => !res.success);
 		if (errored.length) {
 			errored = errored.map(msg => msg.d);
 			const error = errored[0];
 			throw Util.makeError(error);
 		}
-		return data.map(res => res.d);
+		return data.map(res => res.d) as unknown[];
 	}
 
 	private _incommingMessage(message: NodeMessage) {
 		if (isNaN(message.data.op)) return;
-		const { op }: { op: number } = message.data;
+		const { op } = message.data as IPCRequest;
 		this[`_${IPCEvents[op].toLowerCase()}`](message);
 	}
 
 	private _message(message: NodeMessage) {
-		const { d } = message.data;
-		this.manager.emit('message', d);
+		const { d } = message.data as IPCRequest;
+		this.manager.emit(SharderEvents.MESSAGE, d);
 	}
 
 	private async _broadcast(message: NodeMessage) {
@@ -56,32 +56,32 @@ export class MasterIPC extends EventEmitter {
 		const { d: id } = message.data;
 		const cluster = this.manager.clusters.get(id);
 		cluster!.emit('ready');
-		this.manager.emit('debug', `Cluster ${id} became ready`);
-		this.manager.emit('ready', cluster);
+		this._debug(`Cluster ${id} became ready`);
+		this.manager.emit(SharderEvents.READY, cluster);
 	}
 
 	private _shardready(message: NodeMessage) {
 		const { d: { shardID } } = message.data;
-		this.manager.emit('debug', `Shard ${shardID} became ready`);
-		this.manager.emit('shardReady', shardID);
+		this._debug(`Shard ${shardID} became ready`);
+		this.manager.emit(SharderEvents.SHARD_READY, shardID);
 	}
 
 	private _shardreconnect(message: NodeMessage) {
 		const { d: { shardID } } = message.data;
-		this.manager.emit('debug', `Shard ${shardID} tries to reconnect`);
-		this.manager.emit('shardReconnect', shardID);
+		this._debug(`Shard ${shardID} tries to reconnect`);
+		this.manager.emit(SharderEvents.SHARD_RECONNECT, shardID);
 	}
 
-	private _shardresumed(message: NodeMessage) {
+	private _shardresume(message: NodeMessage) {
 		const { d: { shardID, replayed } } = message.data;
-		this.manager.emit('debug', `Shard ${shardID} resumed connection`);
-		this.manager.emit('shardResumed', replayed, shardID);
+		this._debug(`Shard ${shardID} resumed connection`);
+		this.manager.emit(SharderEvents.SHARD_RESUME, replayed, shardID);
 	}
 
 	private _sharddisconnect(message: NodeMessage) {
 		const { d: { shardID, closeEvent } } = message.data;
-		this.manager.emit('debug', `Shard ${shardID} disconnected!`);
-		this.manager.emit('shardDisconnect', closeEvent, shardID);
+		this._debug(`Shard ${shardID} disconnected!`);
+		this.manager.emit(SharderEvents.SHARD_DISCONNECT, closeEvent, shardID);
 	}
 
 	private _restart(message: NodeMessage) {
@@ -101,8 +101,8 @@ export class MasterIPC extends EventEmitter {
 		}
 	}
 
-	private _restartall() {
-		this.manager.restartAll();
+	private async _restartall() {
+		await this.manager.restartAll();
 	}
 
 	private async _fetchuser(message: NodeMessage) {
@@ -119,11 +119,15 @@ export class MasterIPC extends EventEmitter {
 
 	private async _fetch(message: NodeMessage, code: string) {
 		const { d: id } = message.data;
-		const result = await this.broadcast<any>(code.replace('{id}', id));
+		const result = await this.broadcast(code.replace('{id}', id));
 		const realResult = result.filter(r => r);
 		if (realResult.length) {
 			return message.reply({ success: true, d: realResult[0] });
 		}
 		return message.reply({ success: false });
+	}
+
+	private _debug(message: string): void {
+		this.emit(SharderEvents.DEBUG, message);
 	}
 }
