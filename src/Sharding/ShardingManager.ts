@@ -22,6 +22,7 @@ export interface SharderOptions {
 	ipcSocket?: string | number;
 	timeout?: number;
 	retry?: boolean;
+	nodeArgs?: Array<string>;
 }
 
 export interface SessionObject {
@@ -46,6 +47,7 @@ export class ShardingManager extends EventEmitter {
 	public timeout: number;
 	public retry: boolean;
 	public ipc: MasterIPC;
+	public nodeArgs?: Array<string>;
 
 	private development: boolean;
 	private token?: string;
@@ -63,6 +65,7 @@ export class ShardingManager extends EventEmitter {
 		this.retry = options.retry || true;
 		this.timeout = options.timeout || 30000;
 		this.token = options.token;
+		this.nodeArgs = options.nodeArgs;
 		this.ipc = new MasterIPC(this);
 
 		this.ipc.on('debug', msg => this._debug(`[IPC] ${msg}`));
