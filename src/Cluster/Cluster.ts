@@ -1,4 +1,4 @@
-import { Worker, fork, setupMaster } from 'cluster';
+import { Worker, fork } from 'cluster';
 import { ShardingManager } from '..';
 import { IPCEvents } from '../Util/Constants';
 import { IPCResult, IPCError } from '../Sharding/ShardClientUtil';
@@ -63,8 +63,6 @@ export class Cluster extends EventEmitter {
 	}
 
 	public async spawn() {	
-		if (this.manager.nodeArgs) setupMaster({ args: this.manager.nodeArgs });
-		
 		this.worker = fork({ CLUSTER_SHARDS: this.shards.join(','), CLUSTER_ID: this.id, CLUSTER_SHARD_COUNT: this.manager.shardCount, CLUSTER_CLUSTER_COUNT: this.manager.clusterCount });
 
 		this.worker.once('exit', this._exitListenerFunction);

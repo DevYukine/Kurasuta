@@ -5,7 +5,7 @@ import { Cluster } from '../Cluster/Cluster';
 import { http, SharderEvents } from '../Util/Constants';
 import { EventEmitter } from 'events';
 import { cpus } from 'os';
-import { isMaster } from 'cluster';
+import { isMaster, setupMaster } from 'cluster';
 import * as Util from '../Util/Util';
 import fetch from 'node-fetch';
 
@@ -93,6 +93,8 @@ export class ShardingManager extends EventEmitter {
 			const shardArray = [...Array(this.shardCount).keys()];
 			const shardTuple = Util.chunk(shardArray, this.clusterCount);
 			const failed: Cluster[] = [];
+
+			if (this.nodeArgs) setupMaster({ args: this.nodeArgs });
 
 			for (let index = 0; index < this.clusterCount; index++) {
 				const shards = shardTuple.shift()!;
