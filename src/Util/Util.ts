@@ -77,6 +77,6 @@ export function calcShards(shards: number, guildsPerShard: number): number {
 export async function startCluster(manager: ShardingManager) {
 	const ClusterClassRequire = await import(manager.path);
 	const ClusterClass = ClusterClassRequire.default ? ClusterClassRequire.default : ClusterClassRequire;
-	const cluster: BaseCluster = new ClusterClass(manager);
+	const cluster = new ClusterClass(manager) as BaseCluster;
 	return cluster.init();
 }
