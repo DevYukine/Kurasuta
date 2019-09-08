@@ -67,7 +67,7 @@ export class ShardClientUtil {
 	}
 
 	public send(data: any, options?: SendOptions) {
-		if (typeof data === 'object' && data.op) return this.ipc.server.send(data, options);
+		if (typeof data === 'object' && data.op !== undefined) return this.ipc.server.send(data, options);
 		return this.ipc.server.send({ op: IPCEvents.MESSAGE, d: data }, options);
 	}
 
