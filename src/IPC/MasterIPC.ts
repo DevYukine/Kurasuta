@@ -87,7 +87,7 @@ export class MasterIPC extends EventEmitter {
 		const { d: clusterID } = message.data;
 		return this.manager.restart(clusterID)
 			.then(() => message.reply({ success: true }))
-			.catch(error => message.reply({ success: false, data: { name: error.name, message: error.message, stack: error.stack } }));
+			.catch(error => message.reply({ success: false, d: { name: error.name, message: error.message, stack: error.stack } }));
 	}
 
 	private async _mastereval(message: NodeMessage) {
