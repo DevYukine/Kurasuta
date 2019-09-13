@@ -48,8 +48,7 @@ export class ClusterIPC extends EventEmitter {
 	}
 
 	private _eval(script: string): string {
-		const client: any = this.client;
-		return client._eval(script);
+		return (this.client as any)._eval(script);
 	}
 
 	private async _message(message: NodeMessage) {

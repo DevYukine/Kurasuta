@@ -62,8 +62,12 @@ export class ShardClientUtil {
 		if (!success) throw Util.makeError(d as IPCError);
 	}
 
+	public respawnAll() {
+		return this.restartAll();
+	}
+
 	public send(data: any, options?: SendOptions) {
-		if (typeof data === 'object' && data.op) return this.ipc.server.send(data, options);
+		if (typeof data === 'object' && data.op !== undefined) return this.ipc.server.send(data, options);
 		return this.ipc.server.send({ op: IPCEvents.MESSAGE, d: data }, options);
 	}
 

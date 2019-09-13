@@ -29,7 +29,7 @@ export abstract class BaseCluster {
 	}
 
 	public async init() {
-		const shardUtil = ((this.client.shard as any) as ShardClientUtil);
+		const shardUtil = this.client.shard!;
 		await shardUtil.init();
 		this.client.once('KashimaReady', () => shardUtil.send({ op: IPCEvents.READY, d: this.id }, { receptive: false }));
 		this.client.on('shardReady', id => shardUtil.send({ op: IPCEvents.SHARDREADY, d: { id: this.id, shardID: id } }, { receptive: false }));
