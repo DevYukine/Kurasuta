@@ -1,6 +1,6 @@
-import { ShardingManager, SessionObject, SharderOptions } from './Sharding/ShardingManager';
+import { ShardingManager, SessionObject, SharderOptions, CloseEvent } from './Sharding/ShardingManager';
 import { ShardClientUtil, IPCResult } from './Sharding/ShardClientUtil';
-import { BaseCluster, CloseEvent } from './Cluster/BaseCluster';
+import { BaseCluster } from './Cluster/BaseCluster';
 import { version, http, IPCEvents, SharderEvents } from './Util/Constants';
 import { Cluster, ClusterOptions } from './Cluster/Cluster';
 import { ClusterIPC } from './IPC/ClusterIPC';
