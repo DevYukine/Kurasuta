@@ -13,8 +13,7 @@ export abstract class BaseCluster {
 		const shards = env.CLUSTER_SHARDS!.split(',').map(Number);
 		const clientConfig: ClientOptions = Util.mergeDefault<ClientOptions>(manager.clientOptions, {
 			shards,
-			shardCount: shards.length,
-			totalShardCount: Number(env.CLUSTER_SHARD_COUNT)
+			shardCount: Number(env.CLUSTER_SHARD_COUNT)
 		});
 		this.client = new manager.client(clientConfig);
 		const client = this.client as any;
