@@ -49,8 +49,8 @@ export class ShardingManager extends EventEmitter {
 	public ipc: MasterIPC;
 	public nodeArgs?: Array<string>;
 
-	private development: boolean;
-	private token?: string;
+	private readonly development: boolean;
+	private readonly token?: string;
 
 	constructor(public path: string, options: SharderOptions) {
 		super();

@@ -19,7 +19,7 @@ export class Cluster extends EventEmitter {
 	public worker?: Worker;
 	public manager: ShardingManager;
 
-	private _exitListenerFunction: (...args: any[]) => void;
+	private readonly _exitListenerFunction: (...args: any[]) => void;
 
 	constructor(options: ClusterOptions) {
 		super();
@@ -62,7 +62,7 @@ export class Cluster extends EventEmitter {
 		return this.manager.ipc.node.sendTo(`Cluster ${this.id}`, data);
 	}
 
-	public async spawn() {	
+	public async spawn() {
 		this.worker = fork({ CLUSTER_SHARDS: this.shards.join(','), CLUSTER_ID: this.id, CLUSTER_SHARD_COUNT: this.manager.shardCount, CLUSTER_CLUSTER_COUNT: this.manager.clusterCount });
 
 		this.worker.once('exit', this._exitListenerFunction);
