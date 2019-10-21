@@ -38,8 +38,7 @@ export class MasterIPC extends EventEmitter {
 	}
 
 	private _message(message: NodeMessage) {
-		const { d } = message.data as IPCRequest;
-		this.manager.emit(SharderEvents.MESSAGE, d);
+		this.manager.emit(SharderEvents.MESSAGE, message);
 	}
 
 	private async _broadcast(message: NodeMessage) {
