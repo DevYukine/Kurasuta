@@ -4,12 +4,6 @@ import { ShardClientUtil } from '../Sharding/ShardClientUtil';
 import { IPCEvents } from '../Util/Constants';
 import * as Util from '../Util/Util';
 
-export interface CloseEvent {
-	code: number;
-	reason: string;
-	wasClean: boolean;
-}
-
 export abstract class BaseCluster {
 	public readonly client: Client;
 	public readonly id: number;
@@ -35,7 +29,7 @@ export abstract class BaseCluster {
 		this.client.on('shardReady', id => shardUtil.send({ op: IPCEvents.SHARDREADY, d: { id: this.id, shardID: id } }, { receptive: false }));
 		this.client.on('shardReconnecting', id => shardUtil.send({ op: IPCEvents.SHARDRECONNECT, d: { id: this.id, shardID: id } }, { receptive: false }));
 		this.client.on('shardResume', (id, replayed) => shardUtil.send({ op: IPCEvents.SHARDRESUME, d: { id: this.id, shardID: id, replayed } }, { receptive: false }));
-		this.client.on('shardDisconnect', (closeEvent, id) => shardUtil.send({ op: IPCEvents.SHARDDISCONNECT, d: { id: this.id, shardID: id, closeEvent } }, { receptive: false }));
+		this.client.on('shardDisconnect', ({ code, reason, wasClean }, id) => shardUtil.send({ op: IPCEvents.SHARDDISCONNECT, d: { id: this.id, shardID: id, closeEvent: { code, reason, wasClean } } }, { receptive: false }));
 		await this.launch();
 	}
 

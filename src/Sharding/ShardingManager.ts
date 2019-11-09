@@ -1,4 +1,3 @@
-import { CloseEvent } from '../Cluster/BaseCluster';
 import { Client, ClientOptions } from 'discord.js';
 import { MasterIPC } from '../IPC/MasterIPC';
 import { Cluster } from '../Cluster/Cluster';
@@ -33,6 +32,12 @@ export interface SessionObject {
 		remaining: number;
 		reset_after: number;
 	};
+}
+
+export interface CloseEvent {
+	code: number;
+	reason: string;
+	wasClean: boolean;
 }
 
 export class ShardingManager extends EventEmitter {
