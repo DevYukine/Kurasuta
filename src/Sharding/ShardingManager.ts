@@ -4,7 +4,7 @@ import { Cluster } from '../Cluster/Cluster';
 import { http, SharderEvents } from '../Util/Constants';
 import { EventEmitter } from 'events';
 import { cpus } from 'os';
-import { isMaster } from 'cluster';
+import { isMaster, setupMaster } from 'cluster';
 import * as Util from '../Util/Util';
 import fetch from 'node-fetch';
 
@@ -21,6 +21,7 @@ export interface SharderOptions {
 	ipcSocket?: string | number;
 	timeout?: number;
 	retry?: boolean;
+	nodeArgs?: Array<string>;
 }
 
 export interface SessionObject {
@@ -50,10 +51,11 @@ export class ShardingManager extends EventEmitter {
 	public respawn: boolean;
 	public timeout: number;
 	public retry: boolean;
+	public nodeArgs?: Array<string>;
 	public ipc: MasterIPC;
 
-	private development: boolean;
-	private token?: string;
+	private readonly development: boolean;
+	private readonly token?: string;
 
 	constructor(public path: string, options: SharderOptions) {
 		super();
@@ -68,6 +70,7 @@ export class ShardingManager extends EventEmitter {
 		this.retry = options.retry || true;
 		this.timeout = options.timeout || 30000;
 		this.token = options.token;
+		this.nodeArgs = options.nodeArgs;
 		this.ipc = new MasterIPC(this);
 
 		this.ipc.on('debug', msg => this._debug(`[IPC] ${msg}`));
@@ -95,6 +98,8 @@ export class ShardingManager extends EventEmitter {
 			const shardArray = [...Array(this.shardCount).keys()];
 			const shardTuple = Util.chunk(shardArray, this.clusterCount);
 			const failed: Cluster[] = [];
+
+			if (this.nodeArgs) setupMaster({ execArgv: this.nodeArgs });
 
 			for (let index = 0; index < this.clusterCount; index++) {
 				const shards = shardTuple.shift()!;
