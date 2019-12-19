@@ -19,7 +19,7 @@ export class Cluster extends EventEmitter {
 	public worker?: Worker;
 	public manager: ShardingManager;
 
-	private _exitListenerFunction: (...args: any[]) => void;
+	private readonly _exitListenerFunction: (...args: any[]) => void;
 
 	constructor(options: ClusterOptions) {
 		super();
