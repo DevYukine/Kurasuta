@@ -23,7 +23,7 @@
     "veza": "^1.1.0"
   },
   "devDependencies": {
-    "@types/node": "^12.7.3",
+    "@types/node": "^13.1.1",
     "@types/node-fetch": "^2.5.0",
     "@types/ws": "^6.0.3",
     "fs-nextra": "^0.4.5",
