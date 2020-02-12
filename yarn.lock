@@ -43,21 +43,21 @@
     through2 "^2.0.3"
 
 "@types/node-fetch@^2.5.0":
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/@types/node-fetch/-/node-fetch-2.5.3.tgz#b84127facd93642b1fb6439bc630ba0612e3ec50"
-  integrity sha512-X3TNlzZ7SuSwZsMkb5fV7GrPbVKvHc2iwHmslb8bIxRKWg2iqkfm3F/Wd79RhDpOXR7wCtKAwc5Y2JE6n/ibyw==
+  version "2.5.4"
+  resolved "https://registry.yarnpkg.com/@types/node-fetch/-/node-fetch-2.5.4.tgz#5245b6d8841fc3a6208b82291119bc11c4e0ce44"
+  integrity sha512-Oz6id++2qAOFuOlE1j0ouk1dzl3mmI1+qINPNBhi9nt/gVOz0G+13Ao6qjhdF0Ys+eOkhu6JnFmt38bR3H0POQ==
   dependencies:
     "@types/node" "*"
 
-"@types/node@*", "@types/node@^12.7.3":
-  version "12.12.5"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.5.tgz#66103d2eddc543d44a04394abb7be52506d7f290"
-  integrity sha512-KEjODidV4XYUlJBF3XdjSH5FWoMCtO0utnhtdLf1AgeuZLOrRbvmU/gaRCVg7ZaQDjVf3l84egiY0mRNe5xE4A==
+"@types/node@*", "@types/node@^13.1.2":
+  version "13.1.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.1.6.tgz#076028d0b0400be8105b89a0a55550c86684ffec"
+  integrity sha512-Jg1F+bmxcpENHP23sVKkNuU3uaxPnsBMW0cLjleiikFKomJQbsn0Cqk2yDvQArqzZN6ABfBkZ0To7pQ8sLdWDg==
 
 "@types/ws@^6.0.3":
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-6.0.3.tgz#b772375ba59d79066561c8d87500144d674ba6b3"
-  integrity sha512-yBTM0P05Tx9iXGq00BbJPo37ox68R5vaGTXivs6RGh/BQ6QP5zqZDGWdAO6JbRE/iR1l80xeGAwCQS2nMV9S/w==
+  version "6.0.4"
+  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-6.0.4.tgz#7797707c8acce8f76d8c34b370d4645b70421ff1"
+  integrity sha512-PpPrX7SZW9re6+Ha8ojZG4Se8AZXgf0GK6zmfqEuCsY49LFDNXO3SByp44X3dFEqtB73lkCDAdUazhAjVPiNwg==
   dependencies:
     "@types/node" "*"
 
@@ -246,11 +246,6 @@ async-each@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/async-each/-/async-each-1.0.3.tgz#b727dbf87d7651602f06f4d4ac387f47d91b0cbf"
   integrity sha512-z/WhQ5FPySLdvREByI2vZiTWwCnF0moMJ1hK9YQwDTHKh6I7/uSckMetoRGb5UBZPC1z0jlw+n/XCgjeH7y1AQ==
-
-async-limiter@~1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/async-limiter/-/async-limiter-1.0.1.tgz#dd379e94f0db8310b08291f9d64c3209766617fd"
-  integrity sha512-csOlWGAcRFJaI6m+F2WKdnMKr4HhdhFVBk0H/QbJFMCr+uO2kwohwXQPxw/9OCxp05r5ghVBFSyioixx3gfkNQ==
 
 async-settle@^1.0.0:
   version "1.0.0"
@@ -677,18 +672,17 @@ diff@^4.0.1:
 
 discord.js@discordjs/discord.js:
   version "12.0.0-dev"
-  uid "38d370fb18fdbf079b1c91793c0550e77667eccd"
-  resolved "https://codeload.github.com/discordjs/discord.js/tar.gz/38d370fb18fdbf079b1c91793c0550e77667eccd"
+  uid "45cd58b68ce61afcf44793e610f06ada44fb8d1f"
+  resolved "https://codeload.github.com/discordjs/discord.js/tar.gz/45cd58b68ce61afcf44793e610f06ada44fb8d1f"
   dependencies:
     "@discordjs/collection" "^0.1.1"
     abort-controller "^3.0.0"
     form-data "^2.3.3"
     node-fetch "^2.3.0"
-    pako "^1.0.8"
     prism-media "^1.0.0"
     setimmediate "^1.0.5"
     tweetnacl "^1.0.1"
-    ws "^6.1.3"
+    ws "^7.2.0"
 
 duplexify@^3.6.0:
   version "3.7.1"
@@ -956,9 +950,9 @@ fs-mkdirp-stream@^1.0.0:
     through2 "^2.0.3"
 
 fs-nextra@^0.4.5:
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/fs-nextra/-/fs-nextra-0.4.5.tgz#0f44a00dd6c0547adaf59ce875e59941d0c70664"
-  integrity sha512-oY2o6j0izYzJWp2sow21SekkR3qeMZqHV5ZfNFvfKimFU7piw1/AWwiwbcWjuSfwrfCmHyHymWZOyNbKOzew5g==
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/fs-nextra/-/fs-nextra-0.4.7.tgz#76af367029fc5dab360f112f3d38bbc7a7d24285"
+  integrity sha512-N61ZytY7cF3VlPTQ+o90XK+TsdOaUPeX0cpwy5oOVbXaneSO6KorpsR2xSQr+GJbItkWzgu3h4ypSqCWjTeZKg==
 
 fs.realpath@^1.0.0:
   version "1.0.0"
@@ -1925,11 +1919,6 @@ osenv@^0.1.4:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
 
-pako@^1.0.8:
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.10.tgz#4328badb5086a426aa90f541977d4955da5c9732"
-  integrity sha512-0DTvPVU3ed8+HNXOu5Bs+o//Mbdj9VNQMUOe9oKCwh8l0GNwpTDMKCWbRjgtD291AWnkAgkqA/LOnQS8AmS1tw==
-
 parse-filepath@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/parse-filepath/-/parse-filepath-1.0.2.tgz#a632127f53aaf3d15876f5872f3ffac763d6c891"
@@ -2604,9 +2593,9 @@ tslint-config-fire@^1.0.1:
   integrity sha512-kSYiN7Jbk8MYNCW6Sjt1ay41q9/AtalgT+LvdzosIB+PTwTij8SHPfqZrPuFy7TW6Am0R6m9zKpskpqy2vEmpQ==
 
 tslint@^5.19.0:
-  version "5.20.0"
-  resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.20.0.tgz#fac93bfa79568a5a24e7be9cdde5e02b02d00ec1"
-  integrity sha512-2vqIvkMHbnx8acMogAERQ/IuINOq6DFqgF8/VDvhEkBqQh/x6SP0Y+OHnKth9/ZcHQSroOZwUQSN18v8KKF0/g==
+  version "5.20.1"
+  resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.20.1.tgz#e401e8aeda0152bc44dd07e614034f3f80c67b7d"
+  integrity sha512-EcMxhzCFt8k+/UP5r8waCf/lzmeSyVlqxqMEDQE7rWYiQky8KpIBz1JAoYXfROHrPZ1XXd43q8yQnULOLiBRQg==
   dependencies:
     "@babel/code-frame" "^7.0.0"
     builtin-modules "^1.1.1"
@@ -2645,9 +2634,9 @@ typedarray@^0.0.6:
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
 typescript@^3.6.2:
-  version "3.6.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.6.4.tgz#b18752bb3792bc1a0281335f7f6ebf1bbfc5b91d"
-  integrity sha512-unoCll1+l+YK4i4F8f22TaNVPRHcD9PA3yCuZ8g5e0qGqlVlJ/8FSateOLLSagn+Yg5+ZwuPkL8LFUc0Jcvksg==
+  version "3.7.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.4.tgz#1743a5ec5fef6a1fa9f3e4708e33c81c73876c19"
+  integrity sha512-A25xv5XCtarLwXpcDNZzCGvW2D1S3/bACratYBx2sax8PefsFhlYmkQicKHvpYflFS8if4zne5zT5kpJ7pzuvw==
 
 unc-path-regex@^0.1.2:
   version "0.1.2"
@@ -2827,12 +2816,10 @@ wrappy@1:
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
 
-ws@^6.1.3:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-6.2.1.tgz#442fdf0a47ed64f59b6a5d8ff130f4748ed524fb"
-  integrity sha512-GIyAXC2cB7LjvpgMt9EKS2ldqr0MTrORaleiOno6TweZ6r3TKtoFQWay/2PceJ3RuBasOHzXNn5Lrw1X0bEjqA==
-  dependencies:
-    async-limiter "~1.0.0"
+ws@^7.2.0:
+  version "7.2.1"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-7.2.1.tgz#03ed52423cd744084b2cf42ed197c8b65a936b8e"
+  integrity sha512-sucePNSafamSKoOqoNfBd8V0StlkzJKL2ZAhGQinCfNQ+oacw+Pk7lcdAElecBF2VkLNZRiIb5Oi1Q5lVUVt2A==
 
 xtend@~4.0.0, xtend@~4.0.1:
   version "4.0.2"
