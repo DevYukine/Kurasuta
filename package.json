@@ -25,7 +25,7 @@
   "devDependencies": {
     "@types/node": "^13.1.2",
     "@types/node-fetch": "^2.5.0",
-    "@types/ws": "^6.0.3",
+    "@types/ws": "^7.2.1",
     "fs-nextra": "^0.4.5",
     "gulp": "^4.0.2",
     "gulp-sourcemaps": "^2.6.5",

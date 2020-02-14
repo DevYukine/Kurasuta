@@ -54,10 +54,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.7.1.tgz#238eb34a66431b71d2aaddeaa7db166f25971a0d"
   integrity sha512-Zq8gcQGmn4txQEJeiXo/KiLpon8TzAl0kmKH4zdWctPj05nWwp1ClMdAVEloqrQKfaC48PNLdgN/aVaLqUrluA==
 
-"@types/ws@^6.0.3":
-  version "6.0.4"
-  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-6.0.4.tgz#7797707c8acce8f76d8c34b370d4645b70421ff1"
-  integrity sha512-PpPrX7SZW9re6+Ha8ojZG4Se8AZXgf0GK6zmfqEuCsY49LFDNXO3SByp44X3dFEqtB73lkCDAdUazhAjVPiNwg==
+"@types/ws@^7.2.1":
+  version "7.2.1"
+  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-7.2.1.tgz#b800f2b8aee694e2b581113643e20d79dd3b8556"
+  integrity sha512-UEmRNbXFGvfs/sLncf01GuVv6U1mZP3Df0iXWx4kUlikJxbFyFADp95mDn1XDTE2mXpzzoHcKlfFcbytLq4vaA==
   dependencies:
     "@types/node" "*"
 
