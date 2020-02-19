@@ -670,10 +670,9 @@ diff@^4.0.1:
   resolved "https://registry.yarnpkg.com/diff/-/diff-4.0.1.tgz#0c667cb467ebbb5cea7f14f135cc2dba7780a8ff"
   integrity sha512-s2+XdvhPCOF01LRQBC8hf4vhbVmI2CGS5aZnxLJlT5FtdhPCDFq80q++zK2KlrVorVDdL5BOGZ/VfLrVtYNF+Q==
 
-discord.js@discordjs/discord.js:
+"discord.js@github:discordjs/discord.js#21d37ed0cc71b227be0feadc4ffbcd522ca4f00e":
   version "12.0.0-dev"
-  uid "45cd58b68ce61afcf44793e610f06ada44fb8d1f"
-  resolved "https://codeload.github.com/discordjs/discord.js/tar.gz/45cd58b68ce61afcf44793e610f06ada44fb8d1f"
+  resolved "https://codeload.github.com/discordjs/discord.js/tar.gz/21d37ed0cc71b227be0feadc4ffbcd522ca4f00e"
   dependencies:
     "@discordjs/collection" "^0.1.1"
     abort-controller "^3.0.0"
