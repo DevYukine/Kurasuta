@@ -63,7 +63,7 @@ export class Cluster extends EventEmitter {
 	}
 
 	public async spawn() {
-		this.worker = fork({ CLUSTER_SHARDS: this.shards.join(','), CLUSTER_ID: this.id, CLUSTER_SHARD_COUNT: this.manager.shardCount, CLUSTER_CLUSTER_COUNT: this.manager.clusterCount });
+		this.worker = fork({ CLUSTER_SHARDS: this.shards.join(','), CLUSTER_ID: this.id.toString(), CLUSTER_SHARD_COUNT: this.manager.shardCount.toString(), CLUSTER_CLUSTER_COUNT: this.manager.clusterCount.toString() });
 
 		this.worker.once('exit', this._exitListenerFunction);
 
