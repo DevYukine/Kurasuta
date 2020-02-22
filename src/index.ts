@@ -1,12 +1,5 @@
-import { ShardingManager, SessionObject, SharderOptions, CloseEvent } from './Sharding/ShardingManager';
-import { ShardClientUtil, IPCResult } from './Sharding/ShardClientUtil';
-import { BaseCluster } from './Cluster/BaseCluster';
-import { version, http, IPCEvents, SharderEvents } from './Util/Constants';
-import { Cluster, ClusterOptions } from './Cluster/Cluster';
-import { ClusterIPC } from './IPC/ClusterIPC';
-import { MasterIPC } from './IPC/MasterIPC';
-import * as Util from './Util/Util';
 import { SendOptions } from 'veza';
+import { ClusterIPC } from './IPC/ClusterIPC';
 
 declare module 'discord.js' {
 	interface ShardClientUtil {
@@ -29,21 +22,11 @@ declare module 'discord.js' {
 	}
 }
 
-export {
-	BaseCluster,
-	ShardingManager,
-	Util,
-	ShardClientUtil,
-	SessionObject,
-	SharderOptions,
-	IPCResult,
-	CloseEvent,
-	http,
-	IPCEvents,
-	Cluster,
-	ClusterOptions,
-	ClusterIPC,
-	MasterIPC,
-	SharderEvents,
-	version
-};
+export { BaseCluster } from './Cluster/BaseCluster';
+export { Cluster, ClusterOptions } from './Cluster/Cluster';
+export { ClusterIPC } from './IPC/ClusterIPC';
+export { MasterIPC } from './IPC/MasterIPC';
+export { IPCResult, ShardClientUtil } from './Sharding/ShardClientUtil';
+export { CloseEvent, SessionObject, SharderOptions, ShardingManager } from './Sharding/ShardingManager';
+export { http, IPCEvents, SharderEvents, version } from './Util/Constants';
+export * from './Util/Util';
