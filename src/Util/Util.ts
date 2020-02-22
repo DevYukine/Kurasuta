@@ -48,7 +48,7 @@ export function deepClone(source: any): any {
 	return source;
 }
 
-export function isPrimitive(value: any) {
+export function isPrimitive(value: any): value is string | bigint | number | boolean {
 	return PRIMITIVE_TYPES.includes(typeof value);
 }
 
