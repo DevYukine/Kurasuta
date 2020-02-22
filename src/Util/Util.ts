@@ -51,7 +51,7 @@ export function isPrimitive(value: any): value is string | bigint | number | boo
 export function mergeDefault<T>(def: Record<string, any>, given: Record<string, any>): T {
 	if (!given) return deepClone(def);
 	for (const key in def) {
-		if (typeof given[key] === 'undefined') given[key] = deepClone(def[key]);
+		if (given[key] === undefined) given[key] = deepClone(def[key]);
 		else if (isObject(given[key])) given[key] = mergeDefault(def[key], given[key]);
 	}
 
