@@ -1,25 +1,7 @@
-import { SendOptions } from 'veza';
-import { ClusterIPC } from './IPC/ClusterIPC';
+import { ShardClientUtil as KurasutaShardClientUtil } from './Sharding/ShardClientUtil';
 
 declare module 'discord.js' {
-	interface ShardClientUtil {
-		ipcSocket: string | number;
-		readonly clusterCount: number;
-		readonly shardCount: number;
-		readonly id: number;
-		readonly ipc: ClusterIPC;
-		broadcastEval(script: string | Function): Promise<unknown[]>;
-		masterEval(script: string | Function): Promise<unknown>;
-		fetchClientValues(prop: string): Promise<unknown[]>;
-		fetchGuild(id: string): Promise<object>;
-		fetchUser(id: string): Promise<object>;
-		fetchChannel(id: string): Promise<object>;
-		restartAll(): Promise<void>;
-		restart(clusterID: number): Promise<void>;
-		respawnAll(): Promise<void>;
-		send(data: any, options?: SendOptions): Promise<unknown>;
-		init(): Promise<void>;
-	}
+	interface ShardClientUtil extends KurasutaShardClientUtil {}
 }
 
 export { BaseCluster } from './Cluster/BaseCluster';
