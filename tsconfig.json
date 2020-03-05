@@ -9,7 +9,7 @@
 		"declarationDir": "./dist/typings",
 		"lib": ["es2017"],
 		"resolveJsonModule": true,
-		"types": ["node"]
+		"types": ["@types/node"]
 	},
 	"include": [
 		"./src/**/*"

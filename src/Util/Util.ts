@@ -4,10 +4,6 @@ import { Constructable } from 'discord.js';
 import { promisify } from 'util';
 import { ShardingManager, BaseCluster } from '..';
 
-export interface UnkownObject {
-	[key: string]: any;
-}
-
 export const PRIMITIVE_TYPES = ['string', 'bigint', 'number', 'boolean'];
 
 export function chunk<T>(entries: T[], chunkSize: number) {
@@ -31,7 +27,7 @@ export function deepClone(source: any): any {
 		return output;
 	}
 	if (isObject(source)) {
-		const output = {} as UnkownObject;
+		const output = {} as Record<string, any>;
 		for (const [key, value] of Object.entries(source)) output[key] = deepClone(value);
 		return output;
 	}
@@ -48,14 +44,14 @@ export function deepClone(source: any): any {
 	return source;
 }
 
-export function isPrimitive(value: any) {
+export function isPrimitive(value: any): value is string | bigint | number | boolean {
 	return PRIMITIVE_TYPES.includes(typeof value);
 }
 
-export function mergeDefault<T>(def: UnkownObject, given: UnkownObject): T {
+export function mergeDefault<T>(def: Record<string, any>, given: Record<string, any>): T {
 	if (!given) return deepClone(def);
 	for (const key in def) {
-		if (typeof given[key] === 'undefined') given[key] = deepClone(def[key]);
+		if (given[key] === undefined) given[key] = deepClone(def[key]);
 		else if (isObject(given[key])) given[key] = mergeDefault(def[key], given[key]);
 	}
 
