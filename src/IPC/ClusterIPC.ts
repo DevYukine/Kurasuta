@@ -15,7 +15,7 @@ export class ClusterIPC extends EventEmitter {
 	public client: Client;
 	public node: VezaClient;
 
-	constructor(discordClient: Client, public id: number, public socket: string | number) {
+	public constructor(discordClient: Client, public id: number, public socket: string | number) {
 		super();
 		this.client = discordClient;
 		this.node = new VezaClient(`Cluster ${this.id}`)
@@ -36,7 +36,7 @@ export class ClusterIPC extends EventEmitter {
 		script = typeof script === 'function' ? `(${script})(this)` : script;
 		const { success, d } = await this.server.send({ op: IPCEvents.MASTEREVAL, d: script }) as IPCResult;
 		if (!success) throw Util.makeError(d as IPCError);
-		return d as unknown;
+		return d;
 	}
 
 	public async init() {

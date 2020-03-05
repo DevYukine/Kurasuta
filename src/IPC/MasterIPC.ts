@@ -10,7 +10,7 @@ export class MasterIPC extends EventEmitter {
 	[key: string]: any;
 	public server: Server;
 
-	constructor(public manager: ShardingManager) {
+	public constructor(public manager: ShardingManager) {
 		super();
 		this.server = new Server('Master')
 			.on('connect', client => this.emit('debug', `Client Connected: ${client.name}`))

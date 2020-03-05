@@ -1,7 +1,0 @@
-{
-	"extends": "tslint-config-fire",
-	"rules": {
-		"variable-name": false,
-		"ban-types": false
-	}
-}

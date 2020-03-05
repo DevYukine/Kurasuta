@@ -26,13 +26,22 @@
     "@types/node": "^13.1.2",
     "@types/node-fetch": "^2.5.0",
     "@types/ws": "^7.2.1",
+    "@typescript-eslint/eslint-plugin": "^2.19.0",
+    "@typescript-eslint/parser": "^2.19.0",
+    "eslint": "^6.8.0",
+    "eslint-config-marine": "^6.0.0",
     "fs-nextra": "^0.4.5",
     "gulp": "^4.0.2",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-typescript": "^5.0.1",
     "merge2": "^1.2.3",
-    "tslint": "^6.0.0",
-    "tslint-config-fire": "^1.0.1",
-    "typescript": "^3.6.2"
+    "typescript": "^3.8.3"
+  },
+  "eslintConfig": {
+    "extends": "marine",
+    "rules": {
+      "no-eval": "off",
+      "no-useless-constructor": "off"
+    }
   }
 }

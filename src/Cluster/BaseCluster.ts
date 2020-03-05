@@ -8,7 +8,7 @@ export abstract class BaseCluster {
 	public readonly client: Client;
 	public readonly id: number;
 
-	constructor(public manager: ShardingManager) {
+	public constructor(public manager: ShardingManager) {
 		const env = process.env;
 		const shards = env.CLUSTER_SHARDS!.split(',').map(Number);
 		const clientConfig: ClientOptions = Util.mergeDefault<ClientOptions>(manager.clientOptions, {

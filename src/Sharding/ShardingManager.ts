@@ -57,7 +57,7 @@ export class ShardingManager extends EventEmitter {
 	private readonly development: boolean;
 	private readonly token?: string;
 
-	constructor(public path: string, options: SharderOptions) {
+	public constructor(public path: string, options: SharderOptions) {
 		super();
 		this.clusterCount = options.clusterCount || cpus().length;
 		this.guildsPerShard = options.guildsPerShard || 1000;
@@ -201,7 +201,7 @@ export class ShardingManager extends EventEmitter {
 		if (!this.token) throw new Error('No token was provided!');
 		const res = await fetch(`${http.api}/v${http.version}/gateway/bot`, {
 			method: 'GET',
-			headers: { Authorization: `Bot ${this.token.replace(/^Bot\s*/i, '')}` },
+			headers: { Authorization: `Bot ${this.token.replace(/^Bot\s*/i, '')}` }
 		});
 		if (res.ok) return res.json();
 		throw res;
