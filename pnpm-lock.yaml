@@ -5,7 +5,7 @@ dependencies:
 devDependencies:
   '@types/node': 13.7.7
   '@types/node-fetch': 2.5.5
-  '@types/ws': 7.2.2
+  '@types/ws': 7.2.4
   '@typescript-eslint/eslint-plugin': 2.22.0_5fc37458f7af86d127d807b1f2a4d108
   '@typescript-eslint/parser': 2.22.0_eslint@6.8.0+typescript@3.8.3
   eslint: 6.8.0
@@ -80,12 +80,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-Uo4chgKbnPNlxQwoFmYIwctkQVkMMmsAoGGU4JKwLuvBefF0pCq4FybNSnfkfRCpC7ZW7kttcC/TrRtAJsvGtg==
-  /@types/ws/7.2.2:
+  /@types/ws/7.2.4:
     dependencies:
       '@types/node': 13.7.7
     dev: true
     resolution:
-      integrity: sha512-oqnI3DbGCVI9zJ/WHdFo3CUE8jQ8CVQDUIKaDtlTcNeT4zs6UCg9Gvk5QrFx2QPkRszpM6yc8o0p4aGjCsTi+w==
+      integrity: sha512-9S6Ask71vujkVyeEXKxjBSUV8ZUB0mjL5la4IncBoheu04bDaYyUKErh1BQcY9+WzOUOiKqz/OnpJHYckbMfNg==
   /@typescript-eslint/eslint-plugin/2.22.0_5fc37458f7af86d127d807b1f2a4d108:
     dependencies:
       '@typescript-eslint/experimental-utils': 2.22.0_eslint@6.8.0+typescript@3.8.3
@@ -3581,7 +3581,7 @@ packages:
 specifiers:
   '@types/node': ^13.1.2
   '@types/node-fetch': ^2.5.0
-  '@types/ws': 7.2.2
+  '@types/ws': 7.2.4
   '@typescript-eslint/eslint-plugin': ^2.19.0
   '@typescript-eslint/parser': ^2.19.0
   discord.js: ^12.0.1
