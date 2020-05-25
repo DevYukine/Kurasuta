@@ -29,7 +29,7 @@
     "@typescript-eslint/eslint-plugin": "^2.19.0",
     "@typescript-eslint/parser": "^2.19.0",
     "eslint": "^6.8.0",
-    "eslint-config-marine": "^6.0.0",
+    "eslint-config-marine": "^7.1.2",
     "fs-nextra": "^0.4.5",
     "gulp": "^4.0.2",
     "gulp-sourcemaps": "^2.6.5",
