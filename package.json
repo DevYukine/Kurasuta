@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "typings": "typings/index.d.ts",
   "scripts": {
-    "prepare": "gulp build"
+    "build": "gulp build",
+    "prepare": "pnpm build"
   },
   "repository": {
     "type": "git",
