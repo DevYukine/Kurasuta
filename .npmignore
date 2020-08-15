@@ -6,3 +6,4 @@ node_modules/
 tsconfig.json
 gulpfile.js
 webpack.config.js
+pnpm-lock.yaml
