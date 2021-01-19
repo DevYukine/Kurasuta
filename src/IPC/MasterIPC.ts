@@ -17,7 +17,7 @@ export class MasterIPC extends EventEmitter {
 			.on('disconnect', client => this.emit('debug', `Client Disconnected: ${client.name}`))
 			.on('error', error => this.emit('error', error))
 			.on('message', this._incommingMessage.bind(this));
-		if (isMaster) this.server.listen(manager.ipcSocket);
+		if (isMaster) void this.server.listen(manager.ipcSocket);
 	}
 
 	public async broadcast(code: string) {

@@ -21,7 +21,7 @@ export class Cluster extends EventEmitter {
 
 	private readonly _exitListenerFunction: (...args: any[]) => void;
 
-	constructor(options: ClusterOptions) {
+	public constructor(options: ClusterOptions) {
 		super();
 		this.id = options.id;
 		this.shards = options.shards;
@@ -58,7 +58,7 @@ export class Cluster extends EventEmitter {
 		await this.spawn();
 	}
 
-	public send(data: object) {
+	public send(data: unknown) {
 		return this.manager.ipc.node.sendTo(`Cluster ${this.id}`, data);
 	}
 
@@ -80,9 +80,9 @@ export class Cluster extends EventEmitter {
 		this.ready = false;
 		this.worker = undefined;
 
-		if (this.manager.respawn) this.respawn();
-
 		this.manager.emit('debug', `Worker exited with code ${code} and signal ${signal}${this.manager.respawn ? ', restarting...' : ''}`);
+
+		if (this.manager.respawn) return this.respawn();
 	}
 
 	private _waitReady(shardCount: number) {

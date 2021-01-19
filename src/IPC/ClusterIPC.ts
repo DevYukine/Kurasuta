@@ -22,6 +22,7 @@ export class ClusterIPC extends EventEmitter {
 			.on('error', error => this.emit('error', error))
 			.on('disconnect', client => this.emit('warn', `[IPC] Disconnected from ${client.name}`))
 			.on('ready', client => this.emit('debug', `[IPC] Connected to: ${client.name}`))
+			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			.on('message', this._message.bind(this));
 	}
 

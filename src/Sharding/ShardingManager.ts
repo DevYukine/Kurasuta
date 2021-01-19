@@ -27,9 +27,11 @@ export interface SharderOptions {
 export interface SessionObject {
 	url: string;
 	shards: number;
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	session_start_limit: {
 		total: number;
 		remaining: number;
+		// eslint-disable-next-line @typescript-eslint/naming-convention
 		reset_after: number;
 	};
 }
@@ -59,16 +61,16 @@ export class ShardingManager extends EventEmitter {
 
 	public constructor(public path: string, options: SharderOptions) {
 		super();
-		this.clusterCount = options.clusterCount || cpus().length;
-		this.guildsPerShard = options.guildsPerShard || 1000;
-		this.clientOptions = options.clientOptions || {};
-		this.development = options.development || false;
-		this.shardCount = options.shardCount || 'auto';
-		this.client = options.client || Client;
-		this.respawn = options.respawn || true;
-		this.ipcSocket = options.ipcSocket || 9999;
-		this.retry = options.retry || true;
-		this.timeout = options.timeout || 30000;
+		this.clusterCount = options.clusterCount ?? cpus().length;
+		this.guildsPerShard = options.guildsPerShard ?? 1000;
+		this.clientOptions = options.clientOptions ?? {};
+		this.development = options.development ?? false;
+		this.shardCount = options.shardCount ?? 'auto';
+		this.client = options.client ?? Client;
+		this.respawn = options.respawn ?? true;
+		this.ipcSocket = options.ipcSocket ?? 9999;
+		this.retry = options.retry ?? true;
+		this.timeout = options.timeout ?? 30000;
 		this.token = options.token;
 		this.nodeArgs = options.nodeArgs;
 		this.ipc = new MasterIPC(this);
@@ -201,10 +203,10 @@ export class ShardingManager extends EventEmitter {
 		if (!this.token) throw new Error('No token was provided!');
 		const res = await fetch(`${http.api}/v${http.version}/gateway/bot`, {
 			method: 'GET',
-			headers: { Authorization: `Bot ${this.token.replace(/^Bot\s*/i, '')}` }
+			headers: { authorization: `Bot ${this.token.replace(/^Bot\s*/i, '')}` }
 		});
 		if (res.ok) return res.json();
-		throw res;
+		throw new Error(`Invalid Session Endpoint response: ${res.status} ${res.statusText}`);
 	}
 
 	private _debug(message: string) {

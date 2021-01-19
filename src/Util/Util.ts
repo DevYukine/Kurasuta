@@ -27,7 +27,7 @@ export function deepClone(source: any): any {
 		return output;
 	}
 	if (isObject(source)) {
-		const output = {} as Record<string, any>;
+		const output: Record<string, any> = {};
 		for (const [key, value] of Object.entries(source)) output[key] = deepClone(value);
 		return output;
 	}
@@ -48,7 +48,7 @@ export function isPrimitive(value: any): value is string | bigint | number | boo
 	return PRIMITIVE_TYPES.includes(typeof value);
 }
 
-export function mergeDefault<T>(def: Record<string, any>, given: Record<string, any>): T {
+export function mergeDefault<T>(def: Record<string, any>, given?: Record<string, any>): T {
 	if (!given) return deepClone(def);
 	for (const key in def) {
 		if (given[key] === undefined) given[key] = deepClone(def[key]);
@@ -71,7 +71,9 @@ export function calcShards(shards: number, guildsPerShard: number): number {
 }
 
 export async function startCluster(manager: ShardingManager) {
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	const ClusterClassRequire = await import(manager.path);
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	const ClusterClass = ClusterClassRequire.default ? ClusterClassRequire.default : ClusterClassRequire;
 	const cluster = new ClusterClass(manager) as BaseCluster;
 	return cluster.init();
