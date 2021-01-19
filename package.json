@@ -33,7 +33,7 @@
     "eslint-config-marine": "^7.2.0",
     "fs-nextra": "^0.5.1",
     "gulp": "^4.0.2",
-    "gulp-sourcemaps": "^2.6.5",
+    "gulp-sourcemaps": "^3.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",
     "merge2": "^1.4.1",
     "typescript": "^4.1.3"
