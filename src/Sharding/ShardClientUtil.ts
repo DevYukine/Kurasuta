@@ -19,7 +19,7 @@ export class ShardClientUtil {
 	public readonly shardCount = Number(process.env.CLUSTER_SHARD_COUNT);
 	public readonly id = Number(process.env.CLUSTER_ID);
 	public readonly ipc = new ClusterIPC(this.client, this.id, this.ipcSocket);
-	public readonly shards = String(process.env.CLUSTER_SHARDS).split(",");
+	public readonly shards = String(process.env.CLUSTER_SHARDS).split(',');
 
 	public constructor(public client: Client, public ipcSocket: string | number) {
 	}
