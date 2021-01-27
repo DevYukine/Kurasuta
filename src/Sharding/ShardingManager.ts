@@ -61,16 +61,16 @@ export class ShardingManager extends EventEmitter {
 
 	public constructor(public path: string, options: SharderOptions) {
 		super();
-		this.clusterCount = options.clusterCount ?? cpus().length;
-		this.guildsPerShard = options.guildsPerShard ?? 1000;
+		this.clusterCount = Number(options.clusterCount ?? cpus().length);
+		this.guildsPerShard = Number(options.guildsPerShard ?? 1000);
 		this.clientOptions = options.clientOptions ?? {};
 		this.development = options.development ?? false;
-		this.shardCount = options.shardCount ?? 'auto';
+		this.shardCount = Number.isNaN(options.shardCount) ? 'auto' : Number(options.shardCount);
 		this.client = options.client ?? Client;
 		this.respawn = options.respawn ?? true;
 		this.ipcSocket = options.ipcSocket ?? 9999;
 		this.retry = options.retry ?? true;
-		this.timeout = options.timeout ?? 30000;
+		this.timeout = Number(options.timeout ?? 30000);
 		this.token = options.token;
 		this.nodeArgs = options.nodeArgs;
 		this.ipc = new MasterIPC(this);
