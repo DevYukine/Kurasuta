@@ -65,7 +65,7 @@ export class ShardingManager extends EventEmitter {
 		this.guildsPerShard = Number(options.guildsPerShard ?? 1000);
 		this.clientOptions = options.clientOptions ?? {};
 		this.development = options.development ?? false;
-		this.shardCount = Number.isNaN(options.shardCount) ? 'auto' : Number(options.shardCount);
+		this.shardCount = options.shardCount ? Number(options.shardCount) : 'auto';
 		this.client = options.client ?? Client;
 		this.respawn = options.respawn ?? true;
 		this.ipcSocket = options.ipcSocket ?? 9999;
