@@ -5,8 +5,10 @@ import { ShardingManager } from '..';
 import { isMaster } from 'cluster';
 import { IPCEvents, SharderEvents } from '../Util/Constants';
 import { IPCRequest } from './ClusterIPC';
+import { TypedEventEmitter } from '@pizzafox/util';
 
-export class MasterIPC extends EventEmitter {
+
+export class MasterIPC extends (EventEmitter as new () => TypedEventEmitter<SharderEvents>) {
 	[key: string]: any;
 	public server: Server;
 
@@ -38,7 +40,7 @@ export class MasterIPC extends EventEmitter {
 
 	private _message(message: NodeMessage) {
 		const { d } = message.data as IPCRequest;
-		this.manager.emit(SharderEvents.MESSAGE, d);
+		this.manager.emit('message', d);
 	}
 
 	private async _broadcast(message: NodeMessage) {
@@ -56,31 +58,31 @@ export class MasterIPC extends EventEmitter {
 		const cluster = this.manager.clusters.get(id);
 		cluster!.emit('ready');
 		this._debug(`Cluster ${id} became ready`);
-		this.manager.emit(SharderEvents.READY, cluster);
+		this.manager.emit('ready', cluster!);
 	}
 
 	private _shardready(message: NodeMessage) {
 		const { d: { shardID } } = message.data;
 		this._debug(`Shard ${shardID} became ready`);
-		this.manager.emit(SharderEvents.SHARD_READY, shardID);
+		this.manager.emit('shardReady', shardID);
 	}
 
 	private _shardreconnect(message: NodeMessage) {
 		const { d: { shardID } } = message.data;
 		this._debug(`Shard ${shardID} tries to reconnect`);
-		this.manager.emit(SharderEvents.SHARD_RECONNECT, shardID);
+		this.manager.emit('shardReconnect', shardID);
 	}
 
 	private _shardresume(message: NodeMessage) {
 		const { d: { shardID, replayed } } = message.data;
 		this._debug(`Shard ${shardID} resumed connection`);
-		this.manager.emit(SharderEvents.SHARD_RESUME, replayed, shardID);
+		this.manager.emit('shardResume', replayed, shardID);
 	}
 
 	private _sharddisconnect(message: NodeMessage) {
 		const { d: { shardID, closeEvent } } = message.data;
 		this._debug(`Shard ${shardID} disconnected!`);
-		this.manager.emit(SharderEvents.SHARD_DISCONNECT, closeEvent, shardID);
+		this.manager.emit('shardDisconnect', closeEvent, shardID);
 	}
 
 	private _restart(message: NodeMessage) {
@@ -127,6 +129,6 @@ export class MasterIPC extends EventEmitter {
 	}
 
 	private _debug(message: string): void {
-		this.emit(SharderEvents.DEBUG, message);
+		this.emit('debug', message);
 	}
 }

@@ -1,4 +1,5 @@
 dependencies:
+  '@pizzafox/util': 2.6.0
   discord.js: 12.5.1
   node-fetch: 2.6.1
   veza: 1.1.0
@@ -112,6 +113,12 @@ packages:
       node: '>= 8'
     resolution:
       integrity: sha512-8Broas6vTtW4GIXTAHDoE32hnN2M5ykgCpWGbuXHQ15vEMqr23pB76e/GZcYsZCHALv50ktd24qhEyKr6wBtow==
+  /@pizzafox/util/2.6.0:
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-teQ2h4dv37wz/mMBlS/qoXsn1UxYHxtX2l8TqoJ+IIa9fH7DFI2KM48y5zoH43h2V1p3G77hrDaIjY/U5VH1Qw==
   /@types/json-schema/7.0.7:
     dev: true
     resolution:
@@ -3654,6 +3661,7 @@ packages:
     resolution:
       integrity: sha512-huO4Fr1f9PmiJJdll5kwoS2e4GqzGSsMT3PPMpOwoVkOK8ckqAewMTZyA6LXVQWflleb/Z8oPBEvNsMft0XE+g==
 specifiers:
+  '@pizzafox/util': ^2.6.0
   '@types/node': ^14.14.22
   '@types/node-fetch': ^2.5.8
   '@types/ws': 7.4.0

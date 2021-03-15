@@ -19,6 +19,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "@pizzafox/util": "^2.6.0",
     "discord.js": "^12.5.1",
     "node-fetch": "^2.6.1",
     "veza": "^1.1.0"
