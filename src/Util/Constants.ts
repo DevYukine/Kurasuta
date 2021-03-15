@@ -23,7 +23,7 @@ export enum IPCEvents {
 	RESTART,
 	FETCHUSER,
 	FETCHCHANNEL,
-	FETCHGUILD,
+	FETCHGUILD
 }
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
