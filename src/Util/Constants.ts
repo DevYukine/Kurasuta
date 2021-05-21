@@ -1,3 +1,6 @@
+import { Cluster } from '../Cluster/Cluster';
+import { CloseEvent } from '../Sharding/ShardingManager';
+
 /* eslint-disable @typescript-eslint/naming-convention */
 export const http = {
 	version: 8,
@@ -23,14 +26,15 @@ export enum IPCEvents {
 	FETCHGUILD
 }
 
-export enum SharderEvents {
-	DEBUG = 'debug',
-	MESSAGE = 'message',
-	READY = 'ready',
-	SPAWN = 'spawn',
-	SHARD_READY = 'shardReady',
-	SHARD_RECONNECT = 'shardReconnect',
-	SHARD_RESUME = 'shardResume',
-	SHARD_DISCONNECT = 'shardDisconnect',
-	ERROR = 'error'
-}
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export type SharderEvents = {
+	debug: (message: string) => void;
+	message: (message: unknown) => void;
+	ready: (cluster: Cluster) => void;
+	spawn: (cluster: Cluster) => void;
+	shardReady: (replayed: number, shardID: number) => void;
+	shardReconnect: (replayed: number, shardID: number) => void;
+	shardResume: (replayed: number, shardID: number) => void;
+	shardDisconnect: (closeEvent: CloseEvent, shardID: number) => void;
+	error: (error: Error) => void;
+};
