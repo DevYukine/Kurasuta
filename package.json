@@ -19,7 +19,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "discord.js": "^12.5.1",
+    "discord.js": "^13.1.0",
     "node-fetch": "^2.6.1",
     "veza": "^1.1.0"
   },
