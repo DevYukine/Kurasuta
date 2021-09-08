@@ -1,132 +1,78 @@
-import { EventEmitter } from 'events';
-import { Server, NodeMessage } from 'veza';
-import { Util } from 'discord.js';
-import { ShardingManager } from '..';
-import cluster from 'cluster';
-import { IPCEvents, SharderEvents } from '../Util/Constants';
-import { IPCRequest } from './ClusterIPC';
-const isPrimary = cluster.isPrimary
-export class MasterIPC extends EventEmitter {
-	[key: string]: any;
-	public server: Server;
+import { Client, Util } from 'discord.js'
+import { ClusterIPC } from '../IPC/ClusterIPC'
+import { IPCEvents } from '../Util/Constants'
+import { SendOptions } from 'veza';
 
-	public constructor(public manager: ShardingManager) {
-		super();
-		this.server = new Server('Master')
-			.on('connect', client => this.emit('debug', `Client Connected: ${client.name}`))
-			.on('disconnect', client => this.emit('debug', `Client Disconnected: ${client.name}`))
-			.on('error', error => this.emit('error', error))
-			.on('message', this._incommingMessage.bind(this));
-		if (isPrimary) void this.server.listen(manager.ipcSocket);
+export interface IPCResult {
+	success: boolean;
+	d: unknown;
+}
+
+export interface IPCError {
+	name: string;
+	message: string;
+	stack: string;
+}
+
+export class ShardClientUtil {
+	public readonly clusterCount = Number(process.env.CLUSTER_CLUSTER_COUNT);
+	public readonly shardCount = Number(process.env.CLUSTER_SHARD_COUNT);
+	public readonly id = Number(process.env.CLUSTER_ID);
+	public readonly ipc = new ClusterIPC(this.client, this.id, this.ipcSocket);
+	public readonly shards = String(process.env.CLUSTER_SHARDS).split(',');
+
+	public constructor(public client: Client | typeof Client, public ipcSocket: string | number) {
 	}
 
-	public async broadcast(code: string) {
-		const data = await this.server.broadcast({ op: IPCEvents.EVAL, d: code });
-		let errored = data.filter(res => !res.success);
-		if (errored.length) {
-			errored = errored.map(msg => msg.d);
-			const error = errored[0];
-			throw Util.makeError(error);
-		}
-		return data.map(res => res.d) as unknown[];
+	public broadcastEval(script: string | Function): Promise<unknown[]> {
+		return this.ipc.broadcast(script);
 	}
 
-	private _incommingMessage(message: NodeMessage) {
-		const { op } = message.data as IPCRequest;
-		this[`_${IPCEvents[op].toLowerCase()}`](message);
+	public masterEval(script: string | Function): Promise<unknown> {
+		return this.ipc.masterEval(script);
 	}
 
-	private _message(message: NodeMessage) {
-		const { d } = message.data as IPCRequest;
-		this.manager.emit(SharderEvents.MESSAGE, d);
+	public fetchClientValues(prop: string): Promise<unknown[]> {
+		return this.ipc.broadcast(`this.${prop}`);
 	}
 
-	private async _broadcast(message: NodeMessage) {
-		const { d } = message.data;
-		try {
-			const data = await this.broadcast(d);
-			message.reply({ success: true, d: data });
-		} catch (error) {
-			message.reply({ success: false, d: { name: error.name, message: error.message, stack: error.stack } });
-		}
+	public async fetchGuild(id: string) {
+		const { success, d } = await this.send({ op: IPCEvents.FETCHGUILD, d: id }) as IPCResult;
+		if (!success) throw new Error('No guild with this id found!');
+		return d as object;
 	}
 
-	private _ready(message: NodeMessage) {
-		const { d: id } = message.data;
-		const cluster = this.manager.clusters.get(id);
-		cluster!.emit('ready');
-		this._debug(`Cluster ${id} became ready`);
-		this.manager.emit(SharderEvents.READY, cluster);
+	public async fetchUser(id: string) {
+		const { success, d } = await this.send({ op: IPCEvents.FETCHUSER, d: id }) as IPCResult;
+		if (!success) throw new Error('No user with this id found!');
+		return d as object;
 	}
 
-	private _shardready(message: NodeMessage) {
-		const { d: { shardID } } = message.data;
-		this._debug(`Shard ${shardID} became ready`);
-		this.manager.emit(SharderEvents.SHARD_READY, shardID);
+	public async fetchChannel(id: string) {
+		const { success, d } = await this.send({ op: IPCEvents.FETCHCHANNEL, d: id }) as IPCResult;
+		if (!success) throw new Error('No channel with this id found!');
+		return d as object;
 	}
 
-	private _shardreconnect(message: NodeMessage) {
-		const { d: { shardID } } = message.data;
-		this._debug(`Shard ${shardID} tries to reconnect`);
-		this.manager.emit(SharderEvents.SHARD_RECONNECT, shardID);
+	public async restartAll() {
+		await this.ipc.server.send({ op: IPCEvents.RESTARTALL }, { receptive: false });
 	}
 
-	private _shardresume(message: NodeMessage) {
-		const { d: { shardID, replayed } } = message.data;
-		this._debug(`Shard ${shardID} resumed connection`);
-		this.manager.emit(SharderEvents.SHARD_RESUME, replayed, shardID);
+	public async restart(clusterID: number) {
+		const { success, d } = await this.ipc.server.send({ op: IPCEvents.RESTART, d: clusterID }) as IPCResult;
+		if (!success) throw Util.makeError(d as IPCError);
 	}
 
-	private _sharddisconnect(message: NodeMessage) {
-		const { d: { shardID, closeEvent } } = message.data;
-		this._debug(`Shard ${shardID} disconnected!`);
-		this.manager.emit(SharderEvents.SHARD_DISCONNECT, closeEvent, shardID);
+	public respawnAll() {
+		return this.restartAll();
 	}
 
-	private _restart(message: NodeMessage) {
-		const { d: clusterID } = message.data;
-		return this.manager.restart(clusterID)
-			.then(() => message.reply({ success: true }))
-			.catch(error => message.reply({ success: false, d: { name: error.name, message: error.message, stack: error.stack } }));
+	public send(data: any, options?: SendOptions) {
+		if (typeof data === 'object' && data.op !== undefined) return this.ipc.server.send(data, options);
+		return this.ipc.server.send({ op: IPCEvents.MESSAGE, d: data }, options);
 	}
 
-	private async _mastereval(message: NodeMessage) {
-		const { d } = message.data;
-		try {
-			const result = await this.manager.eval(d);
-			return message.reply({ success: true, d: result });
-		} catch (error) {
-			return message.reply({ success: false, d: { name: error.name, message: error.message, stack: error.stack } });
-		}
-	}
-
-	private async _restartall() {
-		await this.manager.restartAll();
-	}
-
-	private async _fetchuser(message: NodeMessage) {
-		return this._fetch(message, 'const user = this.users.cache.get(\'{id}\'); user ? user.toJSON() : user;');
-	}
-
-	private async _fetchguild(message: NodeMessage) {
-		return this._fetch(message, 'const guild = this.guilds.cache.get(\'{id}\'); guild ? guild.toJSON() : guild;');
-	}
-
-	private _fetchchannel(message: NodeMessage) {
-		return this._fetch(message, 'const channel = this.channels.cache.get(\'{id}\'); channel ? channel.toJSON() : channel;');
-	}
-
-	private async _fetch(message: NodeMessage, code: string) {
-		const { d: id } = message.data;
-		const result = await this.broadcast(code.replace('{id}', id));
-		const realResult = result.filter(r => r);
-		if (realResult.length) {
-			return message.reply({ success: true, d: realResult[0] });
-		}
-		return message.reply({ success: false });
-	}
-
-	private _debug(message: string): void {
-		this.emit(SharderEvents.DEBUG, message);
+	public init() {
+		return this.ipc.init();
 	}
 }
