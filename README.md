@@ -15,9 +15,9 @@ To use Kurasuta, you can take a look at [example](#example)
 
 Example:
 ```js
-const { isMaster } = require('cluster');
+const { isPrimary } = require('cluster');
 
-if (isMaster) {
+if (isPrimary) {
 	// Code to run on the Master process here
 }
 
