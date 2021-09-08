@@ -12,10 +12,10 @@ export interface IPCRequest {
 
 export class ClusterIPC extends EventEmitter {
 	public clientSocket?: ClientSocket;
-	public client: Client;
+	public client: Client | typeof Client;
 	public node: VezaClient;
 
-	public constructor(discordClient: Client, public id: number, public socket: string | number) {
+	public constructor(discordClient: Client | typeof Client, public id: number, public socket: string | number) {
 		super();
 		this.client = discordClient;
 		this.node = new VezaClient(`Cluster ${this.id}`)
