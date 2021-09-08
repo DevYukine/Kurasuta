@@ -2,10 +2,9 @@ import { EventEmitter } from 'events';
 import { Server, NodeMessage } from 'veza';
 import { Util } from 'discord.js';
 import { ShardingManager } from '..';
-import cluster from 'cluster';
+import { isPrimary } from 'cluster';
 import { IPCEvents, SharderEvents } from '../Util/Constants';
 import { IPCRequest } from './ClusterIPC';
-const isPrimary = cluster.isPrimary
 export class MasterIPC extends EventEmitter {
 	[key: string]: any;
 	public server: Server;
