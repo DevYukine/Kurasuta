@@ -58,6 +58,7 @@ export class ClusterIPC extends EventEmitter {
 			try {
 				message.reply({ success: true, d: await this._eval(d) });
 			} catch (error) {
+				if (!(error instanceof Error)) return;
 				message.reply({ success: false, d: { name: error.name, message: error.message, stack: error.stack } });
 			}
 		}

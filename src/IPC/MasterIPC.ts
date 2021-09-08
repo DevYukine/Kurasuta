@@ -46,6 +46,7 @@ export class MasterIPC extends EventEmitter {
 			const data = await this.broadcast(d);
 			message.reply({ success: true, d: data });
 		} catch (error) {
+			if (!(error instanceof Error)) return;
 			message.reply({ success: false, d: { name: error.name, message: error.message, stack: error.stack } });
 		}
 	}
@@ -95,6 +96,7 @@ export class MasterIPC extends EventEmitter {
 			const result = await this.manager.eval(d);
 			return message.reply({ success: true, d: result });
 		} catch (error) {
+			if (!(error instanceof Error)) return;
 			return message.reply({ success: false, d: { name: error.name, message: error.message, stack: error.stack } });
 		}
 	}
