@@ -2,10 +2,10 @@ import { EventEmitter } from 'events';
 import { Server, NodeMessage } from 'veza';
 import { Util } from 'discord.js';
 import { ShardingManager } from '..';
-import { isMaster } from 'cluster';
+import cluster from 'cluster';
 import { IPCEvents, SharderEvents } from '../Util/Constants';
 import { IPCRequest } from './ClusterIPC';
-
+const isPrimary = cluster.isPrimary
 export class MasterIPC extends EventEmitter {
 	[key: string]: any;
 	public server: Server;
@@ -17,7 +17,7 @@ export class MasterIPC extends EventEmitter {
 			.on('disconnect', client => this.emit('debug', `Client Disconnected: ${client.name}`))
 			.on('error', error => this.emit('error', error))
 			.on('message', this._incommingMessage.bind(this));
-		if (isMaster) void this.server.listen(manager.ipcSocket);
+		if (isPrimary) void this.server.listen(manager.ipcSocket);
 	}
 
 	public async broadcast(code: string) {
