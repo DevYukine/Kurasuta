@@ -1,10 +1,10 @@
-import { Client, ClientOptions } from 'discord.js';
+import { Client, ClientOptions, Intents } from 'discord.js';
 import { MasterIPC } from '../IPC/MasterIPC';
 import { Cluster } from '../Cluster/Cluster';
 import { http, SharderEvents } from '../Util/Constants';
 import { EventEmitter } from 'events';
 import { cpus } from 'os';
-import { isMaster, setupMaster } from 'cluster';
+import { isPrimary, setupPrimary } from 'cluster';
 import * as Util from '../Util/Util';
 import fetch from 'node-fetch';
 
@@ -63,7 +63,7 @@ export class ShardingManager extends EventEmitter {
 		super();
 		this.clusterCount = Number(options.clusterCount ?? cpus().length);
 		this.guildsPerShard = Number(options.guildsPerShard ?? 1000);
-		this.clientOptions = options.clientOptions ?? {};
+		this.clientOptions = options.clientOptions ?? { intents: Intents.FLAGS.GUILDS } as unknown as ClientOptions;
 		this.development = options.development ?? false;
 		this.shardCount = options.shardCount ? Number(options.shardCount) : 'auto';
 		this.client = options.client ?? Client;
@@ -82,7 +82,7 @@ export class ShardingManager extends EventEmitter {
 	}
 
 	public async spawn() {
-		if (isMaster) {
+		if (isPrimary) {
 			if (this.shardCount === 'auto') {
 				this._debug('Fetching Session Endpoint');
 				const { shards: recommendShards } = await this._fetchSessionEndpoint();
@@ -101,7 +101,7 @@ export class ShardingManager extends EventEmitter {
 			const shardTuple = Util.chunk(shardArray, this.clusterCount);
 			const failed: Cluster[] = [];
 
-			if (this.nodeArgs) setupMaster({ execArgv: this.nodeArgs });
+			if (this.nodeArgs) setupPrimary({ execArgv: this.nodeArgs });
 
 			for (let index = 0; index < this.clusterCount; index++) {
 				const shards = shardTuple.shift()!;
@@ -205,7 +205,7 @@ export class ShardingManager extends EventEmitter {
 			method: 'GET',
 			headers: { authorization: `Bot ${this.token.replace(/^Bot\s*/i, '')}` }
 		});
-		if (res.ok) return res.json();
+		if (res.ok) return res.json() as unknown as SessionObject;
 		throw new Error(`Invalid Session Endpoint response: ${res.status} ${res.statusText}`);
 	}
 
