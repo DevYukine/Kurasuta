@@ -1,5 +1,4 @@
-import cluster, { Worker } from 'cluster';
-const fork = cluster.fork
+import { Worker, fork } from 'cluster';
 import { ShardingManager } from '..';
 import { IPCEvents } from '../Util/Constants';
 import { IPCResult, IPCError } from '../Sharding/ShardClientUtil';
