@@ -4,7 +4,7 @@ import { Cluster } from '../Cluster/Cluster';
 import { http, SharderEvents } from '../Util/Constants';
 import { EventEmitter } from 'events';
 import { cpus } from 'os';
-import { isPrimary, setupPrimary } from 'cluster';
+import cluster from 'cluster';
 import * as Util from '../Util/Util';
 import fetch from 'node-fetch';
 
@@ -82,7 +82,7 @@ export class ShardingManager extends EventEmitter {
 	}
 
 	public async spawn() {
-		if (isPrimary) {
+		if (cluster.isPrimary) {
 			if (this.shardCount === 'auto') {
 				this._debug('Fetching Session Endpoint');
 				const { shards: recommendShards } = await this._fetchSessionEndpoint();
@@ -101,7 +101,7 @@ export class ShardingManager extends EventEmitter {
 			const shardTuple = Util.chunk(shardArray, this.clusterCount);
 			const failed: Cluster[] = [];
 
-			if (this.nodeArgs) setupPrimary({ execArgv: this.nodeArgs });
+			if (this.nodeArgs) cluster.setupPrimary({ execArgv: this.nodeArgs });
 
 			for (let index = 0; index < this.clusterCount; index++) {
 				const shards = shardTuple.shift()!;
