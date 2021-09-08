@@ -8,3 +8,4 @@ gulpfile.js
 webpack.config.js
 pnpm-lock.yaml
 .history
+.github
