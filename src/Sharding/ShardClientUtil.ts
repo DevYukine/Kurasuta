@@ -1,6 +1,6 @@
-import { Client, Util } from 'discord.js'
-import { ClusterIPC } from '../IPC/ClusterIPC'
-import { IPCEvents } from '../Util/Constants'
+import { Client, Util } from 'discord.js';
+import { ClusterIPC } from '../IPC/ClusterIPC';
+import { IPCEvents } from '../Util/Constants';
 import { SendOptions } from 'veza';
 
 export interface IPCResult {
