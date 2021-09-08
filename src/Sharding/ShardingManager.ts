@@ -4,9 +4,7 @@ import { Cluster } from '../Cluster/Cluster';
 import { http, SharderEvents } from '../Util/Constants';
 import { EventEmitter } from 'events';
 import { cpus } from 'os';
-import cluster from 'cluster';
-const isPrimary = cluster.isPrimary
-const setupPrimary = cluster.setupPrimary
+import { isPrimary, setupPrimary } from 'cluster';
 import * as Util from '../Util/Util';
 import fetch from 'node-fetch';
 
