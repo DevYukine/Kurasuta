@@ -38,12 +38,15 @@
     "typescript": "^4.4.2"
   },
   "eslintConfig": {
-    "extends": "marine",
+    "extends": "marine/node",
     "rules": {
       "no-eval": "off",
       "no-useless-constructor": "off",
       "@typescript-eslint/restrict-template-expressions": "off",
-      "@typescript-eslint/ban-types": "off"
+      "@typescript-eslint/ban-types": "off",
+      "comma-dangle": [
+        "off"
+      ]
     }
   }
 }
