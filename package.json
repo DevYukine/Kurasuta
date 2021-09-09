@@ -20,10 +20,11 @@
   "private": false,
   "dependencies": {
     "discord.js": "^13.1.0",
-    "node-fetch": "^3.0.0",
+    "node-fetch": "^2.6.2",
     "veza": "^1.1.0"
   },
   "devDependencies": {
+    "@types/node-fetch": "^2.5.12",
     "@types/node": "^16.7.13",
     "@types/ws": "^7.4.7",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
