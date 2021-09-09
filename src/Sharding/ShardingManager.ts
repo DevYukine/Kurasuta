@@ -14,7 +14,7 @@ export interface SharderOptions {
 	clusterCount?: number;
 	name?: string;
 	development?: boolean;
-	client?: typeof Client;
+	client?: Client | extends = Client;
 	clientOptions?: ClientOptions;
 	guildsPerShard?: number;
 	respawn?: boolean;
@@ -47,7 +47,7 @@ export class ShardingManager extends EventEmitter {
 	public clientOptions: ClientOptions;
 	public shardCount: number | 'auto';
 	public guildsPerShard: number;
-	public client: typeof Client;
+	public client: Client | extends = Client;
 	public clusterCount: number;
 	public ipcSocket: string | number;
 	public respawn: boolean;
