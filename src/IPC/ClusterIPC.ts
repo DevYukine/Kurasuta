@@ -10,6 +10,10 @@ export interface IPCRequest {
 	d: string;
 }
 
+export interface BroadcastEvalOptions {
+	context?: any;
+}
+
 export class ClusterIPC extends EventEmitter {
 	public clientSocket?: ClientSocket;
 	public client: Client | typeof Client;
@@ -26,8 +30,9 @@ export class ClusterIPC extends EventEmitter {
 			.on('message', this._message.bind(this));
 	}
 
-	public async broadcast(script: string | Function) {
-		script = typeof script === 'function' ? `(${script})(this)` : script;
+	public async broadcast(script: string | Function, options?: BroadcastEvalOptions) {
+		if (options) script = typeof script === 'function' ? `(${script})(this, ${JSON.stringify(options.context)})` : script;
+		else script = typeof script === 'function' ? `(${script})(this)` : script;
 		const { success, d } = await this.server.send({ op: IPCEvents.BROADCAST, d: script }) as IPCResult;
 		if (!success) throw Util.makeError(d as IPCError);
 		return d as unknown[];
