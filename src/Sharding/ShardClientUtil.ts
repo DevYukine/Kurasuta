@@ -14,6 +14,10 @@ export interface IPCError {
 	stack: string;
 }
 
+export interface BroadcastEvalOptions {
+	context?: any;
+}
+
 export class ShardClientUtil {
 	public readonly clusterCount = Number(process.env.CLUSTER_CLUSTER_COUNT);
 	public readonly shardCount = Number(process.env.CLUSTER_SHARD_COUNT);
@@ -24,8 +28,8 @@ export class ShardClientUtil {
 	public constructor(public client: Client | typeof Client, public ipcSocket: string | number) {
 	}
 
-	public broadcastEval(script: string | Function): Promise<unknown[]> {
-		return this.ipc.broadcast(script);
+	public broadcastEval(script: string | Function, options?: BroadcastEvalOptions): Promise<unknown[]> {
+		return this.ipc.broadcast(script, options);
 	}
 
 	public masterEval(script: string | Function): Promise<unknown> {

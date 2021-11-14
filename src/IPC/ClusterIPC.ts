@@ -3,15 +3,11 @@ import { Client as VezaClient, NodeMessage, ClientSocket } from 'veza';
 import { Client, Util } from 'discord.js';
 import { IPCEvents } from '../Util/Constants';
 import { IPCResult } from '..';
-import { IPCError } from '../Sharding/ShardClientUtil';
+import { IPCError, BroadcastEvalOptions } from '../Sharding/ShardClientUtil';
 
 export interface IPCRequest {
 	op: number;
 	d: string;
-}
-
-export interface BroadcastEvalOptions {
-	context?: any;
 }
 
 export class ClusterIPC extends EventEmitter {
