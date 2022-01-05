@@ -3,6 +3,7 @@ import { ShardingManager } from '..';
 import { IPCEvents } from '../Util/Constants';
 import { IPCResult, IPCError } from '../Sharding/ShardClientUtil';
 import { Util as DjsUtil } from 'discord.js';
+import { setTimeout as delayFor } from 'timers/promises';
 import * as Util from '../Util/Util';
 import { EventEmitter } from 'events';
 
@@ -54,7 +55,7 @@ export class Cluster extends EventEmitter {
 
 	public async respawn(delay = 500) {
 		this.kill();
-		if (delay) await DjsUtil.delayFor(delay);
+		if (delay) await delayFor(delay);
 		await this.spawn();
 	}
 
