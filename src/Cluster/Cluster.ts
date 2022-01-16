@@ -54,7 +54,7 @@ export class Cluster extends EventEmitter {
 
 	public async respawn(delay = 500) {
 		this.kill();
-		if (delay) await DjsUtil.delayFor(delay);
+		if (delay) await Util.sleep(delay);
 		await this.spawn();
 	}
 
