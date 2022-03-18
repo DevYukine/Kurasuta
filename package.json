@@ -1,6 +1,6 @@
 {
   "name": "kurasuta",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "A Custom discord.js Sharding Library inspired by eris-sharder.",
   "main": "dist/index.js",
   "typings": "typings/index.d.ts",
@@ -24,8 +24,8 @@
     "veza": "^1.2.0"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.6.1",
     "@types/node": "^17.0.21",
+    "@types/node-fetch": "^2.6.1",
     "@types/ws": "^8.5.3",
     "@typescript-eslint/eslint-plugin": "^5.15.0",
     "@typescript-eslint/parser": "^5.15.0",
