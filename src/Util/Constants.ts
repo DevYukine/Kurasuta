@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 export const http = {
-	version: 8,
+	version: 9,
 	api: 'https://discordapp.com/api'
 };
 
