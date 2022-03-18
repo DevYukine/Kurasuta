@@ -1,6 +1,4 @@
 // Copyright (c) 2017-2018 dirigeants. All rights reserved. MIT license.
-
-import { Constructable } from 'discord.js';
 import { promisify } from 'util';
 import { ShardingManager, BaseCluster } from '..';
 
@@ -28,16 +26,17 @@ export function deepClone(source: any): any {
 	}
 	if (isObject(source)) {
 		const output: Record<string, any> = {};
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		for (const [key, value] of Object.entries(source)) output[key] = deepClone(value);
 		return output;
 	}
 	if (source instanceof Map) {
-		const output = new (source.constructor() as Constructable<Map<any, any>>)();
+		const output = new (source.constructor() as new (...args: any[]) => Map<any, any>)();
 		for (const [key, value] of source.entries()) output.set(key, deepClone(value));
 		return output;
 	}
 	if (source instanceof Set) {
-		const output = new (source.constructor() as Constructable<Set<any>>)();
+		const output = new (source.constructor() as new (...args: any[]) => Set<any>)();
 		for (const value of source.values()) output.add(deepClone(value));
 		return output;
 	}
@@ -52,6 +51,7 @@ export function mergeDefault<T>(def: Record<string, any>, given?: Record<string,
 	if (!given) return deepClone(def);
 	for (const key in def) {
 		if (given[key] === undefined) given[key] = deepClone(def[key]);
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		else if (isObject(given[key])) given[key] = mergeDefault(def[key], given[key]);
 	}
 

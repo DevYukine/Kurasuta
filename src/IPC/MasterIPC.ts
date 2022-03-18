@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { Server, NodeMessage } from 'veza';
-import { Util } from 'discord.js';
+import { MakeErrorOptions, Util } from 'discord.js';
 import { ShardingManager } from '..';
 import cluster from 'cluster';
 import { IPCEvents, SharderEvents } from '../Util/Constants';
@@ -24,7 +24,7 @@ export class MasterIPC extends EventEmitter {
 		let errored = data.filter(res => !res.success);
 		if (errored.length) {
 			errored = errored.map(msg => msg.d);
-			const error = errored[0];
+			const error = errored[0] as MakeErrorOptions;
 			throw Util.makeError(error);
 		}
 		return data.map(res => res.d) as unknown[];
@@ -43,7 +43,7 @@ export class MasterIPC extends EventEmitter {
 	private async _broadcast(message: NodeMessage) {
 		const { d } = message.data;
 		try {
-			const data = await this.broadcast(d);
+			const data = await this.broadcast(d as string);
 			message.reply({ success: true, d: data });
 		} catch (error) {
 			if (!(error instanceof Error)) return;
@@ -53,7 +53,7 @@ export class MasterIPC extends EventEmitter {
 
 	private _ready(message: NodeMessage) {
 		const { d: id } = message.data;
-		const cluster = this.manager.clusters.get(id);
+		const cluster = this.manager.clusters.get(id as number);
 		cluster!.emit('ready');
 		this._debug(`Cluster ${id} became ready`);
 		this.manager.emit(SharderEvents.READY, cluster);
@@ -85,7 +85,7 @@ export class MasterIPC extends EventEmitter {
 
 	private _restart(message: NodeMessage) {
 		const { d: clusterID } = message.data;
-		return this.manager.restart(clusterID)
+		return this.manager.restart(clusterID as number)
 			.then(() => message.reply({ success: true }))
 			.catch(error => message.reply({ success: false, d: { name: error.name, message: error.message, stack: error.stack } }));
 	}
@@ -93,7 +93,7 @@ export class MasterIPC extends EventEmitter {
 	private async _mastereval(message: NodeMessage) {
 		const { d } = message.data;
 		try {
-			const result = await this.manager.eval(d);
+			const result = await this.manager.eval(d as string);
 			return message.reply({ success: true, d: result });
 		} catch (error) {
 			if (!(error instanceof Error)) return;
@@ -119,7 +119,7 @@ export class MasterIPC extends EventEmitter {
 
 	private async _fetch(message: NodeMessage, code: string) {
 		const { d: id } = message.data;
-		const result = await this.broadcast(code.replace('{id}', id));
+		const result = await this.broadcast(code.replace('{id}', id as string));
 		const realResult = result.filter(r => r);
 		if (realResult.length) {
 			return message.reply({ success: true, d: realResult[0] });

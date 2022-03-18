@@ -166,7 +166,7 @@ export class ShardingManager extends EventEmitter {
 	public on(event: SharderEvents.SHARD_READY | SharderEvents.SHARD_RECONNECT, listener: (shardID: number) => void): this;
 	public on(event: SharderEvents.SHARD_RESUME, listener: (replayed: number, shardID: number) => void): this;
 	public on(event: SharderEvents.SHARD_DISCONNECT, listener: (closeEvent: CloseEvent, shardID: number) => void): this;
-	public on(event: any, listener: (...args: any[]) => void): this {
+	public on(event: string | symbol, listener: (...args: any[]) => void): this {
 		return super.on(event, listener);
 	}
 
@@ -176,7 +176,7 @@ export class ShardingManager extends EventEmitter {
 	public once(event: SharderEvents.SHARD_READY | SharderEvents.SHARD_RECONNECT, listener: (shardID: number) => void): this;
 	public once(event: SharderEvents.SHARD_RESUME, listener: (replayed: number, shardID: number) => void): this;
 	public once(event: SharderEvents.SHARD_DISCONNECT, listener: (closeEvent: CloseEvent, shardID: number) => void): this;
-	public once(event: any, listener: (...args: any[]) => void): this {
+	public once(event: string | symbol, listener: (...args: any[]) => void): this {
 		return super.once(event, listener);
 	}
 
