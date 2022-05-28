@@ -1,5 +1,9 @@
 # Kurasuta
 
+# Fork info
+
+This fork is adds support for es module user
+
 # About
 
 Kurasuta is a powerful sharding manager for the discord.js library. It uses Node.js's cluster module to spread shards evenly among all cores.

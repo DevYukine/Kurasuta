@@ -1,0 +1,26 @@
+on:
+  release:
+    types:
+      - published
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Installing Node.js v16
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          registry-url: 'https://registry.npmjs.org/'
+      - run: |
+          git fetch origin master
+          git checkout master
+      - name: Installing dependencies
+        run: yarn install --frozen-lockfile
+      - name: Compile source
+        run: yarn compile
+      - name: Publish source
+        run: |
+          npm publish --access public || true
+        env:
+          NODE_AUTH_TOKEN: '${{ secrets.NPM_TOKEN }}'
