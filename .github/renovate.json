@@ -1,0 +1,41 @@
+{
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"extends": ["config:base", "helpers:pinGitHubActionDigests", "group:allNonMajor", ":semanticCommits"],
+	"labels": ["meta: dependencies"],
+	"schedule": ["before 6am"],
+	"timezone": "Asia/Jakarta",
+	"docker": {
+		"enabled": true,
+		"rangeStrategy": "bump"
+	},
+	"npm": {
+		"rangeStrategy": "bump",
+		"packageRules": [
+			{
+				"matchUpdateTypes": ["minor", "patch"],
+				"matchCurrentVersion": "!/^0/",
+				"automerge": true
+			},
+			{
+				"matchPackagePatterns": ["ansi-regex"],
+				"allowedVersions": "^5"
+			},
+			{
+				"matchPackagePatterns": ["@discordjs/builders"],
+				"allowedVersions": "0.11.0"
+			},
+			{
+				"matchPackagePatterns": ["@types/node-fetch"],
+				"allowedVersions": "^2"
+			},
+			{
+				"matchPackagePatterns": ["@sapphire"],
+				"groupName": "Sapphire Dependencies"
+			},
+			{
+				"matchDepTypes": ["engines"],
+				"enabled": false
+			}
+		]
+	}
+}
