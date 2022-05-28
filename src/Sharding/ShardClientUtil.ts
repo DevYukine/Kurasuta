@@ -18,10 +18,11 @@ export class ShardClientUtil {
 	public readonly clusterCount = Number(process.env.CLUSTER_CLUSTER_COUNT);
 	public readonly shardCount = Number(process.env.CLUSTER_SHARD_COUNT);
 	public readonly id = Number(process.env.CLUSTER_ID);
-	public readonly ipc = new ClusterIPC(this.client, this.id, this.ipcSocket);
 	public readonly shards = String(process.env.CLUSTER_SHARDS).split(',');
+	public readonly ipc: ClusterIPC;
 
 	public constructor(public client: Client | typeof Client, public ipcSocket: string | number) {
+		this.ipc = new ClusterIPC(this.client, this.id, this.ipcSocket);
 	}
 
 	public broadcastEval(script: string | Function): Promise<unknown[]> {
