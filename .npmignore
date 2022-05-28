@@ -9,3 +9,4 @@ webpack.config.js
 pnpm-lock.yaml
 .history
 .github
+tsup.config.ts
