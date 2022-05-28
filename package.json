@@ -10,7 +10,7 @@
       "require": "./dist/index.js"
     }
   },
-  "typings": "typings/index.d.ts",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "build": "tsup && npm run build:esm",
     "build:esm": "gen-esm-wrapper dist/index.js dist/index.mjs",
@@ -18,12 +18,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Dev-Yukine/Kurasuta"
+    "url": "https://github.com/NezuChan/Kurasuta"
   },
   "bugs": {
-    "url": "https://github.com/Dev-Yukine/Kurasuta"
+    "url": "https://github.com/NezuChan/Kurasuta"
   },
-  "author": "DevYukine",
+  "author": "nezuchan",
   "license": "MIT",
   "private": false,
   "dependencies": {
