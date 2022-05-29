@@ -59,7 +59,7 @@ export class Cluster extends EventEmitter {
 	}
 
 	public send(data: unknown) {
-		return this.manager.ipc.node.sendTo(`Cluster ${this.id}`, data);
+		return this.manager.ipc.server.sendTo(`Cluster ${this.id}`, data);
 	}
 
 	public async spawn() {
