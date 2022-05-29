@@ -2,9 +2,9 @@ import { Client, ClientOptions, Intents } from 'discord.js';
 import { MasterIPC } from '../IPC/MasterIPC';
 import { Cluster } from '../Cluster/Cluster';
 import { http, SharderEvents } from '../Util/Constants';
-import { EventEmitter } from 'events';
-import { cpus } from 'os';
-import cluster from 'cluster';
+import { EventEmitter } from 'node:events';
+import { cpus } from 'node:os';
+import cluster from 'node:cluster';
 import * as Util from '../Util/Util';
 import fetch from 'node-fetch';
 
@@ -161,7 +161,7 @@ export class ShardingManager extends EventEmitter {
 	}
 
 	public on(event: SharderEvents.DEBUG, listener: (message: string) => void): this;
-	public on(event: SharderEvents.MESSAGE, listener: (message: unknown) => void): this;
+	public on(event: SharderEvents.MESSAGE, listener: (message: any) => void): this;
 	public on(event: SharderEvents.READY | SharderEvents.SPAWN, listener: (cluster: Cluster) => void): this;
 	public on(event: SharderEvents.SHARD_READY | SharderEvents.SHARD_RECONNECT, listener: (shardID: number) => void): this;
 	public on(event: SharderEvents.SHARD_RESUME, listener: (replayed: number, shardID: number) => void): this;

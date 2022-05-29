@@ -1,10 +1,10 @@
-import { EventEmitter } from 'events';
+import { EventEmitter } from 'node:events';
 import { Server, NodeMessage } from 'veza';
 import { MakeErrorOptions, Util } from 'discord.js';
-import { ShardingManager } from '..';
-import cluster from 'cluster';
+import cluster from 'node:cluster';
 import { IPCEvents, SharderEvents } from '../Util/Constants';
 import { IPCRequest } from './ClusterIPC';
+import { ShardingManager } from '../Sharding/ShardingManager';
 export class MasterIPC extends EventEmitter {
 	[key: string]: any;
 	public server: Server;

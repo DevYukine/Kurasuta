@@ -1,10 +1,10 @@
-import cluster, { Worker } from 'cluster';
-import { ShardingManager } from '..';
+import cluster, { Worker } from 'node:cluster';
 import { IPCEvents } from '../Util/Constants';
 import { IPCResult, IPCError } from '../Sharding/ShardClientUtil';
 import { Util as DjsUtil } from 'discord.js';
-import * as Util from '../Util/Util';
-import { EventEmitter } from 'events';
+import { setTimeout as sleep } from 'node:timers/promises';
+import { EventEmitter } from 'node:events';
+import { ShardingManager } from '../Sharding/ShardingManager';
 
 export interface ClusterOptions {
 	id: number;
@@ -54,7 +54,7 @@ export class Cluster extends EventEmitter {
 
 	public async respawn(delay = 500) {
 		this.kill();
-		if (delay) await Util.sleep(delay);
+		if (delay) await sleep(delay);
 		await this.spawn();
 	}
 
@@ -73,7 +73,7 @@ export class Cluster extends EventEmitter {
 		this.manager.emit('spawn', this);
 
 		await this._waitReady(this.shards.length);
-		await Util.sleep(5000);
+		await sleep(5000);
 	}
 
 	private _exitListener(code: number, signal: string) {

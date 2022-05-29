@@ -1,6 +1,7 @@
 // Copyright (c) 2017-2018 dirigeants. All rights reserved. MIT license.
-import { promisify } from 'util';
-import { ShardingManager, BaseCluster } from '..';
+import { BaseCluster } from "../Cluster/BaseCluster";
+import { ShardingManager } from "../Sharding/ShardingManager";
+
 
 export const PRIMITIVE_TYPES = ['string', 'bigint', 'number', 'boolean'];
 
@@ -60,10 +61,6 @@ export function mergeDefault<T>(def: Record<string, any>, given?: Record<string,
 
 export function isObject(input: any) {
 	return input && input.constructor === Object;
-}
-
-export function sleep(duration: number) {
-	return promisify(setTimeout)(duration);
 }
 
 export function calcShards(shards: number, guildsPerShard: number): number {
