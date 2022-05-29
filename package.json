@@ -1,6 +1,6 @@
 {
   "name": "@nezuchan/kurasuta",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "A Custom discord.js Sharding Library inspired by eris-sharder.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

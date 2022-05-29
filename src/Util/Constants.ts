@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 export const http = {
-	version: 9,
-	api: 'https://discordapp.com/api'
+	version: 10,
+	api: 'https://discord.com/api'
 };
 
-export const version = '3.1.0';
+export const version = '3.1.1';
 
 export enum IPCEvents {
 	EVAL,
