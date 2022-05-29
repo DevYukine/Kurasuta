@@ -7,6 +7,7 @@ import { cpus } from 'node:os';
 import cluster from 'node:cluster';
 import * as Util from '../Util/Util';
 import fetch from 'node-fetch';
+import { NodeMessage } from 'veza';
 
 export interface SharderOptions {
 	token?: string;
@@ -161,7 +162,7 @@ export class ShardingManager extends EventEmitter {
 	}
 
 	public on(event: SharderEvents.DEBUG, listener: (message: string) => void): this;
-	public on(event: SharderEvents.MESSAGE, listener: (message: any) => void): this;
+	public on(event: SharderEvents.MESSAGE, listener: (data: any, message: NodeMessage) => void): this;
 	public on(event: SharderEvents.READY | SharderEvents.SPAWN, listener: (cluster: Cluster) => void): this;
 	public on(event: SharderEvents.SHARD_READY | SharderEvents.SHARD_RECONNECT, listener: (shardID: number) => void): this;
 	public on(event: SharderEvents.SHARD_RESUME, listener: (replayed: number, shardID: number) => void): this;
