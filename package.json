@@ -28,7 +28,7 @@
   "private": false,
   "dependencies": {
     "discord.js": "^13.7.0",
-    "node-fetch": "^2.6.7",
+    "undici": "^5.5.1",
     "veza": "^1.2.0"
   },
   "devDependencies": {

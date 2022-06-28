@@ -6,7 +6,7 @@ import { EventEmitter } from 'node:events';
 import { cpus } from 'node:os';
 import cluster from 'node:cluster';
 import * as Util from '../Util/Util';
-import fetch from 'node-fetch';
+import { fetch } from 'undici';
 import { NodeMessage } from 'veza';
 
 export interface SharderOptions {
@@ -23,6 +23,7 @@ export interface SharderOptions {
 	timeout?: number;
 	retry?: boolean;
 	nodeArgs?: Array<string>;
+	reSharding?: boolean;
 }
 
 export interface SessionObject {
@@ -56,6 +57,7 @@ export class ShardingManager extends EventEmitter {
 	public retry: boolean;
 	public nodeArgs?: Array<string>;
 	public ipc: MasterIPC;
+	public reSharding: boolean;
 
 	private readonly development: boolean;
 	private readonly token?: string;
@@ -75,6 +77,7 @@ export class ShardingManager extends EventEmitter {
 		this.token = options.token;
 		this.nodeArgs = options.nodeArgs;
 		this.ipc = new MasterIPC(this);
+		this.reSharding = options.reSharding ?? false;
 
 		this.ipc.on('debug', msg => this._debug(`[IPC] ${msg}`));
 		this.ipc.on('error', err => this.emit(SharderEvents.ERROR, err));
