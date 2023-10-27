@@ -1,4 +1,4 @@
-import { Client, Util } from 'discord.js';
+import { Client, makeError } from 'discord.js';
 import { ClusterIPC } from '../IPC/ClusterIPC';
 import { IPCEvents } from '../Util/Constants';
 import { SendOptions } from 'veza';
@@ -60,7 +60,7 @@ export class ShardClientUtil {
 
 	public async restart(clusterID: number) {
 		const { success, d } = await this.ipc.server.send({ op: IPCEvents.RESTART, d: clusterID }) as IPCResult;
-		if (!success) throw Util.makeError(d as IPCError);
+		if (!success) throw makeError(d as IPCError);
 	}
 
 	public respawnAll() {

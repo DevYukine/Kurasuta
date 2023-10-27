@@ -1,4 +1,4 @@
-import { Client, ClientOptions, Intents } from 'discord.js';
+import { Client, ClientOptions, IntentsBitField } from 'discord.js';
 import { MasterIPC } from '../IPC/MasterIPC';
 import { Cluster } from '../Cluster/Cluster';
 import { http, SharderEvents } from '../Util/Constants';
@@ -63,7 +63,7 @@ export class ShardingManager extends EventEmitter {
 		super();
 		this.clusterCount = Number(options.clusterCount ?? cpus().length);
 		this.guildsPerShard = Number(options.guildsPerShard ?? 1000);
-		this.clientOptions = options.clientOptions ?? { intents: Intents.FLAGS.GUILDS } as unknown as ClientOptions;
+		this.clientOptions = options.clientOptions ?? { intents: IntentsBitField.Flags.Guilds } as unknown as ClientOptions;
 		this.development = options.development ?? false;
 		this.shardCount = options.shardCount ? Number(options.shardCount) : 'auto';
 		this.client = options.client ?? Client;
