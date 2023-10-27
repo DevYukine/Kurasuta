@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { Client as VezaClient, NodeMessage, ClientSocket } from 'veza';
-import { Client, Util } from 'discord.js';
+import { Client, makeError } from 'discord.js';
 import { IPCEvents } from '../Util/Constants';
 import { IPCResult } from '..';
 import { IPCError } from '../Sharding/ShardClientUtil';
@@ -29,14 +29,14 @@ export class ClusterIPC extends EventEmitter {
 	public async broadcast(script: string | Function) {
 		script = typeof script === 'function' ? `(${script})(this)` : script;
 		const { success, d } = await this.server.send({ op: IPCEvents.BROADCAST, d: script }) as IPCResult;
-		if (!success) throw Util.makeError(d as IPCError);
+		if (!success) throw makeError(d as IPCError);
 		return d as unknown[];
 	}
 
 	public async masterEval(script: string | Function) {
 		script = typeof script === 'function' ? `(${script})(this)` : script;
 		const { success, d } = await this.server.send({ op: IPCEvents.MASTEREVAL, d: script }) as IPCResult;
-		if (!success) throw Util.makeError(d as IPCError);
+		if (!success) throw makeError(d as IPCError);
 		return d;
 	}
 

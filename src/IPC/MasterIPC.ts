@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { Server, NodeMessage } from 'veza';
-import { MakeErrorOptions, Util } from 'discord.js';
+import { MakeErrorOptions, makeError } from 'discord.js';
 import { ShardingManager } from '..';
 import cluster from 'cluster';
 import { IPCEvents, SharderEvents } from '../Util/Constants';
@@ -25,7 +25,7 @@ export class MasterIPC extends EventEmitter {
 		if (errored.length) {
 			errored = errored.map(msg => msg.d);
 			const error = errored[0] as MakeErrorOptions;
-			throw Util.makeError(error);
+			throw makeError(error);
 		}
 		return data.map(res => res.d) as unknown[];
 	}

@@ -4,3 +4,4 @@ typings/
 test/
 .env
 .history
+yarn.lock
